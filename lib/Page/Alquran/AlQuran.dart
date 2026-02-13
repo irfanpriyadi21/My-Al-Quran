@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:my_quran/Page/Alquran/AyatPage.dart';
 import 'package:provider/provider.dart';
 
 import '../../Componen/Widget/CaegoryChipWidget.dart';
@@ -87,12 +88,28 @@ class _AlQuranState extends State<AlQuran> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (BuildContext context, int index){
                       final datas = listSurah[index];
-                      return SurahCard(
-                        number: datas.nomor!.toInt(),
-                        title: datas.namaLatin!,
-                        subtitle: "${datas.tempatTurun} • ${datas.jumlahAyat!} Ayat",
-                        arabic: datas.nama!,
-                        primaryColor: mainColor,
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AyatPage(
+                                    datas.nomor!.toInt(),
+                                    datas.namaLatin!,
+                                    datas.jumlahAyat!.toString(),
+                                    datas.tempatTurun!,
+                                    datas.arti!,
+                                  )
+                              )
+                          );
+                        },
+                        child: SurahCard(
+                          number: datas.nomor!.toInt(),
+                          title: datas.namaLatin!,
+                          subtitle: "${datas.tempatTurun} • ${datas.jumlahAyat!} Ayat",
+                          arabic: datas.nama!,
+                          primaryColor: mainColor,
+                        ),
                       );
                     }
                 ),
