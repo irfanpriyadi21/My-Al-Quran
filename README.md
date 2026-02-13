@@ -1,5 +1,14 @@
 # my_quran
 
+<p float="left">
+  <img src="/WhatsApp Image 2026-02-13 at 10.31.23.jpeg" width="200" />
+  <img src="/WhatsApp Image 2026-02-13 at 10.31.24.jpeg" width="200" />
+</p>
+<p float="left">
+  <img src="/WhatsApp Image 2026-02-13 at 10.31.24 (1).jpeg" width="200" />
+  <img src="/WhatsApp Image 2026-02-13 at 10.31.23 (1).jpeg" width="200" /> 
+</p>
+
 A new Flutter project.
 
 ## Getting Started
