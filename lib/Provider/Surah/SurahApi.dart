@@ -10,7 +10,6 @@ import '../url_api.dart';
 
 class SurahApi with ChangeNotifier{
   List<ModelListSurah> listSurah = [];
-  List<ModelListAyat> listAyat = [];
 
   Future<void> getSurah()async{
     final url = UrlApi.listSurah;
@@ -31,17 +30,20 @@ class SurahApi with ChangeNotifier{
     }
   }
 
-  Future<void> getAyat(nomorSurah)async{
-    final url = UrlApi.listAyat + nomorSurah;
+  Future<ModelListAyat> getAyat(nomorSurah)async{
+    final url = UrlApi.listAyat + nomorSurah.toString();
     try{
       final response = await http.get(
         Uri.parse(url),
       );
       final responseData = json.decode(response.body);
       print(responseData.toString());
-      if(responseData['status']){
-        Iterable data = responseData['data'];
-        listAyat = data.map((e) => ModelListAyat.fromJson(e)).toList();
+      if(responseData['code'] == 200){
+        ModelListAyat imp = ModelListAyat.fromJson(responseData['data']);
+        return imp;
+      }else{
+        String message = responseData['message'];
+        throw Exception(message);
       }
     }catch(e){
       rethrow;

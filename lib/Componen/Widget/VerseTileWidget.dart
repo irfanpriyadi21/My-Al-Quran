@@ -1,12 +1,16 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Componen/colors.dart';
+
+import 'TextDataWidget.dart';
 
 
 class VerseTile extends StatefulWidget {
   final int number;
   final String arabic;
   final String translation;
+  final String latin;
   final String audioUrl;
 
   const VerseTile({
@@ -14,6 +18,7 @@ class VerseTile extends StatefulWidget {
     required this.number,
     required this.arabic,
     required this.translation,
+    required this.latin,
     required this.audioUrl,
   });
 
@@ -73,7 +78,7 @@ class _VerseTileState extends State<VerseTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
-                    radius: 14,
+                    radius: 13,
                     backgroundColor: mainColor,
                     child: Text("${widget.number}",
                         style: const TextStyle(color: Colors.white)),
@@ -105,17 +110,45 @@ class _VerseTileState extends State<VerseTile> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         Align(
           alignment: Alignment.centerRight,
-          child: Text(
-            widget.arabic,
-            textAlign: TextAlign.right,
-            style: const TextStyle(fontSize: 26),
+          child:  TextData(
+            text:widget.arabic,
+            size: 24,
+            color: Colors.black,
+            fontWeight: FontWeight.normal,
           ),
         ),
+
         const SizedBox(height: 12),
-        Text(widget.translation),
+        Align(
+          alignment: Alignment.centerRight,
+          child:  TextData(
+            text: widget.latin,
+            size: 12,
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 5),
+        Align(
+          alignment: Alignment.centerLeft,
+          child:  Text(
+            widget.translation,
+            style: GoogleFonts.poppins(
+              textStyle: TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontStyle: FontStyle.italic
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 15),
+
+
       ],
     );
   }

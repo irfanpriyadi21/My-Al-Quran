@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Page/login_page.dart';
+import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:my_quran/Provider/ExampleProvider.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:my_quran/Provider/app_provider.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SurahApi()),
+        ChangeNotifierProvider(create: (_) => Artikel()),
         ChangeNotifierProvider(create: (_) => AppProvider()),
       ],
       child: Consumer<AppProvider>(

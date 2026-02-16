@@ -1,28 +1,4 @@
 class ModelListAyat {
-  int? code;
-  String? message;
-  Data? data;
-
-  ModelListAyat({this.code, this.message, this.data});
-
-  ModelListAyat.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-}
-
-class Data {
   int? nomor;
   String? nama;
   String? namaLatin;
@@ -33,9 +9,9 @@ class Data {
   AudioFull? audioFull;
   List<Ayat>? ayat;
   SuratSelanjutnya? suratSelanjutnya;
-  bool? suratSebelumnya;
+  SuratSebelumnya? suratSebelumnya;
 
-  Data(
+  ModelListAyat(
       {this.nomor,
         this.nama,
         this.namaLatin,
@@ -48,7 +24,7 @@ class Data {
         this.suratSelanjutnya,
         this.suratSebelumnya});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  ModelListAyat.fromJson(Map<String, dynamic> json) {
     nomor = json['nomor'];
     nama = json['nama'];
     namaLatin = json['namaLatin'];
@@ -68,7 +44,12 @@ class Data {
     suratSelanjutnya = json['suratSelanjutnya'] != null
         ? new SuratSelanjutnya.fromJson(json['suratSelanjutnya'])
         : null;
-    suratSebelumnya = json['suratSebelumnya'];
+    if (json['suratSebelumnya'] is Map<String, dynamic>) {
+      suratSebelumnya =
+          SuratSebelumnya.fromJson(json['suratSebelumnya']);
+    } else {
+      suratSebelumnya = null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -183,5 +164,22 @@ class SuratSelanjutnya {
     data['namaLatin'] = this.namaLatin;
     data['jumlahAyat'] = this.jumlahAyat;
     return data;
+  }
+}
+
+
+class SuratSebelumnya {
+  int? nomor;
+  String? nama;
+  String? namaLatin;
+  int? jumlahAyat;
+
+  SuratSebelumnya({this.nomor, this.nama, this.namaLatin, this.jumlahAyat});
+
+  SuratSebelumnya.fromJson(Map<String, dynamic> json) {
+    nomor = json['nomor'];
+    nama = json['nama'];
+    namaLatin = json['namaLatin'];
+    jumlahAyat = json['jumlahAyat'];
   }
 }

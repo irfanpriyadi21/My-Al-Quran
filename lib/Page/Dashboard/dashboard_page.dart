@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:my_quran/Componen/Widget/CaegoryChipWidget.dart';
+import 'package:my_quran/Componen/News/NewsWidget.dart';
 import 'package:my_quran/Componen/Widget/SurahCardWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
@@ -190,7 +191,16 @@ class _DashboardPageState extends State<DashboardPage> {
                             ""
                         ));
                   }).toList(),
-                )
+                ),
+                SizedBox(height: 20),
+                TextData(
+                  text: "News",
+                  size: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(height: 16),
+                NewsWidget()
 
               ],
             ),
