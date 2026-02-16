@@ -1,10 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_quran/Page/Dashboard/dashboard_page.dart';
+import 'package:my_quran/Page/indexPage.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:my_quran/Provider/ExampleProvider.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:my_quran/Provider/app_provider.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'Componen/navigatorKey.dart';
@@ -12,11 +15,16 @@ import 'Componen/navigatorKey.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+
+  final prefs = await SharedPreferences.getInstance();
+  final isLogin = prefs.getBool('isLogin') ?? false;
+
+  runApp( MyApp(isLogin));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLogin;
+  const MyApp(this.isLogin, {super.key});
 
   // This widget is the root of your application.
   @override
@@ -38,7 +46,9 @@ class MyApp extends StatelessWidget {
               ),
               useMaterial3: true,
             ),
-            home: LoginPage(),
+            home: isLogin
+            ? IndexPage()
+            : LoginPage()
           );
         },
       ),

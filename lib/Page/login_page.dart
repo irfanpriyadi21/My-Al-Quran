@@ -93,6 +93,9 @@ class _LoginPageState extends State<LoginPage> {
                           await AuthService().signInWithGoogle();
 
                       if (user != null) {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('isLogin', true);
+
                         Navigator.push(
                             context,
                             MaterialPageRoute(
