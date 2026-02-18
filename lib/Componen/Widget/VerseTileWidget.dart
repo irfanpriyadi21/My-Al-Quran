@@ -17,6 +17,7 @@ class VerseTile extends StatefulWidget {
   final String translation;
   final String latin;
   final String audioUrl;
+  final String surah;
 
   const VerseTile({
     super.key,
@@ -25,6 +26,7 @@ class VerseTile extends StatefulWidget {
     required this.translation,
     required this.latin,
     required this.audioUrl,
+    required this.surah
   });
 
   @override
@@ -44,6 +46,7 @@ class _VerseTileState extends State<VerseTile> {
           latin: widget.latin,
           translation: widget.translation,
           number: widget.number,
+          surah: widget.surah,
         ),
       );
 

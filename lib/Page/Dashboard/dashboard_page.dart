@@ -51,7 +51,7 @@ class _DashboardPageState extends State<DashboardPage> {
     },
     {
       "image" : "assets/image/alQuran.png",
-      "title" : "Waktu Sholat",
+      "title" : "W.Shalat",
       "page" : const AlQuran()
     },
     {

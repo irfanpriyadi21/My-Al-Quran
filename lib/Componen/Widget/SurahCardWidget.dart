@@ -43,13 +43,13 @@ Widget SurahCard({
         Stack(
           alignment: Alignment.center,
           children: [
-            Image.asset('assets/image/ayat.png',
+            Image.asset('assets/image/Vector.png',
                 height: 40),
             TextData(
               text: "$number",
               size: 10,
               color: Colors.black,
-              fontWeight: FontWeight.normal,
+              fontWeight: FontWeight.bold,
             ),
           ],
         ),

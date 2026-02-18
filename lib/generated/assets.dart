@@ -6,6 +6,9 @@ class Assets {
   static const String imageAyat = 'assets/image/ayat.png';
   static const String imageImage1 = 'assets/image/image1.png';
   static const String imageQuran1 = 'assets/image/quran1.png';
+  static const String imageQuran2 = 'assets/image/Quran2.png';
+  static const String imageQuranBackground = 'assets/image/QuranBackground.png';
   static const String imageSurah = 'assets/image/surah.svg';
+  static const String imageVector = 'assets/image/Vector.png';
 
 }

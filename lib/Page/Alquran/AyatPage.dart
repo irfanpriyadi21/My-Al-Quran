@@ -60,7 +60,9 @@ class _AyatPageState extends State<AyatPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.only(
+              left: 16, right: 16, top: 20
+          ),
           child:SingleChildScrollView(
             child: Column(
               children: [
@@ -84,47 +86,74 @@ class _AyatPageState extends State<AyatPage> {
                 // CARD SURAH
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(20),
+                  height: 250,
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xffC58AF9),
-                        Color(0xff7B3FE4),
-                      ],
-                    ),
                   ),
-                  child: Column(
+                  child: Stack(
                     children: [
-                      TextData(
-                        text:  "${widget.name}",
-                        size: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      // BACKGROUND IMAGE
+                      Positioned(
+                        right: -10,
+                        bottom: -10,
+                        child: Opacity(
+                          opacity: 1, // penting supaya samar
+                          child: Image.asset(
+                            "assets/image/Quran2.png",
+                            width: 250,
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 6),
-                      TextData(
-                        text:  "${widget.arti}",
-                        size: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
+
+                      // GRADIENT OVERLAY
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color(0xffC58AF9).withOpacity(0.85),
+                                Color(0xff7B3FE4).withOpacity(0.85),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                      SizedBox(height: 10),
-                      Divider(color: Colors.white38),
-                      SizedBox(height: 10),
-                      TextData(
-                        text:   "${widget.tempatTurun} • ${widget.jumlahAyat} Ayat",
-                        size: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      SizedBox(height: 20),
-                      TextData(
-                        text:   "بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-                        size: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal,
-                      ),
+                      Column(
+                        children: [
+                          SizedBox(height: 20),
+                          TextData(
+                            text:  "${widget.name}",
+                            size: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          SizedBox(height: 6),
+                          TextData(
+                            text:  "${widget.arti}",
+                            size: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          SizedBox(height: 10),
+                          Divider(color: Colors.white38),
+                          SizedBox(height: 10),
+                          TextData(
+                            text:   "${widget.tempatTurun} • ${widget.jumlahAyat} Ayat",
+                            size: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          SizedBox(height: 20),
+                          TextData(
+                            text:   "بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+                            size: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -149,6 +178,7 @@ class _AyatPageState extends State<AyatPage> {
                         translation: datas.teksIndonesia!,
                         latin: datas.teksLatin!,
                         audioUrl: datas.audio!.s01!,
+                        surah: widget.name,
                       );
                     }
                 )

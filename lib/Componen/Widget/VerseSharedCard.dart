@@ -7,6 +7,7 @@ class VerseShareCard extends StatelessWidget {
   final String latin;
   final String translation;
   final int number;
+  final String surah;
 
   const VerseShareCard({
     super.key,
@@ -14,6 +15,7 @@ class VerseShareCard extends StatelessWidget {
     required this.latin,
     required this.translation,
     required this.number,
+    required this.surah,
   });
 
   @override
@@ -64,9 +66,8 @@ class VerseShareCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 12),
-
           Text(
-            "Verse $number • My Quran App",
+            "QS. $surah : $number • My Quran App",
             style: const TextStyle(
               color: Colors.white54,
               fontSize: 10,
