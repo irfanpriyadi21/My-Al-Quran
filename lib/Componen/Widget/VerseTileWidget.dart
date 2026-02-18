@@ -2,8 +2,13 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Componen/colors.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:share_plus/share_plus.dart';
 import 'TextDataWidget.dart';
+import 'VerseSharedCard.dart';
 
 
 class VerseTile extends StatefulWidget {
@@ -29,6 +34,34 @@ class VerseTile extends StatefulWidget {
 class _VerseTileState extends State<VerseTile> {
   final AudioPlayer player = AudioPlayer();
   bool isPlaying = false;
+  final ScreenshotController screenshotController = ScreenshotController();
+
+  Future<void> shareVerseAsImage() async {
+    try {
+      final image = await screenshotController.captureFromWidget(
+        VerseShareCard(
+          arabic: widget.arabic,
+          latin: widget.latin,
+          translation: widget.translation,
+          number: widget.number,
+        ),
+      );
+
+      final directory = await getTemporaryDirectory();
+      final filePath =
+          '${directory.path}/verse_${widget.number}.png';
+
+      final file = File(filePath);
+      await file.writeAsBytes(image);
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: widget.translation,
+      );
+    } catch (e) {
+      debugPrint("Error sharing image: $e");
+    }
+  }
 
   @override
   void initState() {
@@ -85,10 +118,14 @@ class _VerseTileState extends State<VerseTile> {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.share_outlined,
-                          color: mainColor),
+                      GestureDetector(
+                        onTap: shareVerseAsImage,
+                        child: const Icon(
+                          Icons.share_outlined,
+                          color: mainColor,
+                        ),
+                      ),
                       const SizedBox(width: 14),
-
                       // BUTTON PLAY MP3
                       GestureDetector(
                         onTap: togglePlay,
@@ -110,43 +147,48 @@ class _VerseTileState extends State<VerseTile> {
             ],
           ),
         ),
-        const SizedBox(height: 10),
-        Align(
-          alignment: Alignment.centerRight,
-          child:  TextData(
-            text:widget.arabic,
-            size: 24,
-            color: Colors.black,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
-
-        const SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerRight,
-          child:  TextData(
-            text: widget.latin,
-            size: 12,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 5),
-        Align(
-          alignment: Alignment.centerLeft,
-          child:  Text(
-            widget.translation,
-            style: GoogleFonts.poppins(
-              textStyle: TextStyle(
-                fontSize: 12,
-                color: Colors.black,
-                fontWeight: FontWeight.normal,
-                fontStyle: FontStyle.italic
+        Container(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child:  TextData(
+                  text:widget.arabic,
+                  size: 24,
+                  color: Colors.black,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
-            ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child:  TextData(
+                  text: widget.latin,
+                  size: 12,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 5),
+              Align(
+                alignment: Alignment.centerLeft,
+                child:  Text(
+                  widget.translation,
+                  style: GoogleFonts.poppins(
+                    textStyle: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontStyle: FontStyle.italic
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+            ],
           ),
-        ),
-        const SizedBox(height: 15),
+        )
 
 
       ],

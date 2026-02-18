@@ -46,6 +46,9 @@ dependencies:
   hijri: ^3.0.0
   audioplayers: ^5.2.1
   flutter_html: ^3.0.0
+  screenshot: ^3.0.0
+  share_plus: ^7.2.1
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

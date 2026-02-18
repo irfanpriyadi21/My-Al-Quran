@@ -20,6 +20,29 @@ class NewsWidget extends StatefulWidget {
 class _NewsWidgetState extends State<NewsWidget> {
   List<ModelListArtikel> listArtikel = [];
   bool isLoading = false;
+  final ScrollController _scrollController = ScrollController();
+
+  void autoScroll() {
+    Future.delayed(const Duration(seconds: 1), () async {
+      while (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        final minScroll = _scrollController.position.minScrollExtent;
+
+        await _scrollController.animateTo(
+          maxScroll,
+          duration: const Duration(seconds: 5),
+          curve: Curves.linear,
+        );
+
+        await _scrollController.animateTo(
+          minScroll,
+          duration: const Duration(seconds: 5),
+          curve: Curves.linear,
+        );
+      }
+    });
+  }
+
 
   getArtikel()async{
     setState(() {
@@ -35,10 +58,12 @@ class _NewsWidgetState extends State<NewsWidget> {
       print(s.toString());
       AlertFail("Terjadi Kesalahan !! $s");
     }
-    setState(() {
-      listArtikel = Provider.of<Artikel>(context, listen: false).listArtikel;
-      isLoading = false;
-    });
+    if(mounted){
+      setState(() {
+        listArtikel = Provider.of<Artikel>(context, listen: false).listArtikel;
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -46,6 +71,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     // TODO: implement initState
     super.initState();
     getArtikel();
+    autoScroll();
   }
 
 
@@ -58,6 +84,7 @@ class _NewsWidgetState extends State<NewsWidget> {
                 child: CircularProgressIndicator(),
               )
             : SingleChildScrollView(
+                controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 child: Wrap(
                   direction: Axis.horizontal,

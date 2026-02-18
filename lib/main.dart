@@ -19,7 +19,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final isLogin = prefs.getBool('isLogin') ?? false;
 
-  runApp( MyApp(isLogin));
+  runApp(MyApp(isLogin));
 }
 
 class MyApp extends StatelessWidget {
@@ -47,12 +47,11 @@ class MyApp extends StatelessWidget {
               useMaterial3: true,
             ),
             home: isLogin
-            ? IndexPage()
-            : LoginPage()
+                ? IndexPage()
+                : LoginPage()
           );
         },
       ),
     );
-
   }
 }
