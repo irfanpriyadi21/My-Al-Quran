@@ -11,6 +11,7 @@ import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
 import 'package:my_quran/Page/Doa/doa_harian_page.dart';
 import 'package:my_quran/Page/Hadits/hadits_page.dart';
+import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:provider/provider.dart';
 
@@ -54,14 +55,13 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       "image" : "assets/image/alQuran.png",
       "title" : "W.Shalat",
-      "page" : const AlQuran()
+      "page" : const JadwalShalatPage()
     },
     {
       "image" : "assets/image/alQuran.png",
       "title" : "Imasakiyah",
-      "page" : const AlQuran()
+      "page" : const JadwalShalatPage()
     },
-
   ];
 
   @override

@@ -12,4 +12,7 @@ class UrlApi {
   static String doaHarian = "https://islamic-api-zhirrr.vercel.app/api/doaharian";
   static String doaHarianBackup = "https://doa-doa-api-ahmadramadhan.fly.dev/api";
   static String haditsBase = "https://hadis-api-id.vercel.app/hadith";
+  static String sholatKotaSemua = "https://api.myquran.com/v2/sholat/kota/semua";
+  static String sholatJadwal = "https://api.myquran.com/v2/sholat/jadwal";
+  static String ipGeolocation = "http://ip-api.com/json";
 }

@@ -8,8 +8,10 @@ import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:my_quran/Provider/Doa/doa_provider.dart';
 import 'package:my_quran/Provider/ExampleProvider.dart';
 import 'package:my_quran/Provider/Hadits/hadits_provider.dart';
+import 'package:my_quran/Provider/Shalat/shalat_api.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:my_quran/Provider/app_provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +20,7 @@ import 'Componen/navigatorKey.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeDateFormatting('id_ID', null);
 
   final prefs = await SharedPreferences.getInstance();
   final isLogin = prefs.getBool('isLogin') ?? false;
@@ -45,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AppProvider()),
         ChangeNotifierProvider(create: (_) => DoaProvider()),
         ChangeNotifierProvider(create: (_) => HaditsProvider()),
+        ChangeNotifierProvider(create: (_) => ShalatApi()),
       ],
       child: Consumer<AppProvider>(
         builder: (context, value, child) {
