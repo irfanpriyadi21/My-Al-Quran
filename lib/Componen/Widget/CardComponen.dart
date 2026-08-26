@@ -6,13 +6,14 @@ class CardComponen extends StatelessWidget {
   final String? image;
   final String? text;
   final String? text2;
+  final double? width;
   const CardComponen(this.image, this.text, this.text2,
-      {Key? key}) : super(key: key);
+      {Key? key, this.width = 300}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: width,
       decoration: boxDecorationRoundedWithShadow(
         20,
         backgroundColor: Colors.white,

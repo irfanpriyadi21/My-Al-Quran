@@ -9,6 +9,8 @@ import 'package:my_quran/Componen/News/NewsWidget.dart';
 import 'package:my_quran/Componen/Widget/SurahCardWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
+import 'package:my_quran/Page/Doa/doa_harian_page.dart';
+import 'package:my_quran/Page/Hadits/hadits_page.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:provider/provider.dart';
 
@@ -37,7 +39,7 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       "image" : "assets/image/alQuran.png",
       "title" : "Doa Harian",
-      "page" : const AlQuran()
+      "page" : const DoaHarianPage()
     },
     {
       "image" : "assets/image/alQuran.png",
@@ -47,7 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       "image" : "assets/image/alQuran.png",
       "title" : "Hadits",
-      "page" : const AlQuran()
+      "page" : const HaditsPage()
     },
     {
       "image" : "assets/image/alQuran.png",

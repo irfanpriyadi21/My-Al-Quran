@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:my_quran/Componen/Loading.dart';
 import 'package:my_quran/Model/ModelDetailArtikel.dart';
 import 'package:provider/provider.dart';
 
@@ -77,8 +78,8 @@ class _NewsDetailState extends State<NewsDetail> {
                 const SizedBox(height: 20),
                 isLoading
                     ? Center(
-                  child: CircularProgressIndicator(),
-                )
+                        child: Loading(),
+                      )
                     : Column(
                   children: [
                     Container(

@@ -47,7 +47,7 @@ Widget SurahCard({
                 height: 40),
             TextData(
               text: "$number",
-              size: 10,
+              size: 12,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),

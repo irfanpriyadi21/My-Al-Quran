@@ -13,6 +13,16 @@ allprojects {
         google()
         mavenCentral()
     }
+    tasks.configureEach {
+        doFirst {
+            val bDir = project.layout.buildDirectory.asFile.orNull
+            if (bDir != null && bDir.exists()) {
+                bDir.walkBottomUp().filter { it.name.startsWith("._") }.forEach {
+                    it.delete()
+                }
+            }
+        }
+    }
 }
 
 val newBuildDir: Directory =

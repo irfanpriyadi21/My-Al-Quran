@@ -1,14 +1,14 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Componen/News/NewsDetail.dart';
 import 'package:my_quran/Componen/Widget/CardComponen.dart';
+import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Model/ModelListArtikel.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../Model/string_http_exception.dart';
 import '../alert.dart';
-
 
 class NewsWidget extends StatefulWidget {
   const NewsWidget({super.key});
@@ -20,31 +20,42 @@ class NewsWidget extends StatefulWidget {
 class _NewsWidgetState extends State<NewsWidget> {
   List<ModelListArtikel> listArtikel = [];
   bool isLoading = false;
-  final ScrollController _scrollController = ScrollController();
+  final PageController _pageController = PageController(viewportFraction: 0.88);
+  int _currentPage = 0;
+  Timer? _autoPlayTimer;
 
-  void autoScroll() {
-    Future.delayed(const Duration(seconds: 1), () async {
-      while (_scrollController.hasClients) {
-        final maxScroll = _scrollController.position.maxScrollExtent;
-        final minScroll = _scrollController.position.minScrollExtent;
+  @override
+  void initState() {
+    super.initState();
+    getArtikel();
+  }
 
-        await _scrollController.animateTo(
-          maxScroll,
-          duration: const Duration(seconds: 5),
-          curve: Curves.linear,
+  void _startAutoPlay() {
+    _autoPlayTimer?.cancel();
+    if (listArtikel.length <= 1) return;
+
+    _autoPlayTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (!mounted || !_pageController.hasClients) return;
+
+      int nextPage = _currentPage + 1;
+      if (nextPage >= listArtikel.length) {
+        nextPage = 0;
+        _pageController.animateToPage(
+          0,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
         );
-
-        await _scrollController.animateTo(
-          minScroll,
-          duration: const Duration(seconds: 5),
-          curve: Curves.linear,
+      } else {
+        _pageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
         );
       }
     });
   }
 
-
-  getArtikel()async{
+  getArtikel() async {
     setState(() {
       isLoading = true;
     });
@@ -58,60 +69,98 @@ class _NewsWidgetState extends State<NewsWidget> {
       print(s.toString());
       AlertFail("Terjadi Kesalahan !! $s");
     }
-    if(mounted){
+    if (mounted) {
       setState(() {
         listArtikel = Provider.of<Artikel>(context, listen: false).listArtikel;
         isLoading = false;
       });
+      if (listArtikel.isNotEmpty) {
+        _startAutoPlay();
+      }
     }
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getArtikel();
-    autoScroll();
+  void dispose() {
+    _autoPlayTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Container(
+        height: 180,
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(color: mainColor),
+      );
+    }
+
+    if (listArtikel.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return Column(
       children: [
-        isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SingleChildScrollView(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                child: Wrap(
-                  direction: Axis.horizontal,
-                  spacing: 16,
-                  children: List.generate(
-                      listArtikel.length,
-                          (index) => GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => NewsDetail(
-                                      listArtikel[index].id!
-                                  )
-                              )
-                          );
-
-                        },
-                        child: CardComponen(
-                            "${listArtikel[index].thumbnail}",
-                            "${listArtikel[index].title}",
-                            "${listArtikel[index].date}",
+        SizedBox(
+          height: 195,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: listArtikel.length,
+            onPageChanged: (index) {
+              setState(() {
+                _currentPage = index;
+              });
+            },
+            itemBuilder: (context, index) {
+              final artikel = listArtikel[index];
+              return AnimatedScale(
+                scale: _currentPage == index ? 1.0 : 0.95,
+                duration: const Duration(milliseconds: 300),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewsDetail(artikel.id!),
                         ),
-                      )
+                      );
+                    },
+                    child: CardComponen(
+                      "${artikel.thumbnail}",
+                      "${artikel.title}",
+                      "${artikel.date}",
+                      width: double.infinity,
+                    ),
                   ),
-                ).paddingOnly(bottom: 16),
+                ),
+              );
+            },
+          ),
+        ),
+        if (listArtikel.length > 1) ...[
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              listArtikel.length,
+              (index) => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                height: 6,
+                width: _currentPage == index ? 22 : 6,
+                decoration: BoxDecoration(
+                  color: _currentPage == index ? mainColor : Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(3),
+                ),
               ),
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
       ],
     );
   }
