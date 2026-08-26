@@ -11,6 +11,7 @@ import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
 import 'package:my_quran/Page/Doa/doa_harian_page.dart';
 import 'package:my_quran/Page/Hadits/hadits_page.dart';
+import 'package:my_quran/Page/Kiblat/kiblat_page.dart';
 import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,7 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       "image" : "assets/image/alQuran.png",
       "title" : "Kiblat",
-      "page" : const AlQuran()
+      "page" : const KiblatPage()
     },
     {
       "image" : "assets/image/alQuran.png",
