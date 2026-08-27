@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
+import 'package:my_quran/Provider/Shalat/adzan_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AdzanAudioOption {
@@ -26,6 +27,7 @@ class AdzanAlarmService extends ChangeNotifier {
   }
 
   late final AudioPlayer _audioPlayer;
+  ModelJadwalSholat? _lastKnownJadwal;
 
   bool _isMasterAlarmEnabled = true;
   bool get isMasterAlarmEnabled => _isMasterAlarmEnabled;
@@ -137,6 +139,7 @@ class AdzanAlarmService extends ChangeNotifier {
       }
     }
     notifyListeners();
+    _rescheduleBackgroundAlarms();
   }
 
   Future<void> _savePreferences() async {
@@ -146,6 +149,24 @@ class AdzanAlarmService extends ChangeNotifier {
 
     for (var entry in _prayerAlarms.entries) {
       await prefs.setBool('adzan_alarm_${entry.key}', entry.value);
+    }
+    _rescheduleBackgroundAlarms();
+  }
+
+  // Update jadwal shalat terbaru dan jadwalkan alarm background OS
+  void updatePrayerSchedule(ModelJadwalSholat jadwal) {
+    _lastKnownJadwal = jadwal;
+    _rescheduleBackgroundAlarms();
+  }
+
+  // Menjadwalkan ulang alarm sistem operasi untuk background saat aplikasi ditutup
+  void _rescheduleBackgroundAlarms() {
+    if (_lastKnownJadwal != null) {
+      AdzanNotificationService().scheduleDailyPrayerAlarms(
+        jadwal: _lastKnownJadwal!,
+        prayerAlarms: _prayerAlarms,
+        isMasterEnabled: _isMasterAlarmEnabled,
+      );
     }
   }
 
@@ -220,7 +241,7 @@ class AdzanAlarmService extends ChangeNotifier {
     }
   }
 
-  // Cek waktu shalat saat ini untuk memicu alarm adzan otomatis
+  // Cek waktu shalat saat ini untuk memicu alarm adzan otomatis (saat aplikasi foreground)
   String? checkPrayerTimeMatch(DateTime now, ModelJadwalSholat jadwal) {
     if (!_isMasterAlarmEnabled) return null;
 

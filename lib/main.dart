@@ -15,6 +15,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import 'package:my_quran/Provider/Shalat/adzan_notification_service.dart';
 import 'Componen/colors.dart';
 import 'Componen/navigatorKey.dart';
 
@@ -22,6 +23,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await initializeDateFormatting('id_ID', null);
+
+  // Initialize Background Adzan Alarm Notification Service
+  try {
+    await AdzanNotificationService().initialize();
+  } catch (e) {
+    debugPrint("Failed to initialize AdzanNotificationService: $e");
+  }
 
   final prefs = await SharedPreferences.getInstance();
   final isLogin = prefs.getBool('isLogin') ?? false;
@@ -56,6 +64,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'My Alquran Mobile App',
             navigatorKey: NavigationService.navigatorKey,
             themeMode: appProvider.isDarkMode

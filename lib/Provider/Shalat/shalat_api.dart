@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
 import 'package:my_quran/Model/model_kota_sholat.dart';
+import 'package:my_quran/Provider/Shalat/AdzanAlarmService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../url_api.dart';
 
@@ -154,6 +155,7 @@ class ShalatApi with ChangeNotifier {
           final jadwalData = decoded['data']['jadwal'];
           if (jadwalData != null) {
             jadwalToday = ModelJadwalSholat.fromJson(jadwalData);
+            AdzanAlarmService().updatePrayerSchedule(jadwalToday!);
           }
         } else {
           errorMessage = 'Jadwal shalat tidak ditemukan untuk tanggal ini.';

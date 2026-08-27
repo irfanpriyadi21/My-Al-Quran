@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Componen/colors.dart';
+import 'package:my_quran/Page/Profile/privacy_policy_page.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:my_quran/Provider/AuthService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -99,43 +100,70 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 60),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
-                        foregroundColor: Colors.white,
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: () async {
+                            final user = await AuthService().signInWithGoogle();
+
+                            if (user != null) {
+                              final prefs = await SharedPreferences.getInstance();
+                              await prefs.setBool('isLogin', true);
+
+                              if (context.mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const IndexPage()),
+                                );
+                              }
+                            }
+                          },
+                          child: Text(
+                            "Masuk Dengan Google",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
-                      onPressed: () async {
-                        final user = await AuthService().signInWithGoogle();
-
-                        if (user != null) {
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setBool('isLogin', true);
-
-                          if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const IndexPage()),
-                            );
-                          }
-                        }
-                      },
-                      child: Text(
-                        "Masuk Dengan Google",
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      const SizedBox(height: 14),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PrivacyPolicyPage(),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                          child: Text(
+                            "Kebijakan Privasi • Privacy Policy",
+                            style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              color: isDark ? Colors.white60 : Colors.black54,
+                              decoration: TextDecoration.underline,
+                              decorationColor: isDark ? Colors.white38 : Colors.black38,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ],

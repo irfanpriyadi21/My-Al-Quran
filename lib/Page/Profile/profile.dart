@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_quran/Page/Profile/privacy_policy_page.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/app_provider.dart';
 import 'package:nb_utils/nb_utils.dart' hide SettingItemWidget;
@@ -204,7 +205,14 @@ class _ProfileState extends State<Profile> {
                       Icons.privacy_tip_outlined,
                       color: Colors.grey,
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PrivacyPolicyPage(),
+                        ),
+                      );
+                    },
                   ).paddingOnly(bottom: 10),
 
                   // DARK MODE TOGGLE
