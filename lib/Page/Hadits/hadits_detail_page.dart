@@ -31,10 +31,10 @@ class _HaditsDetailPageState extends State<HaditsDetailPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<HaditsProvider>(context, listen: false).getHaditsByPerawi(
-        widget.perawi.slug,
-        page: 1,
-      );
+      Provider.of<HaditsProvider>(
+        context,
+        listen: false,
+      ).getHaditsByPerawi(widget.perawi.slug, page: 1);
     });
 
     _scrollController.addListener(_onScroll);
@@ -71,13 +71,18 @@ class _HaditsDetailPageState extends State<HaditsDetailPage> {
     });
 
     final int? hadithNumber = int.tryParse(query.trim());
-    if (hadithNumber != null && hadithNumber > 0 && hadithNumber <= widget.perawi.total) {
+    if (hadithNumber != null &&
+        hadithNumber > 0 &&
+        hadithNumber <= widget.perawi.total) {
       setState(() {
         _isSearchingNumber = true;
       });
 
       final provider = Provider.of<HaditsProvider>(context, listen: false);
-      final item = await provider.getHaditsByNumber(widget.perawi.slug, hadithNumber);
+      final item = await provider.getHaditsByNumber(
+        widget.perawi.slug,
+        hadithNumber,
+      );
       if (mounted) {
         setState(() {
           _searchedItem = item;
@@ -88,7 +93,8 @@ class _HaditsDetailPageState extends State<HaditsDetailPage> {
   }
 
   void _copyHadits(ModelHaditsItem hadits) {
-    final text = '''HR. ${widget.perawi.name} No. ${hadits.number}
+    final text =
+        '''HR. ${widget.perawi.name} No. ${hadits.number}
 
 ${hadits.arab}
 
@@ -120,7 +126,8 @@ Artinya:
   }
 
   void _shareHadits(ModelHaditsItem hadits) {
-    final text = '''HR. ${widget.perawi.name} No. ${hadits.number}
+    final text =
+        '''HR. ${widget.perawi.name} No. ${hadits.number}
 
 ${hadits.arab}
 
@@ -129,7 +136,10 @@ Artinya:
 
 Dibagikan dari Aplikasi My Quran''';
 
-    Share.share(text, subject: "HR. ${widget.perawi.name} No. ${hadits.number}");
+    Share.share(
+      text,
+      subject: "HR. ${widget.perawi.name} No. ${hadits.number}",
+    );
   }
 
   @override
@@ -154,9 +164,7 @@ Dibagikan dari Aplikasi My Quran''';
       body: Consumer<HaditsProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return Center(
-              child: CircularProgressIndicator(color: mainColor),
-            );
+            return Center(child: CircularProgressIndicator(color: mainColor));
           }
 
           if (provider.errorMessage.isNotEmpty && provider.listHadits.isEmpty) {
@@ -206,7 +214,8 @@ Dibagikan dari Aplikasi My Quran''';
           final List<ModelHaditsItem> displayList;
           if (_searchedItem != null) {
             displayList = [_searchedItem!];
-          } else if (_searchQuery.isNotEmpty && int.tryParse(_searchQuery) == null) {
+          } else if (_searchQuery.isNotEmpty &&
+              int.tryParse(_searchQuery) == null) {
             final q = _searchQuery.toLowerCase().trim();
             displayList = provider.listHadits
                 .where((h) => h.translation.toLowerCase().contains(q))
@@ -217,10 +226,8 @@ Dibagikan dari Aplikasi My Quran''';
 
           return RefreshIndicator(
             color: mainColor,
-            onRefresh: () => provider.getHaditsByPerawi(
-              widget.perawi.slug,
-              page: 1,
-            ),
+            onRefresh: () =>
+                provider.getHaditsByPerawi(widget.perawi.slug, page: 1),
             child: ListView(
               controller: _scrollController,
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
@@ -234,10 +241,7 @@ Dibagikan dari Aplikasi My Quran''';
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xffC58AF9),
-                        Color(0xff7B3FE4),
-                      ],
+                      colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -278,7 +282,8 @@ Dibagikan dari Aplikasi My Quran''';
                             ),
                             const SizedBox(height: 4),
                             TextData(
-                              text: "Total ${_numberFormat.format(widget.perawi.total)} Hadits",
+                              text:
+                                  "Total ${_numberFormat.format(widget.perawi.total)} Hadits",
                               size: 12,
                               color: Colors.white70,
                               fontWeight: FontWeight.normal,
@@ -289,14 +294,15 @@ Dibagikan dari Aplikasi My Quran''';
                       Opacity(
                         opacity: 0.9,
                         child: Image.asset(
-                          "assets/image/alQuran.png",
+                          "assets/image/book.png",
                           width: 80,
                           height: 80,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
-                            Icons.auto_stories,
-                            size: 60,
-                            color: Colors.white,
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.auto_stories,
+                                size: 60,
+                                color: Colors.white,
+                              ),
                         ),
                       ),
                     ],
@@ -322,15 +328,13 @@ Dibagikan dari Aplikasi My Quran''';
                     controller: _searchController,
                     onChanged: _handleSearch,
                     decoration: InputDecoration(
-                      hintText: "Cari nomor hadits (1-${widget.perawi.total}) atau kata kunci...",
+                      hintText:
+                          "Cari nomor hadits (1-${widget.perawi.total}) atau kata kunci...",
                       hintStyle: GoogleFonts.poppins(
                         color: Colors.grey.shade400,
                         fontSize: 13,
                       ),
-                      prefixIcon: Icon(
-                        Icons.search_rounded,
-                        color: mainColor,
-                      ),
+                      prefixIcon: Icon(Icons.search_rounded, color: mainColor),
                       suffixIcon: _searchQuery.isNotEmpty
                           ? IconButton(
                               icon: const Icon(
@@ -394,7 +398,8 @@ Dibagikan dari Aplikasi My Quran''';
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: displayList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 14),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 14),
                     itemBuilder: (context, index) {
                       final hadits = displayList[index];
                       return _buildHaditsCard(hadits);
@@ -442,7 +447,10 @@ Dibagikan dari Aplikasi My Quran''';
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: mainColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),

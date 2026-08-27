@@ -37,7 +37,8 @@ class _DoaHarianPageState extends State<DoaHarianPage> {
   }
 
   void _copyDoa(ModelDoaHarian doa) {
-    final text = '''${doa.title}
+    final text =
+        '''${doa.title}
 
 ${doa.arabic}
 
@@ -71,7 +72,8 @@ Artinya:
   }
 
   void _shareDoa(ModelDoaHarian doa) {
-    final text = '''${doa.title}
+    final text =
+        '''${doa.title}
 
 ${doa.arabic}
 
@@ -183,10 +185,7 @@ Dibagikan dari Aplikasi My Quran''';
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xffC58AF9),
-                        Color(0xff7B3FE4),
-                      ],
+                      colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -238,15 +237,15 @@ Dibagikan dari Aplikasi My Quran''';
                       Opacity(
                         opacity: 0.9,
                         child: Image.asset(
-                          "assets/image/alQuran.png",
+                          "assets/image/doa.png",
                           width: 80,
                           height: 80,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
-                            Icons.auto_stories,
-                            size: 60,
-                            color: Colors.white,
-                          ),
+                                Icons.auto_stories,
+                                size: 60,
+                                color: Colors.white,
+                              ),
                         ),
                       ),
                     ],
@@ -368,7 +367,11 @@ Dibagikan dari Aplikasi My Quran''';
   }
 
   Widget _buildDoaCard(
-      ModelDoaHarian doa, int number, bool isDark, Color cardColor) {
+    ModelDoaHarian doa,
+    int number,
+    bool isDark,
+    Color cardColor,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: cardColor,

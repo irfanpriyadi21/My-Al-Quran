@@ -138,10 +138,7 @@ class _HaditsPageState extends State<HaditsPage> {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xffC58AF9),
-                        Color(0xff7B3FE4),
-                      ],
+                      colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -195,15 +192,15 @@ class _HaditsPageState extends State<HaditsPage> {
                       Opacity(
                         opacity: 0.9,
                         child: Image.asset(
-                          "assets/image/alQuran.png",
+                          "assets/image/book.png",
                           width: 80,
                           height: 80,
                           errorBuilder: (context, error, stackTrace) =>
                               const Icon(
-                            Icons.auto_stories,
-                            size: 60,
-                            color: Colors.white,
-                          ),
+                                Icons.auto_stories,
+                                size: 60,
+                                color: Colors.white,
+                              ),
                         ),
                       ),
                     ],
@@ -313,7 +310,11 @@ class _HaditsPageState extends State<HaditsPage> {
                     itemBuilder: (context, index) {
                       final perawi = filteredList[index];
                       return _buildPerawiCard(
-                          perawi, index + 1, isDark, cardColor);
+                        perawi,
+                        index + 1,
+                        isDark,
+                        cardColor,
+                      );
                     },
                   ),
 
@@ -327,7 +328,11 @@ class _HaditsPageState extends State<HaditsPage> {
   }
 
   Widget _buildPerawiCard(
-      ModelHaditsPerawi perawi, int index, bool isDark, Color cardColor) {
+    ModelHaditsPerawi perawi,
+    int index,
+    bool isDark,
+    Color cardColor,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: cardColor,

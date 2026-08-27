@@ -5,6 +5,7 @@ import 'package:my_quran/Componen/News/NewsWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
 import 'package:my_quran/Page/Doa/doa_harian_page.dart';
+import 'package:my_quran/Page/Dzikir/dzikir_page.dart';
 import 'package:my_quran/Page/Hadits/hadits_page.dart';
 import 'package:my_quran/Page/Kiblat/kiblat_page.dart';
 import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
@@ -26,32 +27,32 @@ class _DashboardPageState extends State<DashboardPage> {
     {
       "image": "assets/image/alQuran.png",
       "title": "Al-Quran",
-      "page": const AlQuran()
+      "page": const AlQuran(),
     },
     {
-      "image": "assets/image/alQuran.png",
+      "image": "assets/image/doa.png",
       "title": "Doa Harian",
-      "page": const DoaHarianPage()
+      "page": const DoaHarianPage(),
     },
     {
-      "image": "assets/image/alQuran.png",
+      "image": "assets/image/Qibla.png",
       "title": "Kiblat",
-      "page": const KiblatPage()
+      "page": const KiblatPage(),
     },
     {
-      "image": "assets/image/alQuran.png",
+      "image": "assets/image/book.png",
       "title": "Hadits",
-      "page": const HaditsPage()
+      "page": const HaditsPage(),
     },
     {
-      "image": "assets/image/alQuran.png",
+      "image": "assets/image/shalat.png",
       "title": "W.Shalat",
-      "page": const JadwalShalatPage()
+      "page": const JadwalShalatPage(),
     },
     {
-      "image": "assets/image/alQuran.png",
-      "title": "Imsakiyah",
-      "page": const JadwalShalatPage()
+      "image": "assets/image/tasbih.png",
+      "title": "Dzikir",
+      "page": const DzikirPage(),
     },
   ];
 
@@ -85,7 +86,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                 ? const Color(0xFF2C2C2C)
                                 : Colors.grey[300],
                             child: user?.photoURL == null
-                                ? const Icon(Icons.person, size: 20, color: mainColor)
+                                ? const Icon(
+                                    Icons.person,
+                                    size: 20,
+                                    color: mainColor,
+                                  )
                                 : null,
                           ),
                           const SizedBox(width: 12),
@@ -95,17 +100,21 @@ class _DashboardPageState extends State<DashboardPage> {
                               TextData(
                                 text: "Hi, ${user?.displayName ?? "Pengguna"}",
                                 size: 13,
-                                color: isDark ? Colors.white70 : Colors.grey[700]!,
+                                color: isDark
+                                    ? Colors.white70
+                                    : Colors.grey[700]!,
                                 fontWeight: FontWeight.normal,
                               ),
                               TextData(
                                 text: user?.email ?? "",
                                 size: 10,
-                                color: isDark ? Colors.white60 : Colors.grey[700]!,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey[700]!,
                                 fontWeight: FontWeight.normal,
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -140,7 +149,8 @@ class _DashboardPageState extends State<DashboardPage> {
                           const RealtimeClock(),
                           const SizedBox(height: 4),
                           TextData(
-                            text: "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
+                            text:
+                                "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
                             size: 13,
                             color: isDark ? Colors.white60 : Colors.black45,
                             fontWeight: FontWeight.normal,
@@ -149,10 +159,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         ],
                       ),
                     ),
-                    Image.asset(
-                      "assets/image/image1.png",
-                      height: 150,
-                    ),
+                    Image.asset("assets/image/image1.png", height: 150),
                   ],
                 ),
 
@@ -179,16 +186,10 @@ class _DashboardPageState extends State<DashboardPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => e['page'],
-                          ),
+                          MaterialPageRoute(builder: (context) => e['page']),
                         );
                       },
-                      child: MenuComponent(
-                        e['image'],
-                        e['title'],
-                        "",
-                      ),
+                      child: MenuComponent(e['image'], e['title'], ""),
                     );
                   }).toList(),
                 ),

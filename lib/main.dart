@@ -56,13 +56,15 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'My Quran App',
             navigatorKey: NavigationService.navigatorKey,
-            themeMode: appProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: appProvider.isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
             theme: ThemeData(
               brightness: Brightness.light,
               scaffoldBackgroundColor: const Color(0xFFF5F5F7),
               cardColor: Colors.white,
               colorScheme: ColorScheme.fromSeed(
-                seedColor: mainColor,
+                seedColor: const Color.fromRGBO(149, 67, 255, 1),
                 brightness: Brightness.light,
                 surface: Colors.white,
               ),
@@ -89,9 +91,7 @@ class MyApp extends StatelessWidget {
               ),
               useMaterial3: true,
             ),
-            home: isLogin
-                ? const IndexPage()
-                : const LoginPage(),
+            home: isLogin ? const IndexPage() : const LoginPage(),
           );
         },
       ),

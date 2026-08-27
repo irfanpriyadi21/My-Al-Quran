@@ -26,10 +26,28 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
     try {
       return DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(date);
     } catch (_) {
-      const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+      const days = [
+        'Senin',
+        'Selasa',
+        'Rabu',
+        'Kamis',
+        'Jumat',
+        'Sabtu',
+        'Minggu',
+      ];
       const months = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember',
       ];
       final dayName = days[date.weekday - 1];
       final monthName = months[date.month - 1];
@@ -67,7 +85,12 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
   // Menghitung waktu shalat berikutnya dan sisa waktu (countdown)
   Map<String, dynamic> _getNextPrayerInfo(ModelJadwalSholat? jadwal) {
     if (jadwal == null) {
-      return {'name': 'Memuat...', 'time': '--:--', 'countdown': '--:--:--', 'isToday': true};
+      return {
+        'name': 'Memuat...',
+        'time': '--:--',
+        'countdown': '--:--:--',
+        'isToday': true,
+      };
     }
 
     final now = _currentTime;
@@ -88,7 +111,13 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
       if (parts.length == 2) {
         final hour = int.tryParse(parts[0]) ?? 0;
         final minute = int.tryParse(parts[1]) ?? 0;
-        final prayerDateTime = DateTime(now.year, now.month, now.day, hour, minute);
+        final prayerDateTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          hour,
+          minute,
+        );
 
         if (prayerDateTime.isAfter(now)) {
           final diff = prayerDateTime.difference(now);
@@ -211,7 +240,8 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
             );
           }
 
-          if (provider.errorMessage.isNotEmpty && provider.jadwalToday == null) {
+          if (provider.errorMessage.isNotEmpty &&
+              provider.jadwalToday == null) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -289,7 +319,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                             "Lokasi Saat Ini",
                             style: GoogleFonts.poppins(
                               fontSize: 11,
-                              color: isDark ? Colors.white60 : Colors.grey.shade500,
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade500,
                             ),
                           ),
                           Text(
@@ -309,7 +341,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                       borderRadius: BorderRadius.circular(12),
                       onTap: () => _showCitySearchModal(context, provider),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: cardColor,
                           borderRadius: BorderRadius.circular(12),
@@ -325,7 +360,11 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.edit_location_alt_rounded, size: 14, color: mainColor),
+                            const Icon(
+                              Icons.edit_location_alt_rounded,
+                              size: 14,
+                              color: mainColor,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               "Ubah",
@@ -353,10 +392,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                     gradient: const LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xffC58AF9),
-                        Color(0xff7B3FE4),
-                      ],
+                      colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
                     ),
                     boxShadow: [
                       BoxShadow(
@@ -375,14 +411,15 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                         child: Opacity(
                           opacity: 0.25,
                           child: Image.asset(
-                            "assets/image/alQuran.png",
+                            "assets/image/shalat.png",
                             width: 140,
                             height: 140,
-                            errorBuilder: (context, error, stackTrace) => const Icon(
-                              Icons.mosque,
-                              size: 100,
-                              color: Colors.white,
-                            ),
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                                  Icons.mosque,
+                                  size: 100,
+                                  color: Colors.white,
+                                ),
                           ),
                         ),
                       ),
@@ -395,7 +432,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(20),
@@ -409,7 +449,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                                     ),
                                     const SizedBox(width: 5),
                                     Text(
-                                      DateFormat('HH:mm:ss').format(_currentTime),
+                                      DateFormat(
+                                        'HH:mm:ss',
+                                      ).format(_currentTime),
                                       style: GoogleFonts.poppins(
                                         color: Colors.white,
                                         fontSize: 12,
@@ -455,7 +497,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                               ),
                               const SizedBox(width: 12),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(8),
@@ -491,7 +536,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
 
                 // Date Navigation Selector
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: cardColor,
                     borderRadius: BorderRadius.circular(16),
@@ -513,7 +561,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                         color: mainColor,
                         onPressed: () {
                           provider.selectDate(
-                            provider.selectedDate.subtract(const Duration(days: 1)),
+                            provider.selectedDate.subtract(
+                              const Duration(days: 1),
+                            ),
                           );
                         },
                       ),
@@ -529,7 +579,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                                 color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
-                            if (DateFormat('yyyy-MM-dd').format(provider.selectedDate) ==
+                            if (DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(provider.selectedDate) ==
                                 DateFormat('yyyy-MM-dd').format(DateTime.now()))
                               Text(
                                 "Hari Ini",
@@ -559,14 +611,70 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
 
                 // List of Prayer Times (8 items)
                 if (jadwal != null) ...[
-                  _buildPrayerCard("Imsak", jadwal.imsak, Icons.nightlight_outlined, nextPrayer['name'] == 'Imsak', isDark, cardColor),
-                  _buildPrayerCard("Subuh", jadwal.subuh, Icons.wb_twilight_rounded, nextPrayer['name'] == 'Subuh', isDark, cardColor),
-                  _buildPrayerCard("Terbit", jadwal.terbit, Icons.wb_sunny_outlined, nextPrayer['name'] == 'Terbit', isDark, cardColor),
-                  _buildPrayerCard("Dhuha", jadwal.dhuha, Icons.wb_sunny_rounded, nextPrayer['name'] == 'Dhuha', isDark, cardColor),
-                  _buildPrayerCard("Dzuhur", jadwal.dzuhur, Icons.light_mode_rounded, nextPrayer['name'] == 'Dzuhur', isDark, cardColor),
-                  _buildPrayerCard("Ashar", jadwal.ashar, Icons.wb_cloudy_rounded, nextPrayer['name'] == 'Ashar', isDark, cardColor),
-                  _buildPrayerCard("Maghrib", jadwal.maghrib, Icons.nights_stay_outlined, nextPrayer['name'] == 'Maghrib', isDark, cardColor),
-                  _buildPrayerCard("Isya", jadwal.isya, Icons.bedtime_rounded, nextPrayer['name'] == 'Isya', isDark, cardColor),
+                  _buildPrayerCard(
+                    "Imsak",
+                    jadwal.imsak,
+                    Icons.nightlight_outlined,
+                    nextPrayer['name'] == 'Imsak',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Subuh",
+                    jadwal.subuh,
+                    Icons.wb_twilight_rounded,
+                    nextPrayer['name'] == 'Subuh',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Terbit",
+                    jadwal.terbit,
+                    Icons.wb_sunny_outlined,
+                    nextPrayer['name'] == 'Terbit',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Dhuha",
+                    jadwal.dhuha,
+                    Icons.wb_sunny_rounded,
+                    nextPrayer['name'] == 'Dhuha',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Dzuhur",
+                    jadwal.dzuhur,
+                    Icons.light_mode_rounded,
+                    nextPrayer['name'] == 'Dzuhur',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Ashar",
+                    jadwal.ashar,
+                    Icons.wb_cloudy_rounded,
+                    nextPrayer['name'] == 'Ashar',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Maghrib",
+                    jadwal.maghrib,
+                    Icons.nights_stay_outlined,
+                    nextPrayer['name'] == 'Maghrib',
+                    isDark,
+                    cardColor,
+                  ),
+                  _buildPrayerCard(
+                    "Isya",
+                    jadwal.isya,
+                    Icons.bedtime_rounded,
+                    nextPrayer['name'] == 'Isya',
+                    isDark,
+                    cardColor,
+                  ),
                 ],
 
                 const SizedBox(height: 24),
@@ -578,13 +686,18 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
     );
   }
 
-  Widget _buildPrayerCard(String name, String time, IconData icon, bool isNext, bool isDark, Color cardColor) {
+  Widget _buildPrayerCard(
+    String name,
+    String time,
+    IconData icon,
+    bool isNext,
+    bool isDark,
+    Color cardColor,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: isNext
-            ? mainColor.withOpacity(isDark ? 0.22 : 0.08)
-            : cardColor,
+        color: isNext ? mainColor.withOpacity(isDark ? 0.22 : 0.08) : cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isNext
@@ -635,7 +748,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                   if (isNext) ...[
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: mainColor,
                         borderRadius: BorderRadius.circular(6),
@@ -750,7 +866,9 @@ class _CitySearchModalState extends State<_CitySearchModal> {
               // Search Bar
               Container(
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF7F8FA),
+                  color: isDark
+                      ? const Color(0xFF2A2A2A)
+                      : const Color(0xFFF7F8FA),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(
@@ -766,12 +884,16 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                     });
                   },
                   decoration: InputDecoration(
-                    hintText: "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
+                    hintText:
+                        "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
                     hintStyle: GoogleFonts.poppins(
                       color: isDark ? Colors.white38 : Colors.grey.shade400,
                       fontSize: 13,
                     ),
-                    prefixIcon: const Icon(Icons.search_rounded, color: mainColor),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      color: mainColor,
+                    ),
                     suffixIcon: _query.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
@@ -784,7 +906,10 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                           )
                         : null,
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                 ),
               ),
@@ -798,7 +923,9 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                         child: Text(
                           "Kota tidak ditemukan",
                           style: GoogleFonts.poppins(
-                            color: isDark ? Colors.white60 : Colors.grey.shade500,
+                            color: isDark
+                                ? Colors.white60
+                                : Colors.grey.shade500,
                             fontSize: 13,
                           ),
                         ),
@@ -808,31 +935,47 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                         itemCount: filtered.length,
                         separatorBuilder: (context, index) => Divider(
                           height: 1,
-                          color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+                          color: isDark
+                              ? Colors.white12
+                              : const Color(0xFFF0F0F0),
                         ),
                         itemBuilder: (context, index) {
                           final kota = filtered[index];
-                          final isSelected = widget.currentSelected?.id == kota.id;
+                          final isSelected =
+                              widget.currentSelected?.id == kota.id;
 
                           return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
                             leading: Icon(
                               Icons.location_city_rounded,
-                              color: isSelected ? mainColor : (isDark ? Colors.white60 : Colors.grey.shade400),
+                              color: isSelected
+                                  ? mainColor
+                                  : (isDark
+                                        ? Colors.white60
+                                        : Colors.grey.shade400),
                               size: 20,
                             ),
                             title: Text(
                               kota.lokasi,
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.w500,
                                 color: isSelected
                                     ? mainColor
                                     : (isDark ? Colors.white : Colors.black87),
                               ),
                             ),
                             trailing: isSelected
-                                ? const Icon(Icons.check_circle_rounded, color: mainColor, size: 20)
+                                ? const Icon(
+                                    Icons.check_circle_rounded,
+                                    color: mainColor,
+                                    size: 20,
+                                  )
                                 : null,
                             onTap: () => widget.onSelect(kota),
                           );
