@@ -1,14 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_quran/Page/Dashboard/dashboard_page.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:my_quran/Provider/Doa/doa_provider.dart';
-import 'package:my_quran/Provider/ExampleProvider.dart';
 import 'package:my_quran/Provider/Hadits/hadits_provider.dart';
 import 'package:my_quran/Provider/Shalat/shalat_api.dart';
+import 'package:my_quran/Provider/Surah/QuranAudioProvider.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
 import 'package:my_quran/Provider/app_provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -44,6 +43,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SurahApi()),
+        ChangeNotifierProvider(create: (_) => QuranAudioProvider()),
         ChangeNotifierProvider(create: (_) => Artikel()),
         ChangeNotifierProvider(create: (_) => AppProvider()),
         ChangeNotifierProvider(create: (_) => DoaProvider()),

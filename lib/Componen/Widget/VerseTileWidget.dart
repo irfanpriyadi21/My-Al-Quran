@@ -1,15 +1,16 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_quran/Componen/colors.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:share_plus/share_plus.dart';
+
+import '../../Model/ModelListAyat.dart';
+import '../../Provider/Surah/QuranAudioProvider.dart';
+import '../colors.dart';
 import 'TextDataWidget.dart';
 import 'VerseSharedCard.dart';
-
 
 class VerseTile extends StatefulWidget {
   final int number;
@@ -18,6 +19,9 @@ class VerseTile extends StatefulWidget {
   final String latin;
   final String audioUrl;
   final String surah;
+  final int surahId;
+  final int index;
+  final List<Ayat> ayatList;
 
   const VerseTile({
     super.key,
@@ -26,7 +30,10 @@ class VerseTile extends StatefulWidget {
     required this.translation,
     required this.latin,
     required this.audioUrl,
-    required this.surah
+    required this.surah,
+    this.surahId = 0,
+    this.index = 0,
+    this.ayatList = const [],
   });
 
   @override
@@ -34,8 +41,6 @@ class VerseTile extends StatefulWidget {
 }
 
 class _VerseTileState extends State<VerseTile> {
-  final AudioPlayer player = AudioPlayer();
-  bool isPlaying = false;
   final ScreenshotController screenshotController = ScreenshotController();
 
   Future<void> shareVerseAsImage() async {
@@ -51,150 +56,185 @@ class _VerseTileState extends State<VerseTile> {
       );
 
       final directory = await getTemporaryDirectory();
-      final filePath =
-          '${directory.path}/verse_${widget.number}.png';
+      final filePath = '${directory.path}/verse_${widget.number}.png';
 
       final file = File(filePath);
       await file.writeAsBytes(image);
 
-      await Share.shareXFiles(
-        [XFile(file.path)],
-        text: widget.translation,
-      );
+      await Share.shareXFiles([XFile(file.path)], text: widget.translation);
     } catch (e) {
       debugPrint("Error sharing image: $e");
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // LISTENER SAAT AUDIO SELESAI
-    player.onPlayerComplete.listen((event) {
-      setState(() {
-        isPlaying = false;
-      });
-    });
-  }
-
-  void togglePlay() async {
-    if (isPlaying) {
-      await player.pause();
-    } else {
-      await player.play(UrlSource(widget.audioUrl));
-    }
-
-    setState(() {
-      isPlaying = !isPlaying;
-    });
-  }
-
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(14),
+    return Consumer<QuranAudioProvider>(
+      builder: (context, audioProvider, child) {
+        final isPlaying = audioProvider.isAyatPlaying(
+          widget.surahId,
+          widget.number,
+        );
+        final isActive = audioProvider.isAyatActive(
+          widget.surahId,
+          widget.number,
+        );
+        final isBuffering = isActive && audioProvider.isLoading;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(18),
+            color: isActive ? mainColor.withOpacity(0.04) : Colors.transparent,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isActive ? mainColor.withOpacity(0.4) : Colors.transparent,
+              width: 1.5,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // TOP BAR
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    radius: 13,
-                    backgroundColor: mainColor,
-                    child: Text("${widget.number}",
-                        style: const TextStyle(color: Colors.white)),
-                  ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: shareVerseAsImage,
-                        child: const Icon(
-                          Icons.share_outlined,
-                          color: mainColor,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? mainColor.withOpacity(0.12)
+                      : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      radius: 14,
+                      backgroundColor: mainColor,
+                      child: Text(
+                        "${widget.number}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 14),
-                      // BUTTON PLAY MP3
-                      GestureDetector(
-                        onTap: togglePlay,
-                        child: Icon(
-                          isPlaying
-                              ? Icons.pause_circle_outline
-                              : Icons.play_arrow_outlined,
-                          color: mainColor,
+                    ),
+                    Row(
+                      children: [
+                        // SHARE BUTTON
+                        GestureDetector(
+                          onTap: shareVerseAsImage,
+                          child: const Icon(
+                            Icons.share_outlined,
+                            color: mainColor,
+                            size: 22,
+                          ),
                         ),
-                      ),
+                        const SizedBox(width: 16),
 
-                      const SizedBox(width: 14),
-                      const Icon(Icons.bookmark_border,
-                          color:mainColor),
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-        Container(
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child:  TextData(
-                  text:widget.arabic,
-                  size: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.normal,
+                        // PLAY / PAUSE BUTTON
+                        GestureDetector(
+                          onTap: () {
+                            if (isActive) {
+                              audioProvider.togglePlayPause();
+                            } else {
+                              audioProvider.playAyat(
+                                surahId: widget.surahId,
+                                surahName: widget.surah,
+                                ayatList: widget.ayatList,
+                                index: widget.index,
+                              );
+                            }
+                          },
+                          child: isBuffering
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.2,
+                                    color: mainColor,
+                                  ),
+                                )
+                              : Icon(
+                                  isPlaying
+                                      ? Icons.pause_circle_filled_rounded
+                                      : (isActive
+                                            ? Icons.play_circle_fill_rounded
+                                            : Icons.play_arrow_outlined),
+                                  color: mainColor,
+                                  size: 24,
+                                ),
+                        ),
+
+                        const SizedBox(width: 16),
+                        const Icon(
+                          Icons.bookmark_border,
+                          color: mainColor,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+
+              const SizedBox(height: 14),
+
+              // ARABIC TEXT
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  widget.arabic,
+                  textAlign: TextAlign.right,
+                  style: GoogleFonts.amiri(
+                    fontSize: 26,
+                    height: 2.0,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E1E1E),
+                  ),
+                ),
+              ),
+
               const SizedBox(height: 12),
-              Align(
-                alignment: Alignment.centerRight,
-                child:  TextData(
-                  text: widget.latin,
-                  size: 12,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 5),
+
+              // LATIN TRANSLITERATION
               Align(
                 alignment: Alignment.centerLeft,
-                child:  Text(
-                  widget.translation,
+                child: Text(
+                  widget.latin,
                   style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontStyle: FontStyle.italic
-                    ),
+                    fontSize: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
+
+              const SizedBox(height: 6),
+
+              // INDONESIAN TRANSLATION
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  widget.translation,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12.5,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.normal,
+                    fontStyle: FontStyle.italic,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 6),
             ],
           ),
-        )
-
-
-      ],
+        );
+      },
     );
   }
 }
