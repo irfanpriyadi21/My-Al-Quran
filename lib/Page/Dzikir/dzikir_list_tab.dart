@@ -96,7 +96,7 @@ Artinya:
 Keutamaan:
 ${dzikir.fadhilah} ${dzikir.riwayat != null ? '(${dzikir.riwayat})' : ''}
 
-(Dibagikan dari Aplikasi My Quran)''';
+(Dibagikan dari Aplikasi My Alquran Mobile App)''';
 
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -133,7 +133,7 @@ Artinya:
 Keutamaan:
 ${dzikir.fadhilah}
 
-Dibagikan dari Aplikasi My Quran''';
+Dibagikan dari Aplikasi My Alquran Mobile App''';
 
     Share.share(text, subject: dzikir.title);
   }

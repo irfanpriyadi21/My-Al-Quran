@@ -47,7 +47,7 @@ ${doa.latin}
 Artinya:
 "${doa.translation}"
 
-(Dibagikan dari Aplikasi My Quran)''';
+(Dibagikan dari Aplikasi My Alquran Mobile App)''';
 
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -82,7 +82,7 @@ ${doa.latin}
 Artinya:
 "${doa.translation}"
 
-Dibagikan dari Aplikasi My Quran''';
+Dibagikan dari Aplikasi My Alquran Mobile App''';
 
     Share.share(text, subject: doa.title);
   }

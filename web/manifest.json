@@ -1,6 +1,6 @@
 {
-    "name": "my_quran",
-    "short_name": "my_quran",
+    "name": "My Alquran Mobile App",
+    "short_name": "My Alquran Mobile App",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

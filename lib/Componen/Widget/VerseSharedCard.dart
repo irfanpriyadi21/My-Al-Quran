@@ -67,7 +67,7 @@ class VerseShareCard extends StatelessWidget {
 
           const SizedBox(height: 12),
           Text(
-            "QS. $surah : $number • My Quran App",
+            "QS. $surah : $number • My Alquran Mobile App",
             style: const TextStyle(
               color: Colors.white54,
               fontSize: 10,

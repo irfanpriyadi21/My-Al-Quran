@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {
           return MaterialApp(
-            title: 'My Quran App',
+            title: 'My Alquran Mobile App',
             navigatorKey: NavigationService.navigatorKey,
             themeMode: appProvider.isDarkMode
                 ? ThemeMode.dark

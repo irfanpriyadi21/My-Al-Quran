@@ -133,8 +133,8 @@ class _DashboardPageState extends State<DashboardPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextData(
-                            text: "My Quran",
-                            size: 24,
+                            text: "My Alquran Mobile App",
+                            size: 22,
                             color: mainColor,
                             fontWeight: FontWeight.bold,
                           ),

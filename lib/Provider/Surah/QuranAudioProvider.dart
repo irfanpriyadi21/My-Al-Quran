@@ -40,7 +40,9 @@ class QuranAudioProvider with ChangeNotifier {
   }
 
   void _initAudioPlayer() {
-    _playerStateSubscription = _audioPlayer.onPlayerStateChanged.listen((state) {
+    _playerStateSubscription = _audioPlayer.onPlayerStateChanged.listen((
+      state,
+    ) {
       _playerState = state;
       notifyListeners();
     });
@@ -64,7 +66,8 @@ class QuranAudioProvider with ChangeNotifier {
   bool get isPlaying => _playerState == PlayerState.playing;
   bool get isPaused => _playerState == PlayerState.paused;
   bool get isStopped =>
-      _playerState == PlayerState.stopped || _playerState == PlayerState.completed;
+      _playerState == PlayerState.stopped ||
+      _playerState == PlayerState.completed;
   bool get isLoading => _isLoading;
   bool get isPlayerVisible => _isPlayerVisible;
   PlayerState get playerState => _playerState;
@@ -78,25 +81,32 @@ class QuranAudioProvider with ChangeNotifier {
   List<Ayat> get ayatList => _ayatList;
 
   String get selectedQori => _selectedQori;
-  String get selectedQoriName => qoriList[_selectedQori] ?? 'Abdullah Al-Juhany';
+  String get selectedQoriName =>
+      qoriList[_selectedQori] ?? 'Abdullah Al-Juhany';
   double get playbackSpeed => _playbackSpeed;
   bool get autoPlayNext => _autoPlayNext;
 
   Ayat? get currentAyat =>
-      (_ayatList.isNotEmpty && _currentIndex >= 0 && _currentIndex < _ayatList.length)
-          ? _ayatList[_currentIndex]
-          : null;
+      (_ayatList.isNotEmpty &&
+          _currentIndex >= 0 &&
+          _currentIndex < _ayatList.length)
+      ? _ayatList[_currentIndex]
+      : null;
 
   int get currentAyatNumber => currentAyat?.nomorAyat ?? 0;
   bool get hasNext => _currentIndex + 1 < _ayatList.length;
   bool get hasPrevious => _currentIndex > 0;
 
   bool isAyatPlaying(int surahId, int nomorAyat) {
-    return isPlaying && _currentSurahId == surahId && currentAyatNumber == nomorAyat;
+    return isPlaying &&
+        _currentSurahId == surahId &&
+        currentAyatNumber == nomorAyat;
   }
 
   bool isAyatActive(int surahId, int nomorAyat) {
-    return _isPlayerVisible && _currentSurahId == surahId && currentAyatNumber == nomorAyat;
+    return _isPlayerVisible &&
+        _currentSurahId == surahId &&
+        currentAyatNumber == nomorAyat;
   }
 
   String? getAudioUrlForAyat(Ayat ayat, String qoriKey) {

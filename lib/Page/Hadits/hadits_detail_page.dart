@@ -101,7 +101,7 @@ ${hadits.arab}
 Artinya:
 "${hadits.translation}"
 
-(Dibagikan dari Aplikasi My Quran)''';
+(Dibagikan dari Aplikasi My Alquran Mobile App)''';
 
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -134,7 +134,7 @@ ${hadits.arab}
 Artinya:
 "${hadits.translation}"
 
-Dibagikan dari Aplikasi My Quran''';
+Dibagikan dari Aplikasi My Alquran Mobile App''';
 
     Share.share(
       text,
