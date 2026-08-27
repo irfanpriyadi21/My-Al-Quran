@@ -340,81 +340,85 @@ class _TasbihDigitalWidgetState extends State<TasbihDigitalWidget>
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
+        return Material(
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                "Pilih Lafadz Dzikir",
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Flexible(
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: DzikirData.listTasbihPreset.length,
-                  separatorBuilder: (context, index) => Divider(
-                    height: 1,
-                    color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+                const SizedBox(height: 14),
+                Text(
+                  "Pilih Lafadz Dzikir",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black87,
                   ),
-                  itemBuilder: (context, index) {
-                    final item = DzikirData.listTasbihPreset[index];
-                    final isSelected = item.id == _selectedPreset.id;
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 4),
-                      title: Text(
-                        item.title,
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                          color: isSelected ? mainColor : (isDark ? Colors.white : Colors.black87),
-                        ),
-                      ),
-                      subtitle: Text(
-                        item.latin,
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          color: isDark ? Colors.white60 : Colors.black54,
-                        ),
-                      ),
-                      trailing: Text(
-                        item.arabic,
-                        style: GoogleFonts.amiri(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isSelected ? mainColor : (isDark ? Colors.white70 : const Color(0xFF240F4F)),
-                        ),
-                      ),
-                      onTap: () {
-                        setState(() {
-                          _selectedPreset = item;
-                          _target = item.defaultTarget;
-                          _counter = 0;
-                        });
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: DzikirData.listTasbihPreset.length,
+                    separatorBuilder: (context, index) => Divider(
+                      height: 1,
+                      color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = DzikirData.listTasbihPreset[index];
+                      final isSelected = item.id == _selectedPreset.id;
+                      return ListTile(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 4),
+                        title: Text(
+                          item.title,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                            color: isSelected ? mainColor : (isDark ? Colors.white : Colors.black87),
+                          ),
+                        ),
+                        subtitle: Text(
+                          item.latin,
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            color: isDark ? Colors.white60 : Colors.black54,
+                          ),
+                        ),
+                        trailing: Text(
+                          item.arabic,
+                          style: GoogleFonts.amiri(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isSelected ? mainColor : (isDark ? Colors.white70 : const Color(0xFF240F4F)),
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            _selectedPreset = item;
+                            _target = item.defaultTarget;
+                            _counter = 0;
+                          });
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

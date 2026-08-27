@@ -692,163 +692,167 @@ class _CitySearchModalState extends State<_CitySearchModal> {
       maxChildSize: 0.95,
       expand: false,
       builder: (context, scrollController) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Modal Handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
+        return Material(
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Modal Handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 14),
+                const SizedBox(height: 14),
 
-              Text(
-                "Pilih Kota / Lokasi",
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "Pilih kota Anda untuk menghitung sudut arah kiblat presisi",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: isDark ? Colors.white60 : Colors.black45,
-                ),
-              ),
-
-              const SizedBox(height: 14),
-
-              // Search Bar
-              Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF2A2A2A)
-                      : const Color(0xFFF7F8FA),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  autofocus: false,
+                Text(
+                  "Pilih Kota / Lokasi",
                   style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                     color: isDark ? Colors.white : Colors.black87,
-                    fontSize: 13,
                   ),
-                  onChanged: (val) {
-                    setState(() {
-                      _query = val;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText:
-                        "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
-                    hintStyle: GoogleFonts.poppins(
-                      color: isDark ? Colors.white38 : Colors.grey.shade400,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Pilih kota Anda untuk menghitung sudut arah kiblat presisi",
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: isDark ? Colors.white60 : Colors.black45,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // Search Bar
+                Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF2A2A2A)
+                        : const Color(0xFFF7F8FA),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    autofocus: false,
+                    style: GoogleFonts.poppins(
+                      color: isDark ? Colors.white : Colors.black87,
                       fontSize: 13,
                     ),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: mainColor,
-                    ),
-                    suffixIcon: _query.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, size: 18),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _query = '';
-                              });
-                            },
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                    onChanged: (val) {
+                      setState(() {
+                        _query = val;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText:
+                          "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
+                      hintStyle: GoogleFonts.poppins(
+                        color: isDark ? Colors.white38 : Colors.grey.shade400,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search_rounded,
+                        color: mainColor,
+                      ),
+                      suffixIcon: _query.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _query = '';
+                                });
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // City List
-              Expanded(
-                child: filtered.isEmpty
-                    ? Center(
-                        child: Text(
-                          "Kota tidak ditemukan",
-                          style: GoogleFonts.poppins(
-                            color: isDark
-                                ? Colors.white60
-                                : Colors.grey.shade500,
-                            fontSize: 13,
+                // City List
+                Expanded(
+                  child: filtered.isEmpty
+                      ? Center(
+                          child: Text(
+                            "Kota tidak ditemukan",
+                            style: GoogleFonts.poppins(
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade500,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                      )
-                    : ListView.separated(
-                        controller: scrollController,
-                        itemCount: filtered.length,
-                        separatorBuilder: (context, index) => Divider(
-                          height: 1,
-                          color: isDark
-                              ? Colors.white12
-                              : const Color(0xFFF0F0F0),
-                        ),
-                        itemBuilder: (context, index) {
-                          final kota = filtered[index];
-                          final isSelected =
-                              widget.currentSelected?.id == kota.id;
+                        )
+                      : ListView.separated(
+                          controller: scrollController,
+                          itemCount: filtered.length,
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
+                            color: isDark
+                                ? Colors.white12
+                                : const Color(0xFFF0F0F0),
+                          ),
+                          itemBuilder: (context, index) {
+                            final kota = filtered[index];
+                            final isSelected =
+                                widget.currentSelected?.id == kota.id;
 
-                          return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
-                            leading: Icon(
-                              Icons.location_city_rounded,
-                              color: isSelected
-                                  ? mainColor
-                                  : (isDark
-                                        ? Colors.white60
-                                        : Colors.grey.shade400),
-                              size: 20,
-                            ),
-                            title: Text(
-                              kota.lokasi,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.w500,
+                            return ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 2,
+                              ),
+                              leading: Icon(
+                                Icons.location_city_rounded,
                                 color: isSelected
                                     ? mainColor
-                                    : (isDark ? Colors.white : Colors.black87),
+                                    : (isDark
+                                          ? Colors.white60
+                                          : Colors.grey.shade400),
+                                size: 20,
                               ),
-                            ),
-                            trailing: isSelected
-                                ? const Icon(
-                                    Icons.check_circle_rounded,
-                                    color: mainColor,
-                                    size: 20,
-                                  )
-                                : null,
-                            onTap: () => widget.onSelect(kota),
-                          );
-                        },
-                      ),
-              ),
-            ],
+                              title: Text(
+                                kota.lokasi,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? mainColor
+                                      : (isDark ? Colors.white : Colors.black87),
+                                ),
+                              ),
+                              trailing: isSelected
+                                  ? const Icon(
+                                      Icons.check_circle_rounded,
+                                      color: mainColor,
+                                      size: 20,
+                                    )
+                                  : null,
+                              onTap: () => widget.onSelect(kota),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -8,6 +8,9 @@ import 'package:my_quran/Componen/Widget/TextDataWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
 import 'package:my_quran/Model/model_kota_sholat.dart';
+import 'package:my_quran/Page/Shalat/adzan_player_dialog.dart';
+import 'package:my_quran/Page/Shalat/adzan_settings_modal.dart';
+import 'package:my_quran/Provider/Shalat/AdzanAlarmService.dart';
 import 'package:my_quran/Provider/Shalat/shalat_api.dart';
 import 'package:provider/provider.dart';
 
@@ -66,12 +69,29 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
       }
     });
 
-    // Update real-time clock & countdown every second
+    // Update real-time clock & countdown and check adzan alarm trigger every second
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted) {
         setState(() {
           _currentTime = DateTime.now();
         });
+
+        final shalatProvider = Provider.of<ShalatApi>(context, listen: false);
+        final jadwal = shalatProvider.jadwalToday;
+        if (jadwal != null) {
+          final adzanService =
+              Provider.of<AdzanAlarmService>(context, listen: false);
+          final triggeredPrayer =
+              adzanService.checkPrayerTimeMatch(_currentTime, jadwal);
+          if (triggeredPrayer != null) {
+            adzanService.playAdzan(prayerName: triggeredPrayer);
+            AdzanPlayerDialog.show(
+              context,
+              prayerName: triggeredPrayer,
+              prayerTime: DateFormat('HH:mm').format(_currentTime),
+            );
+          }
+        }
       }
     });
   }
@@ -222,6 +242,11 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_active_rounded, color: mainColor),
+            tooltip: "Pengaturan Adzan",
+            onPressed: () => AdzanSettingsModal.show(context),
+          ),
           IconButton(
             icon: const Icon(Icons.calendar_month_rounded, color: mainColor),
             tooltip: "Pilih Tanggal",
@@ -404,7 +429,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                   ),
                   child: Stack(
                     children: [
-                      // Background Quran / Mosque Illustration
+                      // Background Illustration
                       Positioned(
                         right: -25,
                         bottom: -20,
@@ -609,7 +634,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
 
                 const SizedBox(height: 18),
 
-                // List of Prayer Times (8 items)
+                // List of Prayer Times (8 items) with interactive Adzan Bell Alarm Toggle
                 if (jadwal != null) ...[
                   _buildPrayerCard(
                     "Imsak",
@@ -716,7 +741,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
             Container(
@@ -731,7 +756,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             Expanded(
               child: Row(
                 children: [
@@ -772,12 +797,78 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
             Text(
               time,
               style: GoogleFonts.poppins(
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: FontWeight.bold,
                 color: isNext
                     ? mainColor
                     : (isDark ? Colors.white : Colors.black87),
               ),
+            ),
+
+            // Adzan Alarm Toggle Bell
+            Consumer<AdzanAlarmService>(
+              builder: (context, adzanService, child) {
+                final isAlarmOn = adzanService.isAlarmActiveFor(name);
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      adzanService.togglePrayerAlarm(name);
+                      final newState = !isAlarmOn;
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(
+                                newState
+                                    ? Icons.notifications_active_rounded
+                                    : Icons.notifications_off_outlined,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                newState
+                                    ? "Alarm Adzan $name Diaktifkan"
+                                    : "Alarm Adzan $name Dinonaktifkan",
+                                style: GoogleFonts.poppins(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                          backgroundColor: newState
+                              ? const Color(0xFF240F4F)
+                              : Colors.grey.shade800,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: isAlarmOn
+                            ? mainColor.withOpacity(isDark ? 0.25 : 0.12)
+                            : (isDark
+                                ? const Color(0xFF2A2A2A)
+                                : Colors.grey.shade100),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        isAlarmOn
+                            ? Icons.notifications_active_rounded
+                            : Icons.notifications_off_outlined,
+                        size: 18,
+                        color: isAlarmOn ? mainColor : Colors.grey.shade400,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -826,163 +917,169 @@ class _CitySearchModalState extends State<_CitySearchModal> {
       maxChildSize: 0.95,
       expand: false,
       builder: (context, scrollController) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Modal Handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
+        return Material(
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Modal Handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? Colors.grey.shade700
+                          : Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 14),
+                const SizedBox(height: 14),
 
-              Text(
-                "Pilih Kota / Kabupaten",
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                "Tersedia 500+ Kota & Kabupaten di seluruh Indonesia",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: isDark ? Colors.white60 : Colors.black45,
-                ),
-              ),
-
-              const SizedBox(height: 14),
-
-              // Search Bar
-              Container(
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? const Color(0xFF2A2A2A)
-                      : const Color(0xFFF7F8FA),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  autofocus: false,
+                Text(
+                  "Pilih Kota / Kabupaten",
                   style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                     color: isDark ? Colors.white : Colors.black87,
-                    fontSize: 13,
                   ),
-                  onChanged: (val) {
-                    setState(() {
-                      _query = val;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText:
-                        "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
-                    hintStyle: GoogleFonts.poppins(
-                      color: isDark ? Colors.white38 : Colors.grey.shade400,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "Tersedia 500+ Kota & Kabupaten di seluruh Indonesia",
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: isDark ? Colors.white60 : Colors.black45,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                // Search Bar
+                Container(
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? const Color(0xFF2A2A2A)
+                        : const Color(0xFFF7F8FA),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    autofocus: false,
+                    style: GoogleFonts.poppins(
+                      color: isDark ? Colors.white : Colors.black87,
                       fontSize: 13,
                     ),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: mainColor,
-                    ),
-                    suffixIcon: _query.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear, size: 18),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _query = '';
-                              });
-                            },
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
+                    onChanged: (val) {
+                      setState(() {
+                        _query = val;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      hintText:
+                          "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
+                      hintStyle: GoogleFonts.poppins(
+                        color: isDark ? Colors.white38 : Colors.grey.shade400,
+                        fontSize: 13,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.search_rounded,
+                        color: mainColor,
+                      ),
+                      suffixIcon: _query.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, size: 18),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _query = '';
+                                });
+                              },
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // City List
-              Expanded(
-                child: filtered.isEmpty
-                    ? Center(
-                        child: Text(
-                          "Kota tidak ditemukan",
-                          style: GoogleFonts.poppins(
-                            color: isDark
-                                ? Colors.white60
-                                : Colors.grey.shade500,
-                            fontSize: 13,
+                // City List
+                Expanded(
+                  child: filtered.isEmpty
+                      ? Center(
+                          child: Text(
+                            "Kota tidak ditemukan",
+                            style: GoogleFonts.poppins(
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade500,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                      )
-                    : ListView.separated(
-                        controller: scrollController,
-                        itemCount: filtered.length,
-                        separatorBuilder: (context, index) => Divider(
-                          height: 1,
-                          color: isDark
-                              ? Colors.white12
-                              : const Color(0xFFF0F0F0),
-                        ),
-                        itemBuilder: (context, index) {
-                          final kota = filtered[index];
-                          final isSelected =
-                              widget.currentSelected?.id == kota.id;
+                        )
+                      : ListView.separated(
+                          controller: scrollController,
+                          itemCount: filtered.length,
+                          separatorBuilder: (context, index) => Divider(
+                            height: 1,
+                            color: isDark
+                                ? Colors.white12
+                                : const Color(0xFFF0F0F0),
+                          ),
+                          itemBuilder: (context, index) {
+                            final kota = filtered[index];
+                            final isSelected =
+                                widget.currentSelected?.id == kota.id;
 
-                          return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 2,
-                            ),
-                            leading: Icon(
-                              Icons.location_city_rounded,
-                              color: isSelected
-                                  ? mainColor
-                                  : (isDark
-                                        ? Colors.white60
-                                        : Colors.grey.shade400),
-                              size: 20,
-                            ),
-                            title: Text(
-                              kota.lokasi,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.w500,
+                            return ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 2,
+                              ),
+                              leading: Icon(
+                                Icons.location_city_rounded,
                                 color: isSelected
                                     ? mainColor
-                                    : (isDark ? Colors.white : Colors.black87),
+                                    : (isDark
+                                          ? Colors.white60
+                                          : Colors.grey.shade400),
+                                size: 20,
                               ),
-                            ),
-                            trailing: isSelected
-                                ? const Icon(
-                                    Icons.check_circle_rounded,
-                                    color: mainColor,
-                                    size: 20,
-                                  )
-                                : null,
-                            onTap: () => widget.onSelect(kota),
-                          );
-                        },
-                      ),
-              ),
-            ],
+                              title: Text(
+                                kota.lokasi,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 13,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
+                                  color: isSelected
+                                      ? mainColor
+                                      : (isDark ? Colors.white : Colors.black87),
+                                ),
+                              ),
+                              trailing: isSelected
+                                  ? const Icon(
+                                      Icons.check_circle_rounded,
+                                      color: mainColor,
+                                      size: 20,
+                                    )
+                                  : null,
+                              onTap: () => widget.onSelect(kota),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         );
       },

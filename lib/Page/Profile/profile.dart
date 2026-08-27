@@ -31,13 +31,11 @@ class _ProfileState extends State<Profile> {
       builder: (builder) {
         return Wrap(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
-                ),
+            Material(
+              color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                topRight: Radius.circular(20.0),
               ),
               child: Container(
                 padding: const EdgeInsets.only(
