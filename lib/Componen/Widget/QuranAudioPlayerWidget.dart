@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../Model/ModelListAyat.dart';
 import '../../Provider/Surah/QuranAudioProvider.dart';
 import '../colors.dart';
-import 'TextDataWidget.dart';
 
 class QuranAudioPlayerWidget extends StatelessWidget {
   const QuranAudioPlayerWidget({super.key});
@@ -27,6 +26,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Consumer<QuranAudioProvider>(
       builder: (context, audioProvider, child) {
         if (!audioProvider.isPlayerVisible || audioProvider.currentAyat == null) {
@@ -45,22 +47,22 @@ class QuranAudioPlayerWidget extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: cardColor,
             borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
-                color: mainColor.withOpacity(0.18),
+                color: mainColor.withOpacity(isDark ? 0.25 : 0.18),
                 blurRadius: 20,
                 offset: const Offset(0, 6),
               ),
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
+                color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
                 blurRadius: 10,
                 offset: const Offset(0, 2),
               ),
             ],
             border: Border.all(
-              color: mainColor.withOpacity(0.2),
+              color: mainColor.withOpacity(isDark ? 0.35 : 0.2),
               width: 1.2,
             ),
           ),
@@ -72,7 +74,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                 // MINI PROGRESS BAR
                 LinearProgressIndicator(
                   value: progress,
-                  backgroundColor: Colors.grey.shade200,
+                  backgroundColor: isDark
+                      ? const Color(0xFF2C2C2C)
+                      : Colors.grey.shade200,
                   valueColor: const AlwaysStoppedAnimation<Color>(mainColor),
                   minHeight: 3.5,
                 ),
@@ -143,7 +147,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                                       style: GoogleFonts.poppins(
                                         fontSize: 13,
                                         fontWeight: FontWeight.w700,
-                                        color: const Color(0xFF2D2D2D),
+                                        color: isDark
+                                            ? Colors.white
+                                            : const Color(0xFF2D2D2D),
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -154,7 +160,7 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: mainColor.withOpacity(0.12),
+                                      color: mainColor.withOpacity(0.15),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(
@@ -162,7 +168,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                                       style: GoogleFonts.poppins(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w600,
-                                        color: mainColor,
+                                        color: isDark
+                                            ? const Color(0xFFD0A8FF)
+                                            : mainColor,
                                       ),
                                     ),
                                   ),
@@ -176,7 +184,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                                       audioProvider.selectedQoriName,
                                       style: GoogleFonts.poppins(
                                         fontSize: 11,
-                                        color: Colors.grey.shade600,
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.grey.shade600,
                                         fontWeight: FontWeight.w500,
                                       ),
                                       maxLines: 1,
@@ -188,7 +198,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                                     "${_formatDuration(position)} / ${_formatDuration(duration)}",
                                     style: GoogleFonts.poppins(
                                       fontSize: 10,
-                                      color: Colors.grey.shade500,
+                                      color: isDark
+                                          ? Colors.white54
+                                          : Colors.grey.shade500,
                                     ),
                                   ),
                                 ],
@@ -205,7 +217,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                           Icons.skip_previous_rounded,
                           color: audioProvider.hasPrevious
                               ? mainColor
-                              : Colors.grey.shade400,
+                              : (isDark
+                                  ? Colors.grey.shade700
+                                  : Colors.grey.shade400),
                           size: 24,
                         ),
                         onPressed: audioProvider.hasPrevious
@@ -220,7 +234,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                           Icons.skip_next_rounded,
                           color: audioProvider.hasNext
                               ? mainColor
-                              : Colors.grey.shade400,
+                              : (isDark
+                                  ? Colors.grey.shade700
+                                  : Colors.grey.shade400),
                           size: 24,
                         ),
                         onPressed: audioProvider.hasNext
@@ -244,7 +260,9 @@ class QuranAudioPlayerWidget extends StatelessWidget {
                         visualDensity: VisualDensity.compact,
                         icon: Icon(
                           Icons.close_rounded,
-                          color: Colors.grey.shade500,
+                          color: isDark
+                              ? Colors.white70
+                              : Colors.grey.shade500,
                           size: 20,
                         ),
                         onPressed: () => audioProvider.closePlayer(),
@@ -274,6 +292,8 @@ class QuranAudioFullSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Consumer<QuranAudioProvider>(
       builder: (context, audioProvider, child) {
         final currentAyat = audioProvider.currentAyat;
@@ -294,9 +314,9 @@ class QuranAudioFullSheet extends StatelessWidget {
 
         return Container(
           height: MediaQuery.of(context).size.height * 0.78,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(32),
               topRight: Radius.circular(32),
             ),
@@ -309,7 +329,7 @@ class QuranAudioFullSheet extends StatelessWidget {
                 width: 44,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -321,7 +341,11 @@ class QuranAudioFullSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 28),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        size: 28,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                     Text(
@@ -333,7 +357,11 @@ class QuranAudioFullSheet extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.close_rounded, size: 24),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        size: 24,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                       onPressed: () {
                         audioProvider.closePlayer();
                         Navigator.pop(context);
@@ -343,7 +371,10 @@ class QuranAudioFullSheet extends StatelessWidget {
                 ),
               ),
 
-              const Divider(height: 1),
+              Divider(
+                height: 1,
+                color: isDark ? Colors.white12 : Colors.grey.shade200,
+              ),
 
               // SCROLLABLE CONTENT
               Expanded(
@@ -432,17 +463,23 @@ class QuranAudioFullSheet extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _buildWaveBar(audioProvider.isPlaying, 16, 200),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 16, 200, isDark),
                           const SizedBox(width: 4),
-                          _buildWaveBar(audioProvider.isPlaying, 28, 400),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 28, 400, isDark),
                           const SizedBox(width: 4),
-                          _buildWaveBar(audioProvider.isPlaying, 20, 150),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 20, 150, isDark),
                           const SizedBox(width: 4),
-                          _buildWaveBar(audioProvider.isPlaying, 34, 500),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 34, 500, isDark),
                           const SizedBox(width: 4),
-                          _buildWaveBar(audioProvider.isPlaying, 18, 300),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 18, 300, isDark),
                           const SizedBox(width: 4),
-                          _buildWaveBar(audioProvider.isPlaying, 26, 250),
+                          _buildWaveBar(
+                              audioProvider.isPlaying, 26, 250, isDark),
                         ],
                       ),
 
@@ -459,7 +496,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                             overlayRadius: 14,
                           ),
                           activeTrackColor: mainColor,
-                          inactiveTrackColor: Colors.grey.shade200,
+                          inactiveTrackColor: isDark
+                              ? const Color(0xFF2C2C2C)
+                              : Colors.grey.shade200,
                           thumbColor: mainColor,
                         ),
                         child: Slider(
@@ -484,7 +523,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                               _formatDuration(position),
                               style: GoogleFonts.poppins(
                                 fontSize: 12,
-                                color: Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -492,7 +533,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                               _formatDuration(duration),
                               style: GoogleFonts.poppins(
                                 fontSize: 12,
-                                color: Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -514,7 +557,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                                   : Icons.repeat_rounded,
                               color: audioProvider.autoPlayNext
                                   ? mainColor
-                                  : Colors.grey.shade400,
+                                  : (isDark
+                                      ? Colors.grey.shade600
+                                      : Colors.grey.shade400),
                               size: 26,
                             ),
                             tooltip: "Auto-play ayat berikutnya",
@@ -527,7 +572,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                               Icons.skip_previous_rounded,
                               color: audioProvider.hasPrevious
                                   ? mainColor
-                                  : Colors.grey.shade300,
+                                  : (isDark
+                                      ? Colors.grey.shade700
+                                      : Colors.grey.shade300),
                               size: 38,
                             ),
                             onPressed: audioProvider.hasPrevious
@@ -583,7 +630,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                               Icons.skip_next_rounded,
                               color: audioProvider.hasNext
                                   ? mainColor
-                                  : Colors.grey.shade300,
+                                  : (isDark
+                                      ? Colors.grey.shade700
+                                      : Colors.grey.shade300),
                               size: 38,
                             ),
                             onPressed: audioProvider.hasNext
@@ -601,7 +650,7 @@ class QuranAudioFullSheet extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: mainColor.withOpacity(0.12),
+                                color: mainColor.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -609,7 +658,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: mainColor,
+                                  color: isDark
+                                      ? const Color(0xFFD0A8FF)
+                                      : mainColor,
                                 ),
                               ),
                             ),
@@ -639,7 +690,9 @@ class QuranAudioFullSheet extends StatelessWidget {
                           style: GoogleFonts.poppins(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            color: const Color(0xFF333333),
+                            color: isDark
+                                ? Colors.white
+                                : const Color(0xFF333333),
                           ),
                         ),
                       ),
@@ -656,18 +709,24 @@ class QuranAudioFullSheet extends StatelessWidget {
                             label: Text(entry.value),
                             selected: isSelected,
                             selectedColor: mainColor,
-                            backgroundColor: Colors.grey.shade100,
+                            backgroundColor: isDark
+                                ? const Color(0xFF2C2C2C)
+                                : Colors.grey.shade100,
                             labelStyle: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: isSelected
                                   ? FontWeight.w600
                                   : FontWeight.normal,
-                              color: isSelected ? Colors.white : Colors.black87,
+                              color: isSelected
+                                  ? Colors.white
+                                  : (isDark ? Colors.white70 : Colors.black87),
                             ),
                             side: BorderSide(
                               color: isSelected
                                   ? mainColor
-                                  : Colors.grey.shade300,
+                                  : (isDark
+                                      ? Colors.grey.shade700
+                                      : Colors.grey.shade300),
                             ),
                             onSelected: (selected) {
                               if (selected) {
@@ -690,13 +749,16 @@ class QuranAudioFullSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildWaveBar(bool isPlaying, double height, int durationMs) {
+  Widget _buildWaveBar(
+      bool isPlaying, double height, int durationMs, bool isDark) {
     return AnimatedContainer(
       duration: Duration(milliseconds: durationMs),
       width: 4,
       height: isPlaying ? height : 6,
       decoration: BoxDecoration(
-        color: isPlaying ? mainColor : Colors.grey.shade300,
+        color: isPlaying
+            ? mainColor
+            : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
         borderRadius: BorderRadius.circular(4),
       ),
     );

@@ -17,6 +17,8 @@ class QiblaCompassWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     // Selisih sudut antara hadap kompas dan arah kiblat
     final double relativeQiblaAngle = (qiblaAngle - currentHeading + 360) % 360;
     final bool isAligned = (relativeQiblaAngle < 3 || relativeQiblaAngle > 357);
@@ -41,7 +43,7 @@ class QiblaCompassWidget extends StatelessWidget {
               },
               child: CustomPaint(
                 size: Size(size, size),
-                painter: _CompassDialPainter(mainColor: mainColor),
+                painter: _CompassDialPainter(mainColor: mainColor, isDark: isDark),
               ),
             ),
 
@@ -77,7 +79,7 @@ class QiblaCompassWidget extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: (isAligned ? const Color(0xFF00C853) : const Color(0xFFFFA000))
-                                  .withValues(alpha: 0.6),
+                                  .withOpacity(0.6),
                               blurRadius: isAligned ? 14 : 8,
                               spreadRadius: isAligned ? 3 : 1,
                             ),
@@ -122,17 +124,19 @@ class QiblaCompassWidget extends StatelessWidget {
               height: size * 0.40,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: (isAligned ? const Color(0xFF00C853) : Colors.black)
-                        .withValues(alpha: isAligned ? 0.25 : 0.08),
+                        .withOpacity(isAligned ? 0.25 : (isDark ? 0.4 : 0.08)),
                     blurRadius: isAligned ? 16 : 10,
                     offset: const Offset(0, 4),
                   ),
                 ],
                 border: Border.all(
-                  color: isAligned ? const Color(0xFF00C853) : mainColor.withValues(alpha: 0.2),
+                  color: isAligned
+                      ? const Color(0xFF00C853)
+                      : (isDark ? Colors.white12 : mainColor.withOpacity(0.2)),
                   width: isAligned ? 2.5 : 1.5,
                 ),
               ),
@@ -150,7 +154,9 @@ class QiblaCompassWidget extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isAligned ? const Color(0xFF00C853) : Colors.black87,
+                      color: isAligned
+                          ? const Color(0xFF00C853)
+                          : (isDark ? Colors.white : Colors.black87),
                     ),
                   ),
                   Text(
@@ -158,7 +164,9 @@ class QiblaCompassWidget extends StatelessWidget {
                     style: GoogleFonts.poppins(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
-                      color: isAligned ? const Color(0xFF00C853) : Colors.grey.shade500,
+                      color: isAligned
+                          ? const Color(0xFF00C853)
+                          : (isDark ? Colors.white60 : Colors.grey.shade500),
                     ),
                   ),
                 ],
@@ -173,8 +181,9 @@ class QiblaCompassWidget extends StatelessWidget {
 
 class _CompassDialPainter extends CustomPainter {
   final Color mainColor;
+  final bool isDark;
 
-  _CompassDialPainter({required this.mainColor});
+  _CompassDialPainter({required this.mainColor, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -183,30 +192,30 @@ class _CompassDialPainter extends CustomPainter {
 
     // Background circle
     final bgPaint = Paint()
-      ..color = Colors.white
+      ..color = isDark ? const Color(0xFF1E1E1E) : Colors.white
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius, bgPaint);
 
     // Outer border
     final borderPaint = Paint()
-      ..color = const Color(0xFFE8E8EE)
+      ..color = isDark ? const Color(0xFF333333) : const Color(0xFFE8E8EE)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     canvas.drawCircle(center, radius - 2, borderPaint);
 
     // Inner subtle glow
     final innerRingPaint = Paint()
-      ..color = const Color(0xFFF7F8FA)
+      ..color = isDark ? const Color(0xFF161616) : const Color(0xFFF7F8FA)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius - 16, innerRingPaint);
 
     // Tick lines & labels
     final tickPaint = Paint()
-      ..color = Colors.grey.shade400
+      ..color = isDark ? Colors.grey.shade700 : Colors.grey.shade400
       ..strokeWidth = 1.5;
 
     final majorTickPaint = Paint()
-      ..color = Colors.grey.shade700
+      ..color = isDark ? Colors.grey.shade400 : Colors.grey.shade700
       ..strokeWidth = 2.5;
 
     final northPaint = Paint()
@@ -241,13 +250,13 @@ class _CompassDialPainter extends CustomPainter {
         Color labelColor = const Color(0xFFE53935);
         if (deg == 90) {
           label = 'T';
-          labelColor = Colors.black87;
+          labelColor = isDark ? Colors.white70 : Colors.black87;
         } else if (deg == 180) {
           label = 'S';
-          labelColor = Colors.black87;
+          labelColor = isDark ? Colors.white70 : Colors.black87;
         } else if (deg == 270) {
           label = 'B';
-          labelColor = Colors.black87;
+          labelColor = isDark ? Colors.white70 : Colors.black87;
         }
 
         final textSpan = TextSpan(
@@ -274,5 +283,5 @@ class _CompassDialPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

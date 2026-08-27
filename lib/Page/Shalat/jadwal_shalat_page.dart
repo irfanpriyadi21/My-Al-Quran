@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hijri/hijri_calendar.dart';                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:my_quran/Componen/Widget/TextDataWidget.dart';
@@ -115,10 +115,12 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
   }
 
   void _showCitySearchModal(BuildContext context, ShalatApi provider) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -136,6 +138,8 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
   }
 
   Future<void> _pickDate(BuildContext context, ShalatApi provider) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final picked = await showDatePicker(
       context: context,
       initialDate: provider.selectedDate,
@@ -144,11 +148,18 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: mainColor,
-              onPrimary: Colors.white,
-              onSurface: Colors.black87,
-            ),
+            colorScheme: isDark
+                ? ColorScheme.dark(
+                    primary: mainColor,
+                    onPrimary: Colors.white,
+                    surface: const Color(0xFF1E1E1E),
+                    onSurface: Colors.white,
+                  )
+                : ColorScheme.light(
+                    primary: mainColor,
+                    onPrimary: Colors.white,
+                    onSurface: Colors.black87,
+                  ),
           ),
           child: child!,
         );
@@ -162,13 +173,16 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cardColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor),
+          icon: const Icon(Icons.arrow_back, color: mainColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: TextData(
@@ -180,7 +194,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.calendar_month_rounded, color: mainColor),
+            icon: const Icon(Icons.calendar_month_rounded, color: mainColor),
             tooltip: "Pilih Tanggal",
             onPressed: () {
               final provider = Provider.of<ShalatApi>(context, listen: false);
@@ -192,7 +206,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
       body: Consumer<ShalatApi>(
         builder: (context, provider, child) {
           if (provider.isLoading && provider.jadwalToday == null) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(color: mainColor),
             );
           }
@@ -214,7 +228,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                       provider.errorMessage,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.black54,
+                        color: isDark ? Colors.white70 : Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -257,10 +271,10 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: mainColor.withValues(alpha: 0.1),
+                        color: mainColor.withOpacity(0.12),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.location_on_rounded,
                         color: mainColor,
                         size: 20,
@@ -275,7 +289,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                             "Lokasi Saat Ini",
                             style: GoogleFonts.poppins(
                               fontSize: 11,
-                              color: Colors.grey.shade500,
+                              color: isDark ? Colors.white60 : Colors.grey.shade500,
                             ),
                           ),
                           Text(
@@ -283,7 +297,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: isDark ? Colors.white : Colors.black87,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -297,19 +311,21 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: cardColor,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: mainColor.withValues(alpha: 0.3)),
+                          border: Border.all(color: mainColor.withOpacity(0.3)),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.03),
+                              color: isDark
+                                  ? Colors.black.withOpacity(0.2)
+                                  : Colors.black.withOpacity(0.03),
                               blurRadius: 6,
                             ),
                           ],
                         ),
                         child: Row(
                           children: [
-                            Icon(Icons.edit_location_alt_rounded, size: 14, color: mainColor),
+                            const Icon(Icons.edit_location_alt_rounded, size: 14, color: mainColor),
                             const SizedBox(width: 4),
                             Text(
                               "Ubah",
@@ -344,7 +360,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff7B3FE4).withValues(alpha: 0.3),
+                        color: const Color(0xff7B3FE4).withOpacity(0.3),
                         blurRadius: 14,
                         offset: const Offset(0, 5),
                       ),
@@ -381,7 +397,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
+                                  color: Colors.white.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
@@ -406,7 +422,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                               Text(
                                 "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
                                 style: GoogleFonts.poppins(
-                                  color: Colors.white.withValues(alpha: 0.9),
+                                  color: Colors.white.withOpacity(0.9),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -461,7 +477,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                           Text(
                             dateFormatted,
                             style: GoogleFonts.poppins(
-                              color: Colors.white.withValues(alpha: 0.85),
+                              color: Colors.white.withOpacity(0.85),
                               fontSize: 12,
                             ),
                           ),
@@ -477,11 +493,13 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.03),
+                        color: isDark
+                            ? Colors.black.withOpacity(0.2)
+                            : Colors.black.withOpacity(0.03),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -508,7 +526,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                                color: isDark ? Colors.white : Colors.black87,
                               ),
                             ),
                             if (DateFormat('yyyy-MM-dd').format(provider.selectedDate) ==
@@ -541,14 +559,14 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
 
                 // List of Prayer Times (8 items)
                 if (jadwal != null) ...[
-                  _buildPrayerCard("Imsak", jadwal.imsak, Icons.nightlight_outlined, nextPrayer['name'] == 'Imsak'),
-                  _buildPrayerCard("Subuh", jadwal.subuh, Icons.wb_twilight_rounded, nextPrayer['name'] == 'Subuh'),
-                  _buildPrayerCard("Terbit", jadwal.terbit, Icons.wb_sunny_outlined, nextPrayer['name'] == 'Terbit'),
-                  _buildPrayerCard("Dhuha", jadwal.dhuha, Icons.wb_sunny_rounded, nextPrayer['name'] == 'Dhuha'),
-                  _buildPrayerCard("Dzuhur", jadwal.dzuhur, Icons.light_mode_rounded, nextPrayer['name'] == 'Dzuhur'),
-                  _buildPrayerCard("Ashar", jadwal.ashar, Icons.wb_cloudy_rounded, nextPrayer['name'] == 'Ashar'),
-                  _buildPrayerCard("Maghrib", jadwal.maghrib, Icons.nights_stay_outlined, nextPrayer['name'] == 'Maghrib'),
-                  _buildPrayerCard("Isya", jadwal.isya, Icons.bedtime_rounded, nextPrayer['name'] == 'Isya'),
+                  _buildPrayerCard("Imsak", jadwal.imsak, Icons.nightlight_outlined, nextPrayer['name'] == 'Imsak', isDark, cardColor),
+                  _buildPrayerCard("Subuh", jadwal.subuh, Icons.wb_twilight_rounded, nextPrayer['name'] == 'Subuh', isDark, cardColor),
+                  _buildPrayerCard("Terbit", jadwal.terbit, Icons.wb_sunny_outlined, nextPrayer['name'] == 'Terbit', isDark, cardColor),
+                  _buildPrayerCard("Dhuha", jadwal.dhuha, Icons.wb_sunny_rounded, nextPrayer['name'] == 'Dhuha', isDark, cardColor),
+                  _buildPrayerCard("Dzuhur", jadwal.dzuhur, Icons.light_mode_rounded, nextPrayer['name'] == 'Dzuhur', isDark, cardColor),
+                  _buildPrayerCard("Ashar", jadwal.ashar, Icons.wb_cloudy_rounded, nextPrayer['name'] == 'Ashar', isDark, cardColor),
+                  _buildPrayerCard("Maghrib", jadwal.maghrib, Icons.nights_stay_outlined, nextPrayer['name'] == 'Maghrib', isDark, cardColor),
+                  _buildPrayerCard("Isya", jadwal.isya, Icons.bedtime_rounded, nextPrayer['name'] == 'Isya', isDark, cardColor),
                 ],
 
                 const SizedBox(height: 24),
@@ -560,19 +578,25 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
     );
   }
 
-  Widget _buildPrayerCard(String name, String time, IconData icon, bool isNext) {
+  Widget _buildPrayerCard(String name, String time, IconData icon, bool isNext, bool isDark, Color cardColor) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: isNext ? mainColor.withValues(alpha: 0.08) : Colors.white,
+        color: isNext
+            ? mainColor.withOpacity(isDark ? 0.22 : 0.08)
+            : cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isNext ? mainColor : Colors.transparent,
+          color: isNext
+              ? mainColor
+              : (isDark ? Colors.white.withOpacity(0.05) : Colors.transparent),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: isDark
+                ? Colors.black.withOpacity(0.2)
+                : Colors.black.withOpacity(0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -585,7 +609,7 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: isNext ? mainColor : mainColor.withValues(alpha: 0.1),
+                color: isNext ? mainColor : mainColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -603,7 +627,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: isNext ? FontWeight.bold : FontWeight.w600,
-                      color: isNext ? mainColor : Colors.black87,
+                      color: isNext
+                          ? mainColor
+                          : (isDark ? Colors.white : Colors.black87),
                     ),
                   ),
                   if (isNext) ...[
@@ -614,9 +640,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
                         color: mainColor,
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
+                      child: const Text(
                         "Berikutnya",
-                        style: GoogleFonts.poppins(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -632,7 +658,9 @@ class _JadwalShalatPageState extends State<JadwalShalatPage> {
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: isNext ? mainColor : Colors.black87,
+                color: isNext
+                    ? mainColor
+                    : (isDark ? Colors.white : Colors.black87),
               ),
             ),
           ],
@@ -670,6 +698,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = widget.initialList.where((k) {
       if (_query.isEmpty) return true;
       return k.lokasi.toLowerCase().contains(_query.toLowerCase().trim());
@@ -692,7 +721,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -704,7 +733,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
               const SizedBox(height: 4),
@@ -712,7 +741,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                 "Tersedia 500+ Kota & Kabupaten di seluruh Indonesia",
                 style: GoogleFonts.poppins(
                   fontSize: 12,
-                  color: Colors.black45,
+                  color: isDark ? Colors.white60 : Colors.black45,
                 ),
               ),
 
@@ -721,12 +750,16 @@ class _CitySearchModalState extends State<_CitySearchModal> {
               // Search Bar
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF7F8FA),
+                  color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF7F8FA),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(
                   controller: _searchController,
                   autofocus: false,
+                  style: GoogleFonts.poppins(
+                    color: isDark ? Colors.white : Colors.black87,
+                    fontSize: 13,
+                  ),
                   onChanged: (val) {
                     setState(() {
                       _query = val;
@@ -735,10 +768,10 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                   decoration: InputDecoration(
                     hintText: "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
                     hintStyle: GoogleFonts.poppins(
-                      color: Colors.grey.shade400,
+                      color: isDark ? Colors.white38 : Colors.grey.shade400,
                       fontSize: 13,
                     ),
-                    prefixIcon: Icon(Icons.search_rounded, color: mainColor),
+                    prefixIcon: const Icon(Icons.search_rounded, color: mainColor),
                     suffixIcon: _query.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
@@ -765,7 +798,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                         child: Text(
                           "Kota tidak ditemukan",
                           style: GoogleFonts.poppins(
-                            color: Colors.grey.shade500,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontSize: 13,
                           ),
                         ),
@@ -773,7 +806,10 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                     : ListView.separated(
                         controller: scrollController,
                         itemCount: filtered.length,
-                        separatorBuilder: (context, index) => const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                        separatorBuilder: (context, index) => Divider(
+                          height: 1,
+                          color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+                        ),
                         itemBuilder: (context, index) {
                           final kota = filtered[index];
                           final isSelected = widget.currentSelected?.id == kota.id;
@@ -782,7 +818,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                             contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                             leading: Icon(
                               Icons.location_city_rounded,
-                              color: isSelected ? mainColor : Colors.grey.shade400,
+                              color: isSelected ? mainColor : (isDark ? Colors.white60 : Colors.grey.shade400),
                               size: 20,
                             ),
                             title: Text(
@@ -790,11 +826,13 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                color: isSelected ? mainColor : Colors.black87,
+                                color: isSelected
+                                    ? mainColor
+                                    : (isDark ? Colors.white : Colors.black87),
                               ),
                             ),
                             trailing: isSelected
-                                ? Icon(Icons.check_circle_rounded, color: mainColor, size: 20)
+                                ? const Icon(Icons.check_circle_rounded, color: mainColor, size: 20)
                                 : null,
                             onTap: () => widget.onSelect(kota),
                           );

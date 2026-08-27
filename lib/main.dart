@@ -14,6 +14,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import 'Componen/colors.dart';
 import 'Componen/navigatorKey.dart';
 
 void main() async {
@@ -51,19 +52,46 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ShalatApi()),
       ],
       child: Consumer<AppProvider>(
-        builder: (context, value, child) {
+        builder: (context, appProvider, child) {
           return MaterialApp(
             title: 'My Quran App',
             navigatorKey: NavigationService.navigatorKey,
+            themeMode: appProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
             theme: ThemeData(
+              brightness: Brightness.light,
+              scaffoldBackgroundColor: const Color(0xFFF5F5F7),
+              cardColor: Colors.white,
               colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.deepPurple,
+                seedColor: mainColor,
+                brightness: Brightness.light,
+                surface: Colors.white,
+              ),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 0,
+              ),
+              useMaterial3: true,
+            ),
+            darkTheme: ThemeData(
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: const Color(0xFF121212),
+              cardColor: const Color(0xFF1E1E1E),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: mainColor,
+                brightness: Brightness.dark,
+                surface: const Color(0xFF1E1E1E),
+              ),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Color(0xFF1E1E1E),
+                foregroundColor: Colors.white,
+                elevation: 0,
               ),
               useMaterial3: true,
             ),
             home: isLogin
-                ? IndexPage()
-                : LoginPage()
+                ? const IndexPage()
+                : const LoginPage(),
           );
         },
       ),

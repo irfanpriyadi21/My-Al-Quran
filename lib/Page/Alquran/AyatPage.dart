@@ -140,7 +140,7 @@ class _AyatPageState extends State<AyatPage> {
         );
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: Consumer<QuranAudioProvider>(
             builder: (context, audioProvider, child) {

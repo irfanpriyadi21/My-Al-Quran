@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hijri/hijri_calendar.dart';
 import 'package:my_quran/Page/Alquran/AyatPage.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:provider/provider.dart';
 
-import '../../Componen/Widget/CaegoryChipWidget.dart';
-import '../../Componen/Widget/RealtimeClockWidget.dart';
 import '../../Componen/Widget/SurahCardWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
 import '../../Componen/alert.dart';
@@ -24,7 +20,6 @@ class AlQuran extends StatefulWidget {
 }
 
 class _AlQuranState extends State<AlQuran> {
-  final hijri = HijriCalendar.now();
   List<ModelListSurah> listSurah = [];
   Map<String, dynamic>? lastRead;
   bool isLoading = false;
@@ -37,7 +32,7 @@ class _AlQuranState extends State<AlQuran> {
     });
   }
 
-  getSurah() async {
+  Future<void> getSurah() async {
     setState(() {
       isLoading = true;
     });
@@ -47,8 +42,7 @@ class _AlQuranState extends State<AlQuran> {
       var errorMessage = e.toString();
       AlertFail(errorMessage);
     } catch (error, s) {
-      print(error);
-      print(s.toString());
+      debugPrint("Error getSurah: $error \n $s");
       AlertFail("Terjadi Kesalahan !! $s");
     }
     setState(() {
@@ -59,7 +53,6 @@ class _AlQuranState extends State<AlQuran> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getSurah();
     loadLastRead();
@@ -75,22 +68,22 @@ class _AlQuranState extends State<AlQuran> {
         }
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => IndexPage()),
+          MaterialPageRoute(builder: (context) => const IndexPage()),
         );
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F5F7),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: mainColor),
+            icon: const Icon(Icons.arrow_back, color: mainColor),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => IndexPage()),
+                MaterialPageRoute(builder: (context) => const IndexPage()),
               );
             },
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).cardColor,
           title: TextData(
             text: "Al-Quran",
             size: 20,
@@ -114,7 +107,9 @@ class _AlQuranState extends State<AlQuran> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => AyatPage(
-                                  lastRead!['id'],
+                                  lastRead!['id'] is int
+                                      ? lastRead!['id']
+                                      : int.tryParse(lastRead!['id'].toString()) ?? 1,
                                   lastRead!['name'],
                                   lastRead!['jumlahAyat'],
                                   lastRead!['tempatTurun'],
@@ -157,8 +152,8 @@ class _AlQuranState extends State<AlQuran> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: const [
+                                    const Row(
+                                      children: [
                                         Icon(
                                           Icons.menu_book_rounded,
                                           color: Colors.white,
@@ -193,10 +188,13 @@ class _AlQuranState extends State<AlQuran> {
                             ),
                           ),
                         )
-                      : Container(),
+                      : const SizedBox.shrink(),
                   isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(color: mainColor),
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Center(
+                            child: CircularProgressIndicator(color: mainColor),
+                          ),
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.only(top: 20, bottom: 30),

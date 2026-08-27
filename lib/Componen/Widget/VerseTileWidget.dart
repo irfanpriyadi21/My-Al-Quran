@@ -9,7 +9,6 @@ import 'package:share_plus/share_plus.dart';
 import '../../Model/ModelListAyat.dart';
 import '../../Provider/Surah/QuranAudioProvider.dart';
 import '../colors.dart';
-import 'TextDataWidget.dart';
 import 'VerseSharedCard.dart';
 
 class VerseTile extends StatefulWidget {
@@ -54,10 +53,8 @@ class _VerseTileState extends State<VerseTile> {
           surah: widget.surah,
         ),
       );
-
       final directory = await getTemporaryDirectory();
       final filePath = '${directory.path}/verse_${widget.number}.png';
-
       final file = File(filePath);
       await file.writeAsBytes(image);
 
@@ -69,6 +66,8 @@ class _VerseTileState extends State<VerseTile> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Consumer<QuranAudioProvider>(
       builder: (context, audioProvider, child) {
         final isPlaying = audioProvider.isAyatPlaying(
@@ -86,10 +85,18 @@ class _VerseTileState extends State<VerseTile> {
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isActive ? mainColor.withOpacity(0.04) : Colors.transparent,
+            color: isActive
+                ? (isDark
+                    ? mainColor.withOpacity(0.1)
+                    : mainColor.withOpacity(0.04))
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isActive ? mainColor.withOpacity(0.4) : Colors.transparent,
+              color: isActive
+                  ? mainColor.withOpacity(0.5)
+                  : (isDark
+                      ? Colors.white.withOpacity(0.06)
+                      : Colors.transparent),
               width: 1.5,
             ),
           ),
@@ -104,8 +111,10 @@ class _VerseTileState extends State<VerseTile> {
                 ),
                 decoration: BoxDecoration(
                   color: isActive
-                      ? mainColor.withOpacity(0.12)
-                      : Colors.grey[200],
+                      ? mainColor.withOpacity(0.15)
+                      : (isDark
+                          ? const Color(0xFF252525)
+                          : Colors.grey[200]),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -163,8 +172,8 @@ class _VerseTileState extends State<VerseTile> {
                                   isPlaying
                                       ? Icons.pause_circle_filled_rounded
                                       : (isActive
-                                            ? Icons.play_circle_fill_rounded
-                                            : Icons.play_arrow_outlined),
+                                          ? Icons.play_circle_fill_rounded
+                                          : Icons.play_arrow_outlined),
                                   color: mainColor,
                                   size: 24,
                                 ),
@@ -194,7 +203,7 @@ class _VerseTileState extends State<VerseTile> {
                     fontSize: 26,
                     height: 2.0,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1E1E1E),
+                    color: isDark ? Colors.white : const Color(0xFF1E1E1E),
                   ),
                 ),
               ),
@@ -207,8 +216,8 @@ class _VerseTileState extends State<VerseTile> {
                 child: Text(
                   widget.latin,
                   style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.grey,
+                    fontSize: 13,
+                    color: isDark ? const Color(0xFFD0A8FF) : Colors.grey[700],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -223,7 +232,7 @@ class _VerseTileState extends State<VerseTile> {
                   widget.translation,
                   style: GoogleFonts.poppins(
                     fontSize: 12.5,
-                    color: Colors.black87,
+                    color: isDark ? Colors.white70 : Colors.black87,
                     fontWeight: FontWeight.normal,
                     fontStyle: FontStyle.italic,
                     height: 1.4,

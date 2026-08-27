@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_quran/Page/login_page.dart';
+import 'package:my_quran/Provider/app_provider.dart';
 import 'package:nb_utils/nb_utils.dart' hide SettingItemWidget;
+import 'package:provider/provider.dart';
 
 import '../../Componen/Widget/SettingItemWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
 import '../../Componen/colors.dart';
-
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -20,105 +21,120 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-  _modalBottomSheetMenu(){
-    showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (builder){
-          return Wrap(
-            children: [
-              Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20.0),
-                          topRight: Radius.circular(20.0)
-                      )
-                  ),
-                  child:  Container(
-                    padding: EdgeInsets.only(bottom: 40, right: 10, left: 10, top: 30),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text("Apakah Anda Yakin Ingin Logout ?",
-                            style: TextStyle(
-                                fontFamily: 'PoppinsMedium',
-                                fontSize: 16,
-                                color: Color(0xFF424242))
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size(120, 25),
-                                backgroundColor: mainColor,
-                                padding: EdgeInsets.only(
-                                    top: 12, bottom: 14, left: 40, right: 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                              onPressed: () async {
-                                await googleSignIn.signOut();     // Logout Google
-                                await FirebaseAuth.instance.signOut(); // Logout Firebase
+  void _modalBottomSheetMenu() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()
-                                    )
-                                );
-                              },
-                              child: Text(
-                                "Oke!",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.white,
-                                  fontFamily: 'PoppinsSemibold',
-                                ),
-                              ),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (builder) {
+        return Wrap(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  topRight: Radius.circular(20.0),
+                ),
+              ),
+              child: Container(
+                padding: const EdgeInsets.only(
+                    bottom: 40, right: 16, left: 16, top: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Apakah Anda Yakin Ingin Logout ?",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : const Color(0xFF424242),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(120, 25),
+                            backgroundColor: mainColor,
+                            padding: const EdgeInsets.only(
+                                top: 12, bottom: 14, left: 40, right: 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
-                            const SizedBox(width: 10),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: const Size(120, 25),
-                                backgroundColor: Colors.grey[200],
-                                padding: const EdgeInsets.only(
-                                    top: 14, bottom: 14, left: 40, right: 40),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          onPressed: () async {
+                            await googleSignIn.signOut();
+                            await FirebaseAuth.instance.signOut();
+
+                            if (mounted) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginPage(),
                                 ),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: mainColor,
-                                  fontFamily: 'PoppinsSemibold',
-                                ),
-                              ),
+                                (route) => false,
+                              );
+                            }
+                          },
+                          child: const Text(
+                            "Oke!",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.white,
+                              fontFamily: 'PoppinsSemibold',
                             ),
-                          ],
-                        )
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            minimumSize: const Size(120, 25),
+                            backgroundColor: isDark
+                                ? const Color(0xFF2C2C2C)
+                                : Colors.grey[200],
+                            padding: const EdgeInsets.only(
+                                top: 14, bottom: 14, left: 40, right: 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: isDark ? Colors.white70 : mainColor,
+                              fontFamily: 'PoppinsSemibold',
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  )
-              )
-            ],
-          );
-        }
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: TextData(
@@ -131,84 +147,121 @@ class _ProfileState extends State<Profile> {
         automaticallyImplyLeading: false,
         elevation: 0.0,
       ),
-      body: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 40),
-              Center(
-               child: CircleAvatar(
-                 radius: 40.0,
-                 backgroundImage: NetworkImage(
-                   FirebaseAuth.instance.currentUser!.photoURL!,
-                 ),
-                 backgroundColor: Colors.transparent,
-               ),
+      body: Consumer<AppProvider>(
+        builder: (context, appProvider, child) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height,
               ),
-              SizedBox(height: 10),
-              TextData(
-                text: "${FirebaseAuth.instance.currentUser!.displayName}",
-                size: 17,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-              ),
-              TextData(
-                text: "${FirebaseAuth.instance.currentUser!.email}",
-                size: 14,
-                color: Colors.grey,
-                fontWeight: FontWeight.normal,
-              ),
-              SizedBox(height: 50),
-              SettingItemWidget(
-                  title: 'Privacy Policy',
-                  titleTextStyle: GoogleFonts.poppins(
-                      textStyle: boldTextStyle(
-                        color: Colors.grey,
-                        size: 14
-                      )
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  Center(
+                    child: CircleAvatar(
+                      radius: 40.0,
+                      backgroundImage: user?.photoURL != null
+                          ? NetworkImage(user!.photoURL!)
+                          : null,
+                      backgroundColor: isDark
+                          ? const Color(0xFF2C2C2C)
+                          : Colors.grey[300],
+                      child: user?.photoURL == null
+                          ? Icon(Icons.person, size: 40, color: mainColor)
+                          : null,
+                    ),
                   ),
-                  decoration: boxDecorationRoundedWithShadow(12,
-                      backgroundColor: Colors.white),
-                  trailing: const Icon(Icons.privacy_tip_outlined, color: Colors.grey),
-                  onTap: () {
-                    // _modalBottomSheetMenu();
-                  }).paddingOnly(bottom: 5),
-              SettingItemWidget(
-                  title: 'Dark Mode',
-                  titleTextStyle: GoogleFonts.poppins(
-                      textStyle: boldTextStyle(
-                          color: Colors.grey,
-                          size: 14
-                      )
+                  const SizedBox(height: 10),
+                  TextData(
+                    text: user?.displayName ?? 'Pengguna',
+                    size: 17,
+                    color: isDark ? Colors.white : Colors.grey[800]!,
+                    fontWeight: FontWeight.bold,
                   ),
-                  decoration: boxDecorationRoundedWithShadow(12,
-                      backgroundColor: Colors.white),
-                  trailing: const Icon(Icons.dark_mode, color: Colors.grey),
-                  onTap: () {
-                    // _modalBottomSheetMenu();
-                  }).paddingOnly(bottom: 5),
-              SettingItemWidget(
-                  title: 'Logout',
-                  titleTextStyle: GoogleFonts.poppins(
-                      textStyle: boldTextStyle(
-                          color: Colors.grey,
-                          size: 14
-                      )
+                  TextData(
+                    text: user?.email ?? '',
+                    size: 14,
+                    color: Colors.grey,
+                    fontWeight: FontWeight.normal,
                   ),
-                  decoration: boxDecorationRoundedWithShadow(12,
-                      backgroundColor: Colors.white),
-                  trailing: const Icon(Icons.power_settings_new, color: Colors.red),
-                  onTap: () {
-                    _modalBottomSheetMenu();
-                  }),
-            ],
-          ).paddingOnly(right: 20, left: 20),
-        ),
+                  const SizedBox(height: 40),
+
+                  // PRIVACY POLICY
+                  SettingItemWidget(
+                    title: 'Privacy Policy',
+                    titleTextStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    decoration: boxDecorationRoundedWithShadow(
+                      12,
+                      backgroundColor: cardColor,
+                    ),
+                    trailing: const Icon(
+                      Icons.privacy_tip_outlined,
+                      color: Colors.grey,
+                    ),
+                    onTap: () {},
+                  ).paddingOnly(bottom: 10),
+
+                  // DARK MODE TOGGLE
+                  SettingItemWidget(
+                    title: 'Dark Mode',
+                    titleTextStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    decoration: boxDecorationRoundedWithShadow(
+                      12,
+                      backgroundColor: cardColor,
+                    ),
+                    trailing: Switch.adaptive(
+                      value: appProvider.isDarkMode,
+                      activeTrackColor: mainColor,
+                      onChanged: (value) {
+                        appProvider.toggleDarkMode(value);
+                      },
+                    ),
+                    onTap: () {
+                      appProvider.toggleDarkMode(!appProvider.isDarkMode);
+                    },
+                  ).paddingOnly(bottom: 10),
+
+                  // LOGOUT
+                  SettingItemWidget(
+                    title: 'Logout',
+                    titleTextStyle: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    decoration: boxDecorationRoundedWithShadow(
+                      12,
+                      backgroundColor: cardColor,
+                    ),
+                    trailing: const Icon(
+                      Icons.power_settings_new,
+                      color: Colors.redAccent,
+                    ),
+                    onTap: () {
+                      _modalBottomSheetMenu();
+                    },
+                  ),
+                ],
+              ).paddingOnly(right: 20, left: 20),
+            ),
+          );
+        },
       ),
     );
   }

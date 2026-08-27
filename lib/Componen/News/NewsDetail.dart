@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Componen/Loading.dart';
 import 'package:my_quran/Model/ModelDetailArtikel.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,6 @@ import '../../Provider/Artikel/ArtikelApi.dart';
 import '../Widget/TextDataWidget.dart';
 import '../alert.dart';
 import '../colors.dart';
-
 
 class NewsDetail extends StatefulWidget {
   final String id;
@@ -23,18 +23,18 @@ class _NewsDetailState extends State<NewsDetail> {
   bool isLoading = false;
   ModelDetailArtikel detailArtikel = ModelDetailArtikel();
 
-  getDetailArtikel()async{
+  Future<void> getDetailArtikel() async {
     setState(() {
       isLoading = true;
     });
     try {
-      detailArtikel = await Provider.of<Artikel>(context, listen: false).getArtikelDetail(widget.id);
+      detailArtikel = await Provider.of<Artikel>(context, listen: false)
+          .getArtikelDetail(widget.id);
     } on StringHttpException catch (e) {
       var errorMessage = e.toString();
       AlertFail(errorMessage);
     } catch (error, s) {
-      print(error);
-      print(s.toString());
+      debugPrint("Error getDetailArtikel: $error \n $s");
       AlertFail("Terjadi Kesalahan !! $s");
     }
     setState(() {
@@ -44,71 +44,184 @@ class _NewsDetailState extends State<NewsDetail> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDetailArtikel();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final data = detailArtikel.data;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child:SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // HEADER
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(Icons.arrow_back, color:mainColor),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.arrow_back, color: mainColor),
+                    ),
                     TextData(
-                      text:  "News Detail",
+                      text: "News Detail",
                       size: 18,
                       color: mainColor,
                       fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(
-                      width: 10,
-                    )
+                    const SizedBox(width: 24),
                   ],
                 ),
                 const SizedBox(height: 20),
-                isLoading
-                    ? Center(
-                        child: Loading(),
-                      )
-                    : Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                              image: NetworkImage(detailArtikel.data!.thumbnail!),
-                              fit: BoxFit.cover
-                          )
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Html(
-                      data: detailArtikel.data!.contentHtml!,
-                      style: {
-                        "p": Style(
-                          fontSize: FontSize(16),
-                          color: Colors.black,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      },
-                    )
 
-                  ],
-                )
-              ]
-              )
+                if (isLoading)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 80),
+                    child: Center(
+                      child: Loading(),
+                    ),
+                  )
+                else if (data != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // TITLE
+                      if (data.title != null)
+                        Text(
+                          data.title!,
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: isDark ? Colors.white : Colors.black87,
+                            height: 1.4,
+                          ),
+                        ),
+                      const SizedBox(height: 8),
+
+                      // AUTHOR & DATE
+                      if (data.author != null || data.date != null)
+                        Row(
+                          children: [
+                            if (data.author != null) ...[
+                              Icon(
+                                Icons.person_outline,
+                                size: 14,
+                                color: isDark ? Colors.white60 : Colors.grey[600],
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                data.author!,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                            ],
+                            if (data.date != null) ...[
+                              Icon(
+                                Icons.calendar_today_outlined,
+                                size: 13,
+                                color: isDark ? Colors.white60 : Colors.grey[600],
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                data.date!,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      const SizedBox(height: 16),
+
+                      // THUMBNAIL
+                      if (data.thumbnail != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 210,
+                            child: Image.network(
+                              data.thumbnail!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: isDark
+                                    ? const Color(0xFF2C2C2C)
+                                    : Colors.grey[200],
+                                child: const Icon(
+                                  Icons.image,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+
+                      // CONTENT HTML
+                      if (data.contentHtml != null)
+                        Html(
+                          data: data.contentHtml!,
+                          style: {
+                            "p": Style(
+                              fontSize: FontSize(15),
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              lineHeight: const LineHeight(1.6),
+                            ),
+                            "body": Style(
+                              fontSize: FontSize(15),
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              lineHeight: const LineHeight(1.6),
+                            ),
+                            "h1": Style(
+                              color: isDark ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "h2": Style(
+                              color: isDark ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "h3": Style(
+                              color: isDark ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "strong": Style(
+                              color: isDark ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "b": Style(
+                              color: isDark ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            "a": Style(
+                              color: mainColor,
+                            ),
+                            "li": Style(
+                              color: isDark ? Colors.white70 : Colors.black87,
+                              fontSize: FontSize(14.5),
+                            ),
+                          },
+                        ),
+                      const SizedBox(height: 30),
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),

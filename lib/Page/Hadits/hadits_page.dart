@@ -39,13 +39,16 @@ class _HaditsPageState extends State<HaditsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cardColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor),
+          icon: const Icon(Icons.arrow_back, color: mainColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: TextData(
@@ -59,7 +62,7 @@ class _HaditsPageState extends State<HaditsPage> {
       body: Consumer<HaditsProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(color: mainColor),
             );
           }
@@ -81,7 +84,7 @@ class _HaditsPageState extends State<HaditsPage> {
                       provider.errorMessage,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.black54,
+                        color: isDark ? Colors.white70 : Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -142,7 +145,7 @@ class _HaditsPageState extends State<HaditsPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff7B3FE4).withValues(alpha: 0.25),
+                        color: const Color(0xff7B3FE4).withOpacity(0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -154,15 +157,15 @@ class _HaditsPageState extends State<HaditsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            const Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.menu_book_rounded,
                                   color: Colors.white,
                                   size: 16,
                                 ),
-                                const SizedBox(width: 6),
-                                const TextData(
+                                SizedBox(width: 6),
+                                TextData(
                                   text: "Kutubut Tis'ah",
                                   size: 13,
                                   color: Colors.white,
@@ -195,7 +198,8 @@ class _HaditsPageState extends State<HaditsPage> {
                           "assets/image/alQuran.png",
                           width: 80,
                           height: 80,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
                             Icons.auto_stories,
                             size: 60,
                             color: Colors.white,
@@ -211,11 +215,13 @@ class _HaditsPageState extends State<HaditsPage> {
                 // Search Bar
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
+                        color: isDark
+                            ? Colors.black.withOpacity(0.2)
+                            : Colors.black.withOpacity(0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -223,18 +229,23 @@ class _HaditsPageState extends State<HaditsPage> {
                   ),
                   child: TextField(
                     controller: _searchController,
+                    style: GoogleFonts.poppins(
+                      color: isDark ? Colors.white : Colors.black87,
+                      fontSize: 13,
+                    ),
                     onChanged: (val) {
                       setState(() {
                         _searchQuery = val;
                       });
                     },
                     decoration: InputDecoration(
-                      hintText: "Cari nama perawi hadits (contoh: Bukhari, Muslim)...",
+                      hintText:
+                          "Cari nama perawi hadits (contoh: Bukhari, Muslim)...",
                       hintStyle: GoogleFonts.poppins(
-                        color: Colors.grey.shade400,
+                        color: isDark ? Colors.white38 : Colors.grey.shade400,
                         fontSize: 13,
                       ),
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.search_rounded,
                         color: mainColor,
                       ),
@@ -273,13 +284,17 @@ class _HaditsPageState extends State<HaditsPage> {
                           Icon(
                             Icons.search_off_rounded,
                             size: 60,
-                            color: Colors.grey.shade300,
+                            color: isDark
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade300,
                           ),
                           const SizedBox(height: 12),
                           Text(
                             "Kitab hadits tidak ditemukan",
                             style: GoogleFonts.poppins(
-                              color: Colors.grey.shade600,
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade600,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -293,10 +308,12 @@ class _HaditsPageState extends State<HaditsPage> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: filteredList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 12),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 12),
                     itemBuilder: (context, index) {
                       final perawi = filteredList[index];
-                      return _buildPerawiCard(perawi, index + 1);
+                      return _buildPerawiCard(
+                          perawi, index + 1, isDark, cardColor);
                     },
                   ),
 
@@ -309,14 +326,17 @@ class _HaditsPageState extends State<HaditsPage> {
     );
   }
 
-  Widget _buildPerawiCard(ModelHaditsPerawi perawi, int index) {
+  Widget _buildPerawiCard(
+      ModelHaditsPerawi perawi, int index, bool isDark, Color cardColor) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black.withOpacity(0.25)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -343,7 +363,7 @@ class _HaditsPageState extends State<HaditsPage> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: mainColor.withValues(alpha: 0.1),
+                    color: mainColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   alignment: Alignment.center,
@@ -368,13 +388,13 @@ class _HaditsPageState extends State<HaditsPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: isDark ? Colors.white : Colors.black87,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.auto_stories_rounded,
                             size: 14,
                             color: mainColor,
@@ -384,7 +404,7 @@ class _HaditsPageState extends State<HaditsPage> {
                             "${_numberFormat.format(perawi.total)} Hadits",
                             style: GoogleFonts.poppins(
                               fontSize: 12,
-                              color: Colors.black54,
+                              color: isDark ? Colors.white60 : Colors.black54,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -398,10 +418,12 @@ class _HaditsPageState extends State<HaditsPage> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF7F8FA),
+                    color: isDark
+                        ? const Color(0xFF2A2A2A)
+                        : const Color(0xFFF7F8FA),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 14,
                     color: mainColor,

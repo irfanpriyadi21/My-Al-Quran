@@ -20,7 +20,8 @@ class NewsWidget extends StatefulWidget {
 class _NewsWidgetState extends State<NewsWidget> {
   List<ModelListArtikel> listArtikel = [];
   bool isLoading = false;
-  final PageController _pageController = PageController(viewportFraction: 0.88);
+  final PageController _pageController =
+      PageController(viewportFraction: 0.88);
   int _currentPage = 0;
   Timer? _autoPlayTimer;
 
@@ -55,7 +56,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     });
   }
 
-  getArtikel() async {
+  Future<void> getArtikel() async {
     setState(() {
       isLoading = true;
     });
@@ -65,8 +66,7 @@ class _NewsWidgetState extends State<NewsWidget> {
       var errorMessage = e.toString();
       AlertFail(errorMessage);
     } catch (error, s) {
-      print(error);
-      print(s.toString());
+      debugPrint("Error getArtikel: $error \n $s");
       AlertFail("Terjadi Kesalahan !! $s");
     }
     if (mounted) {
@@ -89,11 +89,13 @@ class _NewsWidgetState extends State<NewsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     if (isLoading) {
       return Container(
         height: 180,
         alignment: Alignment.center,
-        child: CircularProgressIndicator(color: mainColor),
+        child: const CircularProgressIndicator(color: mainColor),
       );
     }
 
@@ -119,7 +121,8 @@ class _NewsWidgetState extends State<NewsWidget> {
                 scale: _currentPage == index ? 1.0 : 0.95,
                 duration: const Duration(milliseconds: 300),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -130,9 +133,9 @@ class _NewsWidgetState extends State<NewsWidget> {
                       );
                     },
                     child: CardComponen(
-                      "${artikel.thumbnail}",
-                      "${artikel.title}",
-                      "${artikel.date}",
+                      artikel.thumbnail ?? '',
+                      artikel.title ?? '',
+                      artikel.date ?? '',
                       width: double.infinity,
                     ),
                   ),
@@ -153,7 +156,11 @@ class _NewsWidgetState extends State<NewsWidget> {
                 height: 6,
                 width: _currentPage == index ? 22 : 6,
                 decoration: BoxDecoration(
-                  color: _currentPage == index ? mainColor : Colors.grey.shade300,
+                  color: _currentPage == index
+                      ? mainColor
+                      : (isDark
+                          ? const Color(0xFF333333)
+                          : Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),

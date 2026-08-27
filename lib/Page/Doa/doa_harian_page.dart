@@ -87,13 +87,16 @@ Dibagikan dari Aplikasi My Quran''';
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cardColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor),
+          icon: const Icon(Icons.arrow_back, color: mainColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: TextData(
@@ -107,7 +110,7 @@ Dibagikan dari Aplikasi My Quran''';
       body: Consumer<DoaProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(color: mainColor),
             );
           }
@@ -129,7 +132,7 @@ Dibagikan dari Aplikasi My Quran''';
                       provider.errorMessage,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
-                        color: Colors.black54,
+                        color: isDark ? Colors.white70 : Colors.black54,
                         fontSize: 14,
                       ),
                     ),
@@ -187,7 +190,7 @@ Dibagikan dari Aplikasi My Quran''';
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff7B3FE4).withValues(alpha: 0.25),
+                        color: const Color(0xff7B3FE4).withOpacity(0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -199,15 +202,15 @@ Dibagikan dari Aplikasi My Quran''';
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            const Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.menu_book_rounded,
                                   color: Colors.white,
                                   size: 16,
                                 ),
-                                const SizedBox(width: 6),
-                                const TextData(
+                                SizedBox(width: 6),
+                                TextData(
                                   text: "Kumpulan Doa Pilihan",
                                   size: 13,
                                   color: Colors.white,
@@ -238,7 +241,8 @@ Dibagikan dari Aplikasi My Quran''';
                           "assets/image/alQuran.png",
                           width: 80,
                           height: 80,
-                          errorBuilder: (context, error, stackTrace) => const Icon(
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
                             Icons.auto_stories,
                             size: 60,
                             color: Colors.white,
@@ -254,11 +258,13 @@ Dibagikan dari Aplikasi My Quran''';
                 // Search Bar
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: cardColor,
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.04),
+                        color: isDark
+                            ? Colors.black.withOpacity(0.2)
+                            : Colors.black.withOpacity(0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -266,6 +272,10 @@ Dibagikan dari Aplikasi My Quran''';
                   ),
                   child: TextField(
                     controller: _searchController,
+                    style: GoogleFonts.poppins(
+                      color: isDark ? Colors.white : Colors.black87,
+                      fontSize: 13,
+                    ),
                     onChanged: (val) {
                       setState(() {
                         _searchQuery = val;
@@ -274,10 +284,10 @@ Dibagikan dari Aplikasi My Quran''';
                     decoration: InputDecoration(
                       hintText: "Cari doa harian (contoh: makan, tidur)...",
                       hintStyle: GoogleFonts.poppins(
-                        color: Colors.grey.shade400,
+                        color: isDark ? Colors.white38 : Colors.grey.shade400,
                         fontSize: 13,
                       ),
-                      prefixIcon: Icon(
+                      prefixIcon: const Icon(
                         Icons.search_rounded,
                         color: mainColor,
                       ),
@@ -316,13 +326,17 @@ Dibagikan dari Aplikasi My Quran''';
                           Icon(
                             Icons.search_off_rounded,
                             size: 60,
-                            color: Colors.grey.shade300,
+                            color: isDark
+                                ? Colors.grey.shade700
+                                : Colors.grey.shade300,
                           ),
                           const SizedBox(height: 12),
                           Text(
                             "Doa tidak ditemukan",
                             style: GoogleFonts.poppins(
-                              color: Colors.grey.shade600,
+                              color: isDark
+                                  ? Colors.white60
+                                  : Colors.grey.shade600,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -336,10 +350,11 @@ Dibagikan dari Aplikasi My Quran''';
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: filteredList.length,
-                    separatorBuilder: (context, index) => const SizedBox(height: 14),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 14),
                     itemBuilder: (context, index) {
                       final doa = filteredList[index];
-                      return _buildDoaCard(doa, index + 1);
+                      return _buildDoaCard(doa, index + 1, isDark, cardColor);
                     },
                   ),
 
@@ -352,14 +367,17 @@ Dibagikan dari Aplikasi My Quran''';
     );
   }
 
-  Widget _buildDoaCard(ModelDoaHarian doa, int number) {
+  Widget _buildDoaCard(
+      ModelDoaHarian doa, int number, bool isDark, Color cardColor) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black.withOpacity(0.25)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -378,7 +396,7 @@ Dibagikan dari Aplikasi My Quran''';
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: mainColor.withValues(alpha: 0.1),
+                    color: mainColor.withOpacity(0.12),
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
@@ -398,15 +416,15 @@ Dibagikan dari Aplikasi My Quran''';
                     style: GoogleFonts.poppins(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.copy_rounded,
                     size: 18,
-                    color: Colors.black45,
+                    color: isDark ? Colors.white60 : Colors.black45,
                   ),
                   tooltip: "Salin",
                   onPressed: () => _copyDoa(doa),
@@ -415,10 +433,10 @@ Dibagikan dari Aplikasi My Quran''';
                 ),
                 const SizedBox(width: 4),
                 IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.share_rounded,
                     size: 18,
-                    color: Colors.black45,
+                    color: isDark ? Colors.white60 : Colors.black45,
                   ),
                   tooltip: "Bagikan",
                   onPressed: () => _shareDoa(doa),
@@ -428,7 +446,11 @@ Dibagikan dari Aplikasi My Quran''';
               ],
             ),
 
-            const Divider(height: 24, thickness: 0.7, color: Color(0xFFF0F0F0)),
+            Divider(
+              height: 24,
+              thickness: 0.7,
+              color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+            ),
 
             // Arabic Text
             if (doa.arabic.isNotEmpty) ...[
@@ -440,7 +462,7 @@ Dibagikan dari Aplikasi My Quran''';
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   height: 2.0,
-                  color: const Color(0xFF240F4F),
+                  color: isDark ? Colors.white : const Color(0xFF240F4F),
                 ),
               ),
               const SizedBox(height: 12),
@@ -454,7 +476,7 @@ Dibagikan dari Aplikasi My Quran''';
                   fontSize: 13,
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w400,
-                  color: mainColor,
+                  color: isDark ? const Color(0xFFD0A8FF) : mainColor,
                   height: 1.5,
                 ),
               ),
@@ -467,7 +489,7 @@ Dibagikan dari Aplikasi My Quran''';
                 doa.translation,
                 style: GoogleFonts.poppins(
                   fontSize: 13,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white70 : Colors.black87,
                   height: 1.5,
                 ),
               ),

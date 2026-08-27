@@ -102,10 +102,12 @@ class _KiblatPageState extends State<KiblatPage> {
   }
 
   void _showCitySearchModal(BuildContext context, ShalatApi provider) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -124,13 +126,16 @@ class _KiblatPageState extends State<KiblatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: cardColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: mainColor),
+          icon: const Icon(Icons.arrow_back, color: mainColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: TextData(
@@ -164,10 +169,10 @@ class _KiblatPageState extends State<KiblatPage> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: mainColor.withValues(alpha: 0.1),
+                      color: mainColor.withOpacity(0.12),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.location_on_rounded,
                       color: mainColor,
                       size: 20,
@@ -182,7 +187,7 @@ class _KiblatPageState extends State<KiblatPage> {
                           "Lokasi Anda",
                           style: GoogleFonts.poppins(
                             fontSize: 11,
-                            color: Colors.grey.shade500,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
                           ),
                         ),
                         Text(
@@ -190,7 +195,7 @@ class _KiblatPageState extends State<KiblatPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -204,19 +209,21 @@ class _KiblatPageState extends State<KiblatPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: cardColor,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: mainColor.withValues(alpha: 0.3)),
+                        border: Border.all(color: mainColor.withOpacity(0.3)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.03),
+                            color: isDark
+                                ? Colors.black.withOpacity(0.2)
+                                : Colors.black.withOpacity(0.03),
                             blurRadius: 6,
                           ),
                         ],
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.edit_location_alt_rounded, size: 14, color: mainColor),
+                          const Icon(Icons.edit_location_alt_rounded, size: 14, color: mainColor),
                           const SizedBox(width: 4),
                           Text(
                             "Ubah",
@@ -251,7 +258,7 @@ class _KiblatPageState extends State<KiblatPage> {
                   boxShadow: [
                     BoxShadow(
                       color: (isAligned ? const Color(0xFF00C853) : const Color(0xff7B3FE4))
-                          .withValues(alpha: 0.3),
+                          .withOpacity(0.3),
                       blurRadius: 14,
                       offset: const Offset(0, 5),
                     ),
@@ -296,7 +303,7 @@ class _KiblatPageState extends State<KiblatPage> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.2),
+                                  color: Colors.white.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Text(
@@ -314,7 +321,7 @@ class _KiblatPageState extends State<KiblatPage> {
                           Text(
                             "~${_numberFormat.format(distanceKm.round())} km ke Ka'bah di Makkah",
                             style: GoogleFonts.poppins(
-                              color: Colors.white.withValues(alpha: 0.85),
+                              color: Colors.white.withOpacity(0.85),
                               fontSize: 12,
                             ),
                           ),
@@ -340,15 +347,17 @@ class _KiblatPageState extends State<KiblatPage> {
 
               const SizedBox(height: 20),
 
-              // 3. Visual Live Qibla Compass
+              // 3. Visual Live Qibla Compass Card
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: cardColor,
                   borderRadius: BorderRadius.circular(22),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
+                      color: isDark
+                          ? Colors.black.withOpacity(0.25)
+                          : Colors.black.withOpacity(0.04),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -361,8 +370,8 @@ class _KiblatPageState extends State<KiblatPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                       decoration: BoxDecoration(
                         color: _isAutoCompassActive
-                            ? const Color(0xFFE8F5E9)
-                            : Colors.grey.shade100,
+                            ? (isDark ? const Color(0xFF1B381E) : const Color(0xFFE8F5E9))
+                            : (isDark ? const Color(0xFF2A2A2A) : Colors.grey.shade100),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -371,7 +380,9 @@ class _KiblatPageState extends State<KiblatPage> {
                           Icon(
                             _isAutoCompassActive ? Icons.sensors_rounded : Icons.touch_app_rounded,
                             size: 14,
-                            color: _isAutoCompassActive ? const Color(0xFF2E7D32) : Colors.grey.shade700,
+                            color: _isAutoCompassActive
+                                ? (isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32))
+                                : (isDark ? Colors.white60 : Colors.grey.shade700),
                           ),
                           const SizedBox(width: 6),
                           Text(
@@ -379,7 +390,9 @@ class _KiblatPageState extends State<KiblatPage> {
                             style: GoogleFonts.poppins(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
-                              color: _isAutoCompassActive ? const Color(0xFF2E7D32) : Colors.grey.shade700,
+                              color: _isAutoCompassActive
+                                  ? (isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32))
+                                  : (isDark ? Colors.white60 : Colors.grey.shade700),
                             ),
                           ),
                         ],
@@ -392,7 +405,7 @@ class _KiblatPageState extends State<KiblatPage> {
                       "Putar ponsel Anda hingga jarum mengarah ke Ka'bah",
                       style: GoogleFonts.poppins(
                         fontSize: 12,
-                        color: Colors.grey.shade600,
+                        color: isDark ? Colors.white60 : Colors.grey.shade600,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -419,7 +432,7 @@ class _KiblatPageState extends State<KiblatPage> {
                                 "Orientasi Perangkat: ${_currentHeading.round()}°",
                                 style: GoogleFonts.poppins(
                                   fontSize: 11,
-                                  color: Colors.grey.shade600,
+                                  color: isDark ? Colors.white70 : Colors.grey.shade600,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -430,9 +443,9 @@ class _KiblatPageState extends State<KiblatPage> {
                                       _isAutoCompassActive = true;
                                     });
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     "Aktifkan Sensor",
-                                    style: GoogleFonts.poppins(
+                                    style: TextStyle(
                                       fontSize: 11,
                                       color: mainColor,
                                       fontWeight: FontWeight.bold,
@@ -444,9 +457,9 @@ class _KiblatPageState extends State<KiblatPage> {
                           SliderTheme(
                             data: SliderTheme.of(context).copyWith(
                               activeTrackColor: mainColor,
-                              inactiveTrackColor: mainColor.withValues(alpha: 0.15),
+                              inactiveTrackColor: mainColor.withOpacity(0.15),
                               thumbColor: mainColor,
-                              overlayColor: mainColor.withValues(alpha: 0.1),
+                              overlayColor: mainColor.withOpacity(0.1),
                             ),
                             child: Slider(
                               value: _currentHeading,
@@ -465,14 +478,18 @@ class _KiblatPageState extends State<KiblatPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.compass_calibration_rounded, size: 14, color: Colors.grey.shade500),
+                          Icon(
+                            Icons.compass_calibration_rounded,
+                            size: 14,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
+                          ),
                           const SizedBox(width: 6),
                           Text(
                             "Hadap Ponsel: ${_currentHeading.round()}° ${QiblaCalculator.getDirectionName(_currentHeading)}",
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade700,
+                              color: isDark ? Colors.white70 : Colors.grey.shade700,
                             ),
                           ),
                         ],
@@ -488,11 +505,13 @@ class _KiblatPageState extends State<KiblatPage> {
               Container(
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: cardColor,
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
+                      color: isDark
+                          ? Colors.black.withOpacity(0.2)
+                          : Colors.black.withOpacity(0.03),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -503,14 +522,14 @@ class _KiblatPageState extends State<KiblatPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.info_outline_rounded, color: mainColor, size: 18),
+                        const Icon(Icons.info_outline_rounded, color: mainColor, size: 18),
                         const SizedBox(width: 8),
                         Text(
                           "Petunjuk Akurasi Kompas",
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black87,
+                            color: isDark ? Colors.white : Colors.black87,
                           ),
                         ),
                       ],
@@ -519,16 +538,19 @@ class _KiblatPageState extends State<KiblatPage> {
                     _buildTipItem(
                       Icons.phone_android_rounded,
                       "Pegang ponsel secara mendatar (horizontal) sejajar dengan permukaan lantai/tanah.",
+                      isDark,
                     ),
                     const SizedBox(height: 8),
                     _buildTipItem(
                       Icons.all_inclusive_rounded,
                       "Bila kompas kurang akurat, gerakkan ponsel membentuk angka 8 di udara untuk kalibrasi sensor.",
+                      isDark,
                     ),
                     const SizedBox(height: 8),
                     _buildTipItem(
                       Icons.sensors_off_rounded,
                       "Jauhkan ponsel dari medan magnetik, casing magnetik tebal, atau benda logam besar.",
+                      isDark,
                     ),
                   ],
                 ),
@@ -542,18 +564,18 @@ class _KiblatPageState extends State<KiblatPage> {
     );
   }
 
-  Widget _buildTipItem(IconData icon, String text) {
+  Widget _buildTipItem(IconData icon, String text, bool isDark) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: Colors.grey.shade600),
+        Icon(icon, size: 16, color: isDark ? Colors.white60 : Colors.grey.shade600),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
             style: GoogleFonts.poppins(
               fontSize: 12,
-              color: Colors.black54,
+              color: isDark ? Colors.white70 : Colors.black54,
               height: 1.4,
             ),
           ),
@@ -591,6 +613,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final filtered = widget.initialList.where((k) {
       if (_query.isEmpty) return true;
       return k.lokasi.toLowerCase().contains(_query.toLowerCase().trim());
@@ -613,7 +636,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -625,7 +648,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                 style: GoogleFonts.poppins(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
               const SizedBox(height: 4),
@@ -633,7 +656,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                 "Pilih kota Anda untuk menghitung sudut arah kiblat presisi",
                 style: GoogleFonts.poppins(
                   fontSize: 12,
-                  color: Colors.black45,
+                  color: isDark ? Colors.white60 : Colors.black45,
                 ),
               ),
 
@@ -642,12 +665,16 @@ class _CitySearchModalState extends State<_CitySearchModal> {
               // Search Bar
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF7F8FA),
+                  color: isDark ? const Color(0xFF2A2A2A) : const Color(0xFFF7F8FA),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: TextField(
                   controller: _searchController,
                   autofocus: false,
+                  style: GoogleFonts.poppins(
+                    color: isDark ? Colors.white : Colors.black87,
+                    fontSize: 13,
+                  ),
                   onChanged: (val) {
                     setState(() {
                       _query = val;
@@ -656,10 +683,10 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                   decoration: InputDecoration(
                     hintText: "Cari kota (contoh: Jakarta, Bandung, Surabaya)...",
                     hintStyle: GoogleFonts.poppins(
-                      color: Colors.grey.shade400,
+                      color: isDark ? Colors.white38 : Colors.grey.shade400,
                       fontSize: 13,
                     ),
-                    prefixIcon: Icon(Icons.search_rounded, color: mainColor),
+                    prefixIcon: const Icon(Icons.search_rounded, color: mainColor),
                     suffixIcon: _query.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
@@ -686,7 +713,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                         child: Text(
                           "Kota tidak ditemukan",
                           style: GoogleFonts.poppins(
-                            color: Colors.grey.shade500,
+                            color: isDark ? Colors.white60 : Colors.grey.shade500,
                             fontSize: 13,
                           ),
                         ),
@@ -694,7 +721,10 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                     : ListView.separated(
                         controller: scrollController,
                         itemCount: filtered.length,
-                        separatorBuilder: (context, index) => const Divider(height: 1, color: Color(0xFFF0F0F0)),
+                        separatorBuilder: (context, index) => Divider(
+                          height: 1,
+                          color: isDark ? Colors.white12 : const Color(0xFFF0F0F0),
+                        ),
                         itemBuilder: (context, index) {
                           final kota = filtered[index];
                           final isSelected = widget.currentSelected?.id == kota.id;
@@ -703,7 +733,7 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                             contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                             leading: Icon(
                               Icons.location_city_rounded,
-                              color: isSelected ? mainColor : Colors.grey.shade400,
+                              color: isSelected ? mainColor : (isDark ? Colors.white60 : Colors.grey.shade400),
                               size: 20,
                             ),
                             title: Text(
@@ -711,11 +741,13 @@ class _CitySearchModalState extends State<_CitySearchModal> {
                               style: GoogleFonts.poppins(
                                 fontSize: 13,
                                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                color: isSelected ? mainColor : Colors.black87,
+                                color: isSelected
+                                    ? mainColor
+                                    : (isDark ? Colors.white : Colors.black87),
                               ),
                             ),
                             trailing: isSelected
-                                ? Icon(Icons.check_circle_rounded, color: mainColor, size: 20)
+                                ? const Icon(Icons.check_circle_rounded, color: mainColor, size: 20)
                                 : null,
                             onTap: () => widget.onSelect(kota),
                           );

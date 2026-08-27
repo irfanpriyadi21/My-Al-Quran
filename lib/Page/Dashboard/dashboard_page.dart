@@ -1,27 +1,17 @@
-import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
-import 'package:intl/intl.dart';
-import 'package:my_quran/Componen/Widget/CaegoryChipWidget.dart';
 import 'package:my_quran/Componen/News/NewsWidget.dart';
-import 'package:my_quran/Componen/Widget/SurahCardWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
 import 'package:my_quran/Page/Doa/doa_harian_page.dart';
 import 'package:my_quran/Page/Hadits/hadits_page.dart';
 import 'package:my_quran/Page/Kiblat/kiblat_page.dart';
 import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
-import 'package:my_quran/Provider/Surah/SurahApi.dart';
-import 'package:provider/provider.dart';
 
 import '../../Componen/Widget/MenuComponenWidget.dart';
 import '../../Componen/Widget/RealtimeClockWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
-import '../../Componen/alert.dart';
-import '../../Model/ModelListSurah.dart';
-import '../../Model/string_http_exception.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -32,43 +22,46 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   final hijri = HijriCalendar.now();
-  List menus = [
+  final List menus = [
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "Al-Quran",
-      "page" : const AlQuran()
+      "image": "assets/image/alQuran.png",
+      "title": "Al-Quran",
+      "page": const AlQuran()
     },
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "Doa Harian",
-      "page" : const DoaHarianPage()
+      "image": "assets/image/alQuran.png",
+      "title": "Doa Harian",
+      "page": const DoaHarianPage()
     },
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "Kiblat",
-      "page" : const KiblatPage()
+      "image": "assets/image/alQuran.png",
+      "title": "Kiblat",
+      "page": const KiblatPage()
     },
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "Hadits",
-      "page" : const HaditsPage()
+      "image": "assets/image/alQuran.png",
+      "title": "Hadits",
+      "page": const HaditsPage()
     },
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "W.Shalat",
-      "page" : const JadwalShalatPage()
+      "image": "assets/image/alQuran.png",
+      "title": "W.Shalat",
+      "page": const JadwalShalatPage()
     },
     {
-      "image" : "assets/image/alQuran.png",
-      "title" : "Imasakiyah",
-      "page" : const JadwalShalatPage()
+      "image": "assets/image/alQuran.png",
+      "title": "Imsakiyah",
+      "page": const JadwalShalatPage()
     },
   ];
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final user = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F7),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -85,24 +78,30 @@ class _DashboardPageState extends State<DashboardPage> {
                         children: [
                           CircleAvatar(
                             radius: 20,
-                            backgroundImage: NetworkImage(
-                              FirebaseAuth.instance.currentUser!.photoURL!,
-                            ),
+                            backgroundImage: user?.photoURL != null
+                                ? NetworkImage(user!.photoURL!)
+                                : null,
+                            backgroundColor: isDark
+                                ? const Color(0xFF2C2C2C)
+                                : Colors.grey[300],
+                            child: user?.photoURL == null
+                                ? const Icon(Icons.person, size: 20, color: mainColor)
+                                : null,
                           ),
                           const SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextData(
-                                text: "Hi, ${FirebaseAuth.instance.currentUser!.displayName ?? ""}",
+                                text: "Hi, ${user?.displayName ?? "Pengguna"}",
                                 size: 13,
-                                color: Colors.grey[700]!,
+                                color: isDark ? Colors.white70 : Colors.grey[700]!,
                                 fontWeight: FontWeight.normal,
                               ),
                               TextData(
-                                text: FirebaseAuth.instance.currentUser!.email ?? "",
+                                text: user?.email ?? "",
                                 size: 10,
-                                color: Colors.grey[700]!,
+                                color: isDark ? Colors.white60 : Colors.grey[700]!,
                                 fontWeight: FontWeight.normal,
                               ),
                             ],
@@ -112,11 +111,11 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                     Icon(
                       Icons.notifications_none,
-                      color: Colors.grey[700],
+                      color: isDark ? Colors.white70 : Colors.grey[700],
                     ),
                   ],
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -131,23 +130,22 @@ class _DashboardPageState extends State<DashboardPage> {
                             fontWeight: FontWeight.bold,
                           ),
                           const SizedBox(height: 6),
-                          TextData(
+                          const TextData(
                             text: "Baca Al-Quran Dengan Mudah",
                             size: 14,
                             color: Colors.grey,
                             fontWeight: FontWeight.bold,
                           ),
                           const SizedBox(height: 20),
-                          RealtimeClock(),
+                          const RealtimeClock(),
                           const SizedBox(height: 4),
                           TextData(
                             text: "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
                             size: 13,
-                            color: Colors.black45,
+                            color: isDark ? Colors.white60 : Colors.black45,
                             fontWeight: FontWeight.normal,
                           ),
                           const SizedBox(height: 12),
-
                         ],
                       ),
                     ),
@@ -160,10 +158,9 @@ class _DashboardPageState extends State<DashboardPage> {
 
                 const SizedBox(height: 30),
 
-                TextData(
+                const TextData(
                   text: "Menu",
                   size: 18,
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(height: 16),
@@ -176,35 +173,34 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                   controller: ScrollController(keepScrollOffset: false),
                   shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  children: menus.map((e){
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: menus.map((e) {
                     return GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => e['page']
-                              )
-                          );
-                        },
-                        child:
-                        MenuComponent(
-                            e['image'],
-                            e['title'],
-                            ""
-                        ));
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => e['page'],
+                          ),
+                        );
+                      },
+                      child: MenuComponent(
+                        e['image'],
+                        e['title'],
+                        "",
+                      ),
+                    );
                   }).toList(),
                 ),
-                SizedBox(height: 20),
-                TextData(
+                const SizedBox(height: 20),
+                const TextData(
                   text: "News",
                   size: 18,
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 const SizedBox(height: 16),
-                NewsWidget()
-
+                const NewsWidget(),
+                const SizedBox(height: 20),
               ],
             ),
           ),

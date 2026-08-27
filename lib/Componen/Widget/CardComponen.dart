@@ -1,71 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nb_utils/nb_utils.dart';
 
 class CardComponen extends StatelessWidget {
   final String? image;
   final String? text;
   final String? text2;
   final double? width;
-  const CardComponen(this.image, this.text, this.text2,
-      {Key? key, this.width = 300}) : super(key: key);
+
+  const CardComponen(
+    this.image,
+    this.text,
+    this.text2, {
+    super.key,
+    this.width = 300,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardColor = Theme.of(context).cardColor;
+
     return Container(
       width: width,
-      decoration: boxDecorationRoundedWithShadow(
-        20,
-        backgroundColor: Colors.white,
-        blurRadius: 10.0,
-        spreadRadius: 4.0,
-        shadowColor:Colors.grey[300],
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.2),
+            blurRadius: 10.0,
+            spreadRadius: 2.0,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            Container(
-            height: 90,
-            width: double.infinity,
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(18),
+              topRight: Radius.circular(18),
             ),
-            child: Image.network(
-              "$image",
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) {
-                return const Icon(
-                  Icons.image,
-                  size: 40,
-                );
-              },
+            child: SizedBox(
+              height: 95,
+              width: double.infinity,
+              child: Image.network(
+                image ?? '',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) {
+                  return Container(
+                    color: isDark ? const Color(0xFF2C2C2C) : Colors.grey[200],
+                    child: const Icon(
+                      Icons.image,
+                      size: 40,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-          Container(
-            height: 80,
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    text!.length > 40
-                        ? text!.substring(0, 40) + '...'
-                        : text!,
-                    style: GoogleFonts.poppins(
-                        textStyle: boldTextStyle(size: 12)
-                    )),
-                const SizedBox(height: 8),
+                  text ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : const Color(0xFF2D2D2D),
+                    height: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 6),
                 Text(
-                    text2!.length > 50
-                        ? text2!.substring(0, 50) + '...'
-                        : text2!,
-                    style: GoogleFonts.poppins(
-                        textStyle: secondaryTextStyle(size: 10)
-                    ))
+                  text2 ?? '',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    color: isDark ? Colors.white60 : Colors.grey[600],
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
