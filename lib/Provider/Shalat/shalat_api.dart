@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
 import 'package:my_quran/Model/model_kota_sholat.dart';
 import 'package:my_quran/Provider/Shalat/AdzanAlarmService.dart';
+import 'package:my_quran/Provider/Shalat/prayer_home_widget_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../url_api.dart';
 
@@ -156,6 +157,10 @@ class ShalatApi with ChangeNotifier {
           if (jadwalData != null) {
             jadwalToday = ModelJadwalSholat.fromJson(jadwalData);
             AdzanAlarmService().updatePrayerSchedule(jadwalToday!);
+            PrayerHomeWidgetService().updateWidgetData(
+              jadwal: jadwalToday!,
+              cityName: selectedKota?.lokasi ?? "KOTA JAKARTA",
+            );
           }
         } else {
           errorMessage = 'Jadwal shalat tidak ditemukan untuk tanggal ini.';
