@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
@@ -19,14 +20,24 @@ class AdzanAudioOption {
 }
 
 class AdzanAlarmService extends ChangeNotifier {
-  static final AdzanAlarmService _instance = AdzanAlarmService._internal();
-  factory AdzanAlarmService() => _instance;
+  static AdzanAlarmService _instance = AdzanAlarmService._internal();
+
+  factory AdzanAlarmService() {
+    if (_instance._disposed) {
+      _instance = AdzanAlarmService._internal();
+    }
+    return _instance;
+  }
+
   AdzanAlarmService._internal() {
+    _disposed = false;
     _initAudioPlayer();
     _loadPreferences();
   }
 
+  bool _disposed = false;
   late final AudioPlayer _audioPlayer;
+  StreamSubscription<PlayerState>? _playerSubscription;
   ModelJadwalSholat? _lastKnownJadwal;
 
   bool _isMasterAlarmEnabled = true;
@@ -114,7 +125,8 @@ class AdzanAlarmService extends ChangeNotifier {
       ),
     );
 
-    _audioPlayer.onPlayerStateChanged.listen((state) {
+    _playerSubscription = _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (_disposed) return;
       _isPlaying = state == PlayerState.playing;
       if (state == PlayerState.playing) {
         _isLoading = false;
@@ -125,6 +137,21 @@ class AdzanAlarmService extends ChangeNotifier {
       }
       notifyListeners();
     });
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _playerSubscription?.cancel();
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   Future<void> _loadPreferences() async {

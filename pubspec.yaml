@@ -60,6 +60,8 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
+  pdf: ^3.11.1
+  printing: ^5.13.2
 
 dev_dependencies:
   flutter_test:

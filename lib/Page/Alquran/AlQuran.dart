@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Page/Alquran/AyatPage.dart';
 import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
+import 'package:my_quran/Page/Alquran/surah_pdf_export_modal.dart';
 import 'package:my_quran/Page/indexPage.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../Componen/Widget/SurahCardWidget.dart';
@@ -475,6 +477,30 @@ class _AlQuranState extends State<AlQuran> {
                                 ),
                               ),
                             );
+                          },
+                          onLongPress: () async {
+                            try {
+                              toast("Memuat data Surah ${datas.namaLatin}...");
+                              final ayatData = await Provider.of<SurahApi>(
+                                context,
+                                listen: false,
+                              ).getAyat(datas.nomor!.toInt());
+                              if (ayatData.ayat != null &&
+                                  ayatData.ayat!.isNotEmpty &&
+                                  context.mounted) {
+                                SurahPdfExportModal.show(
+                                  context,
+                                  surahId: datas.nomor!.toInt(),
+                                  surahName: datas.namaLatin!,
+                                  jumlahAyat: datas.jumlahAyat!.toString(),
+                                  tempatTurun: datas.tempatTurun!,
+                                  arti: datas.arti!,
+                                  ayatList: ayatData.ayat!,
+                                );
+                              }
+                            } catch (e) {
+                              toast("Gagal memuat ayat: $e");
+                            }
                           },
                           child: SurahCard(
                             number: datas.nomor!.toInt(),

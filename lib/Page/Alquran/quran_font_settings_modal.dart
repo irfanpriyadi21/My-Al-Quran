@@ -197,27 +197,26 @@ class QuranFontSettingsModal extends StatelessWidget {
 
                 ...QuranSettingsProvider.availableFonts.map((font) {
                   final isSelected = settings.arabicFontFamily == font['id'];
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    decoration: BoxDecoration(
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Material(
                       color: isSelected
                           ? mainColor.withOpacity(0.12)
                           : cardBg,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: isSelected
-                            ? mainColor
-                            : (isDark
-                                ? Colors.white10
-                                : Colors.transparent),
-                        width: isSelected ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(14),
-                      child: InkWell(
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
+                        side: BorderSide(
+                          color: isSelected
+                              ? mainColor
+                              : (isDark
+                                  ? Colors.white10
+                                  : Colors.transparent),
+                          width: isSelected ? 1.5 : 1,
+                        ),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
                         onTap: () => settings.setFontFamily(font['id']!),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -288,7 +287,11 @@ class QuranFontSettingsModal extends StatelessWidget {
                                 "القرآن",
                                 style: _getSampleTextStyle(
                                   font['id']!,
-                                  isSelected ? mainColor : (isDark ? Colors.white70 : Colors.black87),
+                                  isSelected
+                                      ? mainColor
+                                      : (isDark
+                                          ? Colors.white70
+                                          : Colors.black87),
                                 ),
                               ),
                             ],
@@ -386,16 +389,16 @@ class QuranFontSettingsModal extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                Container(
-                  decoration: BoxDecoration(
-                    color: cardBg,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                Material(
+                  color: cardBg,
+                  borderRadius: BorderRadius.circular(16),
+                  clipBehavior: Clip.antiAlias,
                   child: Column(
                     children: [
                       SwitchListTile(
                         value: settings.showLatin,
                         activeThumbColor: mainColor,
+                        tileColor: Colors.transparent,
                         title: Text(
                           "Teks Latin (Transliterasi)",
                           style: GoogleFonts.poppins(
@@ -424,6 +427,7 @@ class QuranFontSettingsModal extends StatelessWidget {
                       SwitchListTile(
                         value: settings.showTranslation,
                         activeThumbColor: mainColor,
+                        tileColor: Colors.transparent,
                         title: Text(
                           "Terjemahan Bahasa Indonesia",
                           style: GoogleFonts.poppins(

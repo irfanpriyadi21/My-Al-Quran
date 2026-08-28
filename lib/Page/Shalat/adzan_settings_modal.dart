@@ -139,23 +139,24 @@ class AdzanSettingsModal extends StatelessWidget {
                   // Audio Options
                   ...AdzanAlarmService.adzanOptions.map((option) {
                     final isSelected = option.id == adzanService.selectedAdzanId;
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Material(
                         color: isSelected
                             ? mainColor.withOpacity(isDark ? 0.18 : 0.08)
                             : (isDark ? const Color(0xFF242424) : const Color(0xFFF7F8FA)),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: isSelected ? mainColor : Colors.transparent,
-                          width: 1.5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                          side: BorderSide(
+                            color: isSelected ? mainColor : Colors.transparent,
+                            width: 1.5,
+                          ),
                         ),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(14),
+                        clipBehavior: Clip.antiAlias,
                         child: ListTile(
                           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+                          tileColor: Colors.transparent,
                           leading: Icon(
                             isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
                             color: isSelected ? mainColor : Colors.grey,

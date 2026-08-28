@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
+import 'package:my_quran/Page/Alquran/surah_pdf_export_modal.dart';
+import 'package:nb_utils/nb_utils.dart';
 import '../../Componen/Widget/QuranAudioPlayerWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
 import '../../Componen/Widget/VerseTileWidget.dart';
@@ -164,7 +166,6 @@ class _AyatPageState extends State<AyatPage> {
                     children: [
                       // HEADER BAR
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GestureDetector(
                             onTap: () {
@@ -177,16 +178,46 @@ class _AyatPageState extends State<AyatPage> {
                             },
                             child: const Icon(Icons.arrow_back, color: mainColor),
                           ),
-                          TextData(
-                            text: widget.name,
-                            size: 20,
-                            color: mainColor,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextData(
+                              text: widget.name,
+                              size: 20,
+                              color: mainColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.format_size_rounded, color: mainColor),
+                            icon: const Icon(
+                              Icons.picture_as_pdf_rounded,
+                              color: Color(0xFFFF5722),
+                            ),
+                            tooltip: "Download Surah PDF",
+                            onPressed: () {
+                              if (listAyat.ayat != null &&
+                                  listAyat.ayat!.isNotEmpty) {
+                                SurahPdfExportModal.show(
+                                  context,
+                                  surahId: widget.id,
+                                  surahName: widget.name,
+                                  jumlahAyat: widget.jumlahAyat,
+                                  tempatTurun: widget.tempatTurun,
+                                  arti: widget.arti,
+                                  ayatList: listAyat.ayat!,
+                                );
+                              } else {
+                                toast("Memuat data ayat...");
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.format_size_rounded,
+                              color: mainColor,
+                            ),
                             tooltip: "Pengaturan Font Arab",
-                            onPressed: () => QuranFontSettingsModal.show(context),
+                            onPressed: () =>
+                                QuranFontSettingsModal.show(context),
                           ),
                         ],
                       ),

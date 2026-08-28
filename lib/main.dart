@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DoaProvider()),
         ChangeNotifierProvider(create: (_) => HaditsProvider()),
         ChangeNotifierProvider(create: (_) => ShalatApi()),
-        ChangeNotifierProvider(create: (_) => AdzanAlarmService()),
+        ChangeNotifierProvider.value(value: AdzanAlarmService()),
         ChangeNotifierProvider(create: (_) => NearbyMosqueProvider()),
       ],
       child: Consumer<AppProvider>(

@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   firebase_core
   geolocator_windows
   nb_utils
+  printing
   share_plus
   url_launcher_windows
 )
