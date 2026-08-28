@@ -107,7 +107,7 @@ class AdzanAlarmService extends ChangeNotifier {
     _audioPlayer = AudioPlayer();
 
     // Set Audio context for proper speaker playback on Android/iOS
-    AudioPlayer.global.setAudioContext(
+    _audioPlayer.setAudioContext(
       const AudioContext(
         android: AudioContextAndroid(
           isSpeakerphoneOn: true,

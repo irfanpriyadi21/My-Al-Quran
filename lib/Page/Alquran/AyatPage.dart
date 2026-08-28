@@ -131,18 +131,27 @@ class _AyatPageState extends State<AyatPage> {
     super.dispose();
   }
 
+  void _onBackPress() {
+    try {
+      Provider.of<QuranAudioProvider>(context, listen: false).pause();
+    } catch (_) {}
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AlQuran()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) {
-          return;
-        }
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AlQuran()),
-        );
+        if (didPop) return;
+        _onBackPress();
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -168,14 +177,7 @@ class _AyatPageState extends State<AyatPage> {
                       Row(
                         children: [
                           GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const AlQuran(),
-                                ),
-                              );
-                            },
+                            onTap: _onBackPress,
                             child: const Icon(Icons.arrow_back, color: mainColor),
                           ),
                           const SizedBox(width: 12),

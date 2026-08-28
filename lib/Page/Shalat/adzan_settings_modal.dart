@@ -39,7 +39,9 @@ class AdzanSettingsModal extends StatelessWidget {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                        color: isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -71,9 +73,14 @@ class AdzanSettingsModal extends StatelessWidget {
 
                   // Master Switch Card
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF282438) : const Color(0xFFF9F6FF),
+                      color: isDark
+                          ? const Color(0xFF282438)
+                          : const Color(0xFFF9F6FF),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
                         color: mainColor.withOpacity(isDark ? 0.3 : 0.15),
@@ -87,7 +94,11 @@ class AdzanSettingsModal extends StatelessWidget {
                             color: mainColor.withOpacity(0.15),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.notifications_active_rounded, color: mainColor, size: 20),
+                          child: const Icon(
+                            Icons.notifications_active_rounded,
+                            color: mainColor,
+                            size: 20,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
@@ -106,7 +117,9 @@ class AdzanSettingsModal extends StatelessWidget {
                                 "Bunyikan adzan saat waktu shalat",
                                 style: GoogleFonts.poppins(
                                   fontSize: 11,
-                                  color: isDark ? Colors.white60 : Colors.black54,
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.black54,
                                 ),
                               ),
                             ],
@@ -138,13 +151,16 @@ class AdzanSettingsModal extends StatelessWidget {
 
                   // Audio Options
                   ...AdzanAlarmService.adzanOptions.map((option) {
-                    final isSelected = option.id == adzanService.selectedAdzanId;
+                    final isSelected =
+                        option.id == adzanService.selectedAdzanId;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Material(
                         color: isSelected
                             ? mainColor.withOpacity(isDark ? 0.18 : 0.08)
-                            : (isDark ? const Color(0xFF242424) : const Color(0xFFF7F8FA)),
+                            : (isDark
+                                  ? const Color(0xFF242424)
+                                  : const Color(0xFFF7F8FA)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                           side: BorderSide(
@@ -154,18 +170,27 @@ class AdzanSettingsModal extends StatelessWidget {
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 2,
+                          ),
                           tileColor: Colors.transparent,
                           leading: Icon(
-                            isSelected ? Icons.radio_button_checked_rounded : Icons.radio_button_off_rounded,
+                            isSelected
+                                ? Icons.radio_button_checked_rounded
+                                : Icons.radio_button_off_rounded,
                             color: isSelected ? mainColor : Colors.grey,
                           ),
                           title: Text(
                             option.name,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                              color: isSelected ? mainColor : (isDark ? Colors.white : Colors.black87),
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? mainColor
+                                  : (isDark ? Colors.white : Colors.black87),
                             ),
                           ),
                           subtitle: Text(
@@ -205,7 +230,9 @@ class AdzanSettingsModal extends StatelessWidget {
                               if (adzanService.isPlaying) {
                                 adzanService.stopAdzan();
                               } else {
-                                adzanService.playAdzan(prayerName: "Uji Coba Suara");
+                                adzanService.playAdzan(
+                                  prayerName: "Uji Coba Suara",
+                                );
                               }
                             },
                       icon: adzanService.isLoading
@@ -226,8 +253,8 @@ class AdzanSettingsModal extends StatelessWidget {
                         adzanService.isLoading
                             ? "Memuat Audio Adzan..."
                             : (adzanService.isPlaying
-                                ? "Hentikan Uji Coba Suara"
-                                : "Uji Coba Suara Adzan"),
+                                  ? "Hentikan Uji Coba Suara"
+                                  : "Uji Coba Suara Adzan"),
                         style: GoogleFonts.poppins(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -260,11 +287,16 @@ class AdzanSettingsModal extends StatelessWidget {
                           adzanService.togglePrayerAlarm(prayer);
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: isActive
                                 ? mainColor.withOpacity(isDark ? 0.22 : 0.1)
-                                : (isDark ? const Color(0xFF242424) : Colors.grey.shade100),
+                                : (isDark
+                                      ? const Color(0xFF242424)
+                                      : Colors.grey.shade100),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isActive ? mainColor : Colors.transparent,
@@ -285,10 +317,14 @@ class AdzanSettingsModal extends StatelessWidget {
                                 prayer,
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
-                                  fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                                  fontWeight: isActive
+                                      ? FontWeight.bold
+                                      : FontWeight.w500,
                                   color: isActive
                                       ? mainColor
-                                      : (isDark ? Colors.white70 : Colors.black87),
+                                      : (isDark
+                                            ? Colors.white70
+                                            : Colors.black87),
                                 ),
                               ),
                             ],

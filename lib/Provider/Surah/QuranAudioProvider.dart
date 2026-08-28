@@ -40,6 +40,24 @@ class QuranAudioProvider with ChangeNotifier {
   }
 
   void _initAudioPlayer() {
+    _audioPlayer.setAudioContext(
+      const AudioContext(
+        android: AudioContextAndroid(
+          isSpeakerphoneOn: false,
+          stayAwake: false,
+          contentType: AndroidContentType.music,
+          usageType: AndroidUsageType.media,
+          audioFocus: AndroidAudioFocus.none,
+        ),
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.playback,
+          options: [
+            AVAudioSessionOptions.defaultToSpeaker,
+          ],
+        ),
+      ),
+    );
+
     _playerStateSubscription = _audioPlayer.onPlayerStateChanged.listen((
       state,
     ) {
