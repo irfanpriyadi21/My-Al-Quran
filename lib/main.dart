@@ -6,6 +6,7 @@ import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:my_quran/Provider/Doa/doa_provider.dart';
 import 'package:my_quran/Provider/Hadits/hadits_provider.dart';
+import 'package:my_quran/Provider/Masjid/nearby_mosque_provider.dart';
 import 'package:my_quran/Provider/Shalat/AdzanAlarmService.dart';
 import 'package:my_quran/Provider/Shalat/shalat_api.dart';
 import 'package:my_quran/Provider/Surah/QuranAudioProvider.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HaditsProvider()),
         ChangeNotifierProvider(create: (_) => ShalatApi()),
         ChangeNotifierProvider(create: (_) => AdzanAlarmService()),
+        ChangeNotifierProvider(create: (_) => NearbyMosqueProvider()),
       ],
       child: Consumer<AppProvider>(
         builder: (context, appProvider, child) {

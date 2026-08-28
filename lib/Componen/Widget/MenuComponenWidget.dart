@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-import '../../main.dart';
-
 
 class MenuComponent extends StatelessWidget {
   final String? image;
@@ -13,27 +11,32 @@ class MenuComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-          width: 60,
-          height: 50,
+          width: 56,
+          height: 48,
           alignment: Alignment.center,
           decoration: boxDecorationRoundedWithShadow(
             16,
             backgroundColor: context.cardColor,
-            shadowColor: Colors.grey.withOpacity(0.2),
+            shadowColor: isDark
+                ? Colors.black.withOpacity(0.3)
+                : Colors.grey.withOpacity(0.15),
           ),
           child: SizedBox(
-            width: 30,
-            height: 30,
+            width: 28,
+            height: 28,
             child: Image.asset(
               image!,
+              fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return const Icon(
-                  Icons.image_not_supported,
+                  Icons.mosque_outlined,
                   size: 22,
                   color: Colors.grey,
                 );
@@ -41,19 +44,17 @@ class MenuComponent extends StatelessWidget {
             ),
           ),
         ),
-        8.height,
-        Expanded(
-          child: Text(
-            '$title',
-            style: GoogleFonts.poppins(
-                textStyle: secondaryTextStyle
-                  (
-                    size: 12,
-                    color: Colors.grey
-                )
-            ),
-            textAlign: TextAlign.center,
+        const SizedBox(height: 6),
+        Text(
+          '$title',
+          style: GoogleFonts.poppins(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: isDark ? Colors.white70 : Colors.grey.shade700,
+            height: 1.2,
           ),
+          textAlign: TextAlign.center,
+          maxLines: 2,
         ),
       ],
     );

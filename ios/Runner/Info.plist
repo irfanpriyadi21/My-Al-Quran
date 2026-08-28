@@ -45,5 +45,18 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan daftar masjid terdekat dan arah kiblat yang akurat dari posisi Anda.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Aplikasi membutuhkan akses lokasi untuk menampilkan masjid terdekat dan jadwal sholat presisi.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlemaps</string>
+		<string>comgooglemaps</string>
+		<string>maps</string>
+		<string>geo</string>
+		<string>https</string>
+		<string>http</string>
+	</array>
 </dict>
 </plist>

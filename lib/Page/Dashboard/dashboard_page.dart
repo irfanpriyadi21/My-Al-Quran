@@ -4,10 +4,12 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:my_quran/Componen/News/NewsWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
+import 'package:my_quran/Page/Dashboard/menu_lainnya_modal.dart';
 import 'package:my_quran/Page/Doa/doa_harian_page.dart';
 import 'package:my_quran/Page/Dzikir/dzikir_page.dart';
 import 'package:my_quran/Page/Hadits/hadits_page.dart';
 import 'package:my_quran/Page/Kiblat/kiblat_page.dart';
+import 'package:my_quran/Page/Masjid/nearby_mosque_page.dart';
 import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
 
 import '../../Componen/Widget/MenuComponenWidget.dart';
@@ -46,13 +48,23 @@ class _DashboardPageState extends State<DashboardPage> {
     },
     {
       "image": "assets/image/shalat.png",
-      "title": "W.Shalat",
+      "title": "Jadwal Shalat",
       "page": const JadwalShalatPage(),
     },
     {
       "image": "assets/image/tasbih.png",
       "title": "Dzikir",
       "page": const DzikirPage(),
+    },
+    {
+      "image": "assets/image/mosque.png",
+      "title": "Masjid Terdekat",
+      "page": const NearbyMosquePage(),
+    },
+    {
+      "image": "assets/image/other.png",
+      "title": "Lainnya",
+      "action": (BuildContext ctx) => MenuLainnyaModal.show(ctx),
     },
   ];
 
@@ -175,8 +187,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   padding: EdgeInsets.zero,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 1,
+                    mainAxisSpacing: 14,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.78,
                   ),
                   controller: ScrollController(keepScrollOffset: false),
                   shrinkWrap: true,
@@ -184,10 +197,14 @@ class _DashboardPageState extends State<DashboardPage> {
                   children: menus.map((e) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => e['page']),
-                        );
+                        if (e['action'] != null) {
+                          e['action'](context);
+                        } else if (e['page'] != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => e['page']),
+                          );
+                        }
                       },
                       child: MenuComponent(e['image'], e['title'], ""),
                     );
