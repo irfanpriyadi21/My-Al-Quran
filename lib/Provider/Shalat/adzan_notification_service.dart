@@ -74,7 +74,7 @@ class AdzanNotificationService {
     if (androidPlugin != null) {
       // Channel Adzan Umum
       const adzanChannel = AndroidNotificationChannel(
-        'adzan_alarm_channel',
+        'adzan_alarm_channel_v2',
         'Alarm Adzan Waktu Shalat',
         description:
             'Memutar suara adzan ketika waktu shalat tiba meskipun aplikasi ditutup',
@@ -82,17 +82,19 @@ class AdzanNotificationService {
         playSound: true,
         sound: RawResourceAndroidNotificationSound('adzan'),
         enableVibration: true,
+        audioAttributesUsage: AudioAttributesUsage.alarm,
       );
 
       // Channel Adzan Khusus Subuh
       const subuhChannel = AndroidNotificationChannel(
-        'adzan_subuh_channel',
+        'adzan_subuh_channel_v2',
         'Alarm Adzan Khusus Subuh',
         description: 'Memutar suara adzan khusus subuh saat waktu Subuh tiba',
         importance: Importance.max,
         playSound: true,
         sound: RawResourceAndroidNotificationSound('adzan_subuh'),
         enableVibration: true,
+        audioAttributesUsage: AudioAttributesUsage.alarm,
       );
 
       await androidPlugin.createNotificationChannel(adzanChannel);
@@ -133,7 +135,7 @@ class AdzanNotificationService {
       'Isya': jadwal.isya,
     };
 
-    final now = DateTime.now();
+    final nowLocal = tz.TZDateTime.now(tz.local);
 
     for (var entry in prayerTimes.entries) {
       final prayerName = entry.key;
@@ -151,19 +153,24 @@ class AdzanNotificationService {
       final hour = int.tryParse(parts[0]) ?? 0;
       final minute = int.tryParse(parts[1]) ?? 0;
 
-      // Calculate scheduled DateTime
-      var scheduledDate = DateTime(now.year, now.month, now.day, hour, minute);
+      // Calculate scheduled TZDateTime directly in local timezone
+      var scheduledDate = tz.TZDateTime(
+        tz.local,
+        nowLocal.year,
+        nowLocal.month,
+        nowLocal.day,
+        hour,
+        minute,
+      );
 
-      // If the time has already passed today, schedule for tomorrow
-      if (scheduledDate.isBefore(now)) {
+      // If the time has already passed today, schedule for tomorrow at the exact time
+      if (scheduledDate.isBefore(nowLocal)) {
         scheduledDate = scheduledDate.add(const Duration(days: 1));
       }
 
-      final tzScheduled = tz.TZDateTime.from(scheduledDate, tz.local);
-
       // Choose notification sound channel
       final isSubuh = prayerName == 'Subuh';
-      final channelId = isSubuh ? 'adzan_subuh_channel' : 'adzan_alarm_channel';
+      final channelId = isSubuh ? 'adzan_subuh_channel_v2' : 'adzan_alarm_channel_v2';
       final channelName = isSubuh
           ? 'Alarm Adzan Khusus Subuh'
           : 'Alarm Adzan Waktu Shalat';
@@ -179,9 +186,10 @@ class AdzanNotificationService {
         playSound: true,
         sound: RawResourceAndroidNotificationSound(soundName),
         enableVibration: true,
-        vibrationPattern: Int64List.fromList([0, 1000, 500, 1000]),
+        vibrationPattern: Int64List.fromList([0, 1000, 500, 1000, 500, 1000]),
         fullScreenIntent: true,
         category: AndroidNotificationCategory.alarm,
+        audioAttributesUsage: AudioAttributesUsage.alarm,
         visibility: NotificationVisibility.public,
       );
 
@@ -203,13 +211,13 @@ class AdzanNotificationService {
           id: notificationId,
           title: "🕌 Waktu Shalat $prayerName Telah Tiba ($timeStr)",
           body: "Mari dirikan shalat $prayerName. Hayya 'alas shalaah.",
-          scheduledDate: tzScheduled,
+          scheduledDate: scheduledDate,
           notificationDetails: notificationDetails,
           androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           payload: "prayer_$prayerName",
         );
         debugPrint(
-          "Scheduled Adzan Alarm for $prayerName at ${tzScheduled.toString()} (ID: $notificationId)",
+          "Scheduled Exact Background Adzan for $prayerName at ${scheduledDate.toString()} (ID: $notificationId)",
         );
       } catch (e) {
         debugPrint("Error scheduling alarm for $prayerName: $e");

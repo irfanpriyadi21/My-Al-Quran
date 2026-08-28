@@ -145,7 +145,6 @@ class AdzanSettingsModal extends StatelessWidget {
                         color: isSelected
                             ? mainColor.withOpacity(isDark ? 0.18 : 0.08)
                             : (isDark ? const Color(0xFF242424) : const Color(0xFFF7F8FA)),
-                        borderRadius: BorderRadius.circular(14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                           side: BorderSide(

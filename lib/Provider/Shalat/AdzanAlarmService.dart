@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
@@ -165,6 +166,15 @@ class AdzanAlarmService extends ChangeNotifier {
         _prayerAlarms[key] = val;
       }
     }
+
+    final cachedSchedule = prefs.getString('sholat_last_jadwal_cache');
+    if (cachedSchedule != null && _lastKnownJadwal == null) {
+      try {
+        final map = json.decode(cachedSchedule);
+        _lastKnownJadwal = ModelJadwalSholat.fromJson(map);
+      } catch (_) {}
+    }
+
     notifyListeners();
     _rescheduleBackgroundAlarms();
   }

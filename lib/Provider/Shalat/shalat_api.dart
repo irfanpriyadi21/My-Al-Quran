@@ -18,6 +18,34 @@ class ShalatApi with ChangeNotifier {
   bool isLoadingKota = false;
   String errorMessage = '';
 
+  ShalatApi() {
+    loadCachedScheduleAndSync();
+  }
+
+  // 0. Muat cache jadwal offline dan jadwalkan alarm background saat inisialisasi awal
+  Future<void> loadCachedScheduleAndSync() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedId = prefs.getString('sholat_city_id');
+      final savedName = prefs.getString('sholat_city_name');
+      if (savedId != null && savedName != null) {
+        selectedKota = ModelKotaSholat(id: savedId, lokasi: savedName);
+      } else {
+        selectedKota = ModelKotaSholat(id: "1301", lokasi: "KOTA JAKARTA");
+      }
+
+      final cachedJson = prefs.getString('sholat_last_jadwal_cache');
+      if (cachedJson != null) {
+        final Map<String, dynamic> map = json.decode(cachedJson);
+        jadwalToday = ModelJadwalSholat.fromJson(map);
+        AdzanAlarmService().updatePrayerSchedule(jadwalToday!);
+      }
+
+      // Sinkronisasi jadwal hari ini dari server di background
+      await getJadwal(selectedKota!.id, DateTime.now());
+    } catch (_) {}
+  }
+
   // 1. Inisialisasi Lokasi & Jadwal Shalat
   Future<void> initLocationAndSchedule() async {
     isLoading = true;
@@ -156,6 +184,11 @@ class ShalatApi with ChangeNotifier {
           final jadwalData = decoded['data']['jadwal'];
           if (jadwalData != null) {
             jadwalToday = ModelJadwalSholat.fromJson(jadwalData);
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString(
+              'sholat_last_jadwal_cache',
+              json.encode(jadwalData),
+            );
             AdzanAlarmService().updatePrayerSchedule(jadwalToday!);
             PrayerHomeWidgetService().updateWidgetData(
               jadwal: jadwalToday!,

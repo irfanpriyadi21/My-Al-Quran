@@ -203,7 +203,6 @@ class QuranFontSettingsModal extends StatelessWidget {
                       color: isSelected
                           ? mainColor.withOpacity(0.12)
                           : cardBg,
-                      borderRadius: BorderRadius.circular(14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
                         side: BorderSide(

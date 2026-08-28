@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_quran/Componen/News/NewsDetail.dart';
 import 'package:my_quran/Componen/Widget/CardComponen.dart';
+import 'package:my_quran/Componen/Widget/shimmer_widget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Model/ModelListArtikel.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
@@ -92,11 +93,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (isLoading) {
-      return Container(
-        height: 180,
-        alignment: Alignment.center,
-        child: const CircularProgressIndicator(color: mainColor),
-      );
+      return const NewsShimmerWidget();
     }
 
     if (listArtikel.isEmpty) {

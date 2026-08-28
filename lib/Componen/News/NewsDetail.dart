@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_quran/Componen/Loading.dart';
+import 'package:my_quran/Componen/Widget/shimmer_widget.dart';
 import 'package:my_quran/Model/ModelDetailArtikel.dart';
 import 'package:provider/provider.dart';
 
@@ -82,10 +82,52 @@ class _NewsDetailState extends State<NewsDetail> {
                 const SizedBox(height: 20),
 
                 if (isLoading)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 80),
-                    child: Center(
-                      child: Loading(),
+                  const ShimmerEffect(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShimmerBox(
+                          height: 200,
+                          width: double.infinity,
+                          borderRadius: 16,
+                        ),
+                        SizedBox(height: 18),
+                        ShimmerBox(
+                          height: 18,
+                          width: double.infinity,
+                          borderRadius: 4,
+                        ),
+                        SizedBox(height: 8),
+                        ShimmerBox(height: 18, width: 220, borderRadius: 4),
+                        SizedBox(height: 14),
+                        Row(
+                          children: [
+                            ShimmerBox(height: 12, width: 100, borderRadius: 4),
+                            SizedBox(width: 14),
+                            ShimmerBox(height: 12, width: 80, borderRadius: 4),
+                          ],
+                        ),
+                        SizedBox(height: 24),
+                        ShimmerBox(
+                          height: 12,
+                          width: double.infinity,
+                          borderRadius: 4,
+                        ),
+                        SizedBox(height: 8),
+                        ShimmerBox(
+                          height: 12,
+                          width: double.infinity,
+                          borderRadius: 4,
+                        ),
+                        SizedBox(height: 8),
+                        ShimmerBox(
+                          height: 12,
+                          width: double.infinity,
+                          borderRadius: 4,
+                        ),
+                        SizedBox(height: 8),
+                        ShimmerBox(height: 12, width: 180, borderRadius: 4),
+                      ],
                     ),
                   )
                 else if (data != null)
@@ -158,7 +200,19 @@ class _NewsDetailState extends State<NewsDetail> {
                             child: Image.network(
                               data.thumbnail!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
+                              loadingBuilder: (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return ShimmerEffect(
+                                  child: Container(
+                                    height: 210,
+                                    width: double.infinity,
+                                    color: isDark
+                                        ? const Color(0xFF2C2C2C)
+                                        : const Color(0xFFE5E7EB),
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) => Container(
                                 color: isDark
                                     ? const Color(0xFF2C2C2C)
                                     : Colors.grey[200],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_quran/Componen/Widget/shimmer_widget.dart';
 
 class CardComponen extends StatelessWidget {
   final String? image;
@@ -50,7 +51,19 @@ class CardComponen extends StatelessWidget {
               child: Image.network(
                 image ?? '',
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) {
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return ShimmerEffect(
+                    child: Container(
+                      height: 95,
+                      width: double.infinity,
+                      color: isDark
+                          ? const Color(0xFF2C2C2C)
+                          : const Color(0xFFE5E7EB),
+                    ),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: isDark ? const Color(0xFF2C2C2C) : Colors.grey[200],
                     child: const Icon(
