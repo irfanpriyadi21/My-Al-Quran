@@ -11,6 +11,7 @@ import 'package:my_quran/Provider/Shalat/AdzanAlarmService.dart';
 import 'package:my_quran/Provider/Shalat/shalat_api.dart';
 import 'package:my_quran/Provider/Surah/QuranAudioProvider.dart';
 import 'package:my_quran/Provider/Surah/SurahApi.dart';
+import 'package:my_quran/Provider/Surah/quran_settings_provider.dart';
 import 'package:my_quran/Provider/app_provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => SurahApi()),
         ChangeNotifierProvider(create: (_) => QuranAudioProvider()),
+        ChangeNotifierProvider(create: (_) => QuranSettingsProvider()),
         ChangeNotifierProvider(create: (_) => Artikel()),
         ChangeNotifierProvider(create: (_) => AppProvider()),
         ChangeNotifierProvider(create: (_) => DoaProvider()),

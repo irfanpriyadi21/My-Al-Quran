@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Page/Alquran/AyatPage.dart';
+import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:provider/provider.dart';
 
@@ -99,20 +100,16 @@ class _AlQuranState extends State<AlQuran> {
         }
       }
 
-      // Query search filter
-      if (_searchQuery.trim().isNotEmpty) {
-        final q = _searchQuery.trim().toLowerCase();
+      // Search query filter
+      if (_searchQuery.isNotEmpty) {
+        final query = _searchQuery.toLowerCase().trim();
         final nameLatin = surah.namaLatin?.toLowerCase() ?? '';
         final arti = surah.arti?.toLowerCase() ?? '';
-        final tempatTurun = surah.tempatTurun?.toLowerCase() ?? '';
-        final nomorStr = surah.nomor?.toString() ?? '';
+        final nomor = surah.nomor?.toString() ?? '';
 
-        final matchName = nameLatin.contains(q);
-        final matchArti = arti.contains(q);
-        final matchTempat = tempatTurun.contains(q);
-        final matchNomor = nomorStr == q || nomorStr.startsWith(q);
-
-        return matchName || matchArti || matchTempat || matchNomor;
+        return nameLatin.contains(query) ||
+            arti.contains(query) ||
+            nomor == query;
       }
 
       return true;
@@ -157,6 +154,13 @@ class _AlQuranState extends State<AlQuran> {
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.format_size_rounded, color: mainColor),
+              tooltip: "Pengaturan Font Arab",
+              onPressed: () => QuranFontSettingsModal.show(context),
+            ),
+          ],
         ),
         body: SafeArea(
           child: Padding(

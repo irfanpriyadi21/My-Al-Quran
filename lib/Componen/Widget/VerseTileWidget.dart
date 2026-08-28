@@ -8,6 +8,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../Model/ModelListAyat.dart';
 import '../../Provider/Surah/QuranAudioProvider.dart';
+import '../../Provider/Surah/quran_settings_provider.dart';
 import '../colors.dart';
 import 'VerseSharedCard.dart';
 
@@ -68,8 +69,8 @@ class _VerseTileState extends State<VerseTile> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Consumer<QuranAudioProvider>(
-      builder: (context, audioProvider, child) {
+    return Consumer2<QuranAudioProvider, QuranSettingsProvider>(
+      builder: (context, audioProvider, quranSettings, child) {
         final isPlaying = audioProvider.isAyatPlaying(
           widget.surahId,
           widget.number,
@@ -193,52 +194,51 @@ class _VerseTileState extends State<VerseTile> {
 
               const SizedBox(height: 14),
 
-              // ARABIC TEXT
+              // ARABIC TEXT (Using selected font & size from QuranSettingsProvider)
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   widget.arabic,
                   textAlign: TextAlign.right,
-                  style: GoogleFonts.amiri(
-                    fontSize: 26,
-                    height: 2.0,
-                    fontWeight: FontWeight.bold,
+                  style: quranSettings.getArabicTextStyle(
                     color: isDark ? Colors.white : const Color(0xFF1E1E1E),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 12),
-
-              // LATIN TRANSLITERATION
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.latin,
-                  style: GoogleFonts.poppins(
-                    fontSize: 13,
-                    color: isDark ? const Color(0xFFD0A8FF) : Colors.grey[700],
-                    fontWeight: FontWeight.w600,
+              // LATIN TRANSLITERATION (Conditional based on user setting)
+              if (quranSettings.showLatin) ...[
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.latin,
+                    style: GoogleFonts.poppins(
+                      fontSize: 13,
+                      color: isDark ? const Color(0xFFD0A8FF) : Colors.grey[700],
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
+              ],
 
-              const SizedBox(height: 6),
-
-              // INDONESIAN TRANSLATION
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  widget.translation,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12.5,
-                    color: isDark ? Colors.white70 : Colors.black87,
-                    fontWeight: FontWeight.normal,
-                    fontStyle: FontStyle.italic,
-                    height: 1.4,
+              // INDONESIAN TRANSLATION (Conditional based on user setting)
+              if (quranSettings.showTranslation) ...[
+                const SizedBox(height: 6),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.translation,
+                    style: GoogleFonts.poppins(
+                      fontSize: 12.5,
+                      color: isDark ? Colors.white70 : Colors.black87,
+                      fontWeight: FontWeight.normal,
+                      fontStyle: FontStyle.italic,
+                      height: 1.4,
+                    ),
                   ),
                 ),
-              ),
+              ],
               const SizedBox(height: 6),
             ],
           ),

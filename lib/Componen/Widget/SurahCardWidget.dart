@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../Provider/Surah/quran_settings_provider.dart';
 import 'TextDataWidget.dart';
 
 class SurahCard extends StatelessWidget {
@@ -91,11 +93,17 @@ class SurahCard extends StatelessWidget {
           ),
 
           /// ARABIC
-          TextData(
-            text: arabic,
-            size: 19,
-            color: primaryColor,
-            fontWeight: FontWeight.bold,
+          Consumer<QuranSettingsProvider>(
+            builder: (context, quranSettings, _) {
+              return Text(
+                arabic,
+                style: quranSettings.getArabicTextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: primaryColor,
+                ),
+              );
+            },
           ),
         ],
       ),

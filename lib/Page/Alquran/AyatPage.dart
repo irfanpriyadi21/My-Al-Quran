@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
 import '../../Componen/Widget/QuranAudioPlayerWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
 import '../../Componen/Widget/VerseTileWidget.dart';
@@ -107,16 +108,18 @@ class _AyatPageState extends State<AyatPage> {
 
   Future<void> loadLastRead() async {
     final data = await LastReadService.getLastRead();
-    if (data != null && data["id"].toString() == widget.id.toString()) {
-      savedAyat = data["ayat"];
+    if (data != null && data['id'] == widget.id) {
+      setState(() {
+        savedAyat = data['ayat'];
+      });
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     initPage();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -180,7 +183,11 @@ class _AyatPageState extends State<AyatPage> {
                             color: mainColor,
                             fontWeight: FontWeight.bold,
                           ),
-                          const SizedBox(width: 24),
+                          IconButton(
+                            icon: const Icon(Icons.format_size_rounded, color: mainColor),
+                            tooltip: "Pengaturan Font Arab",
+                            onPressed: () => QuranFontSettingsModal.show(context),
+                          ),
                         ],
                       ),
 
