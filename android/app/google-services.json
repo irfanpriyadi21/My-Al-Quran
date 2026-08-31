@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:953324306666:android:4b47516776a52ecf5b9793",
         "android_client_info": {
-          "package_name": "com.irfdev.myquran.app"
+          "package_name": "com.example.myquran.my_quran"
         }
       },
       "oauth_client": [
@@ -17,8 +17,61 @@
           "client_id": "953324306666-gsa79tglt1ufctr5o76vd4q3v90uusp8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
+            "package_name": "com.example.myquran.my_quran",
+            "certificate_hash": "ee7196f7ce0ca5015411013ebb2edf7f285daf02"
+          }
+        },
+        {
+          "client_id": "953324306666-bgl2q3f9nprthu1chk5h4fuqcuci201h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfZ1ltb_UtjizZJsRCVeXNbo8q8KIBU_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953324306666-bgl2q3f9nprthu1chk5h4fuqcuci201h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953324306666:android:cfd4a8a20ef06d285b9793",
+        "android_client_info": {
+          "package_name": "com.irfdev.myquran.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953324306666-0bbbhp3qhgor0les4c4v50o7qlhh9nc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
             "package_name": "com.irfdev.myquran.app",
             "certificate_hash": "ee7196f7ce0ca5015411013ebb2edf7f285daf02"
+          }
+        },
+        {
+          "client_id": "953324306666-7ptvo9a9nr61sp8f9i0paiqi9q0p4s7u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.irfdev.myquran.app",
+            "certificate_hash": "9a394d0dd9ed84378faec60589d1beef3defb4b3"
+          }
+        },
+        {
+          "client_id": "953324306666-chlgigmrkk6vhvpbn7m4b8nuk07gc1eo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.irfdev.myquran.app",
+            "certificate_hash": "cf5b4a212a43cae40a89a7cdc31f06076447975d"
           }
         },
         {

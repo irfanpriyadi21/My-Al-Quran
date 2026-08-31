@@ -3,8 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/AsmaulHusna/asmaul_husna_page.dart';
+import 'package:my_quran/Page/Kalender/kalender_hijriah_page.dart';
 import 'package:my_quran/Page/Profile/profile.dart';
 import 'package:my_quran/Page/Shalat/adzan_settings_modal.dart';
+import 'package:my_quran/Page/Shalat/tuntunan_sholat_page.dart';
 
 class MenuLainnyaModal extends StatelessWidget {
   const MenuLainnyaModal({super.key});
@@ -58,7 +60,7 @@ class MenuLainnyaModal extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: mainColor.withOpacity(0.12),
+                    color: mainColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
@@ -93,69 +95,129 @@ class MenuLainnyaModal extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            // Hijri Calendar Quick Banner
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFB176F2), mainColor],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+            // Hijri Calendar Quick Banner (Clickable)
+            Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(18),
+              child: InkWell(
                 borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: mainColor.withOpacity(0.3),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const KalenderHijriahPage()),
+                  );
+                },
+                child: Ink(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFB176F2), mainColor],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: mainColor.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Kalender Hijriyah Hari Ini",
-                          style: GoogleFonts.poppins(
-                            fontSize: 11,
-                            color: Colors.white.withOpacity(0.85),
-                          ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Kalender Hijriyah Hari Ini",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 11,
+                                    color: Colors.white.withValues(alpha: 0.85),
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                const Icon(
+                                  Icons.arrow_forward_rounded,
+                                  color: Colors.white70,
+                                  size: 14,
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
+                              style: GoogleFonts.poppins(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
                         ),
-                      ],
-                    ),
+                        child: const Icon(
+                          Icons.calendar_month_rounded,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.calendar_month_rounded,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
 
             const SizedBox(height: 18),
 
             // Feature Items List
+            _buildFeatureTile(
+              context: context,
+              icon: Icons.calendar_month_rounded,
+              iconColor: const Color(0xFF673AB7),
+              title: "Kalender Hijriah",
+              subtitle: "Kalender lengkap, hari besar Islam, & jadwal puasa",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const KalenderHijriahPage()),
+                );
+              },
+              isDark: isDark,
+            ),
+
+            const SizedBox(height: 10),
+
+            _buildFeatureTile(
+              context: context,
+              icon: Icons.menu_book_rounded,
+              iconColor: const Color(0xFF00897B),
+              title: "Tuntunan Sholat",
+              subtitle: "Panduan sholat fardhu, sunnah, wudhu, & dzikir",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const TuntunanSholatPage()),
+                );
+              },
+              isDark: isDark,
+            ),
+
+            const SizedBox(height: 10),
+
             _buildFeatureTile(
               context: context,
               icon: Icons.notifications_active_rounded,
@@ -250,7 +312,7 @@ class MenuLainnyaModal extends StatelessWidget {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.12),
+                  color: iconColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: iconColor, size: 22),
