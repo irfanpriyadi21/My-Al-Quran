@@ -27,9 +27,11 @@ class _SholawatPageState extends State<SholawatPage> {
 
   List<ModelSholawat> get _filteredList {
     return SholawatData.list.where((item) {
-      final matchesCategory = _selectedCategory == 'all' || item.category == _selectedCategory;
+      final matchesCategory =
+          _selectedCategory == 'all' || item.category == _selectedCategory;
       final q = _searchQuery.toLowerCase().trim();
-      final matchesSearch = q.isEmpty ||
+      final matchesSearch =
+          q.isEmpty ||
           item.title.toLowerCase().contains(q) ||
           item.subtitle.toLowerCase().contains(q) ||
           item.keutamaan.toLowerCase().contains(q) ||
@@ -79,10 +81,14 @@ class _SholawatPageState extends State<SholawatPage> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 decoration: BoxDecoration(
                   color: cardColor,
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(20),
+                  ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.06),
+                      color: isDark
+                          ? Colors.black26
+                          : Colors.grey.withValues(alpha: 0.06),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -108,7 +114,11 @@ class _SholawatPageState extends State<SholawatPage> {
                           fontSize: 12,
                           color: isDark ? Colors.white38 : Colors.grey.shade400,
                         ),
-                        prefixIcon: const Icon(Icons.search_rounded, color: mainColor, size: 20),
+                        prefixIcon: const Icon(
+                          Icons.search_rounded,
+                          color: mainColor,
+                          size: 20,
+                        ),
                         suffixIcon: _searchQuery.isNotEmpty
                             ? IconButton(
                                 icon: const Icon(Icons.clear_rounded, size: 18),
@@ -121,8 +131,13 @@ class _SholawatPageState extends State<SholawatPage> {
                               )
                             : null,
                         filled: true,
-                        fillColor: isDark ? const Color(0xFF282828) : const Color(0xFFF7F8FA),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        fillColor: isDark
+                            ? const Color(0xFF282828)
+                            : const Color(0xFFF7F8FA),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide.none,
@@ -135,17 +150,47 @@ class _SholawatPageState extends State<SholawatPage> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildCategoryChip('all', 'Semua', Icons.grid_view_rounded, isDark),
+                          _buildCategoryChip(
+                            'all',
+                            'Semua',
+                            Icons.grid_view_rounded,
+                            isDark,
+                          ),
                           const SizedBox(width: 8),
-                          _buildCategoryChip('matsurah', 'Ma\'tsurah (Hadits)', Icons.verified_rounded, isDark),
+                          _buildCategoryChip(
+                            'matsurah',
+                            'Ma\'tsurah (Hadits)',
+                            Icons.verified_rounded,
+                            isDark,
+                          ),
                           const SizedBox(width: 8),
-                          _buildCategoryChip('hajat_rezeki', 'Hajat & Rezeki', Icons.auto_awesome_rounded, isDark),
+                          _buildCategoryChip(
+                            'hajat_rezeki',
+                            'Hajat & Rezeki',
+                            Icons.auto_awesome_rounded,
+                            isDark,
+                          ),
                           const SizedBox(width: 8),
-                          _buildCategoryChip('kesehatan_hati', 'Kesehatan & Hati', Icons.favorite_rounded, isDark),
+                          _buildCategoryChip(
+                            'kesehatan_hati',
+                            'Kesehatan & Hati',
+                            Icons.favorite_rounded,
+                            isDark,
+                          ),
                           const SizedBox(width: 8),
-                          _buildCategoryChip('perlindungan', 'Perlindungan', Icons.shield_rounded, isDark),
+                          _buildCategoryChip(
+                            'perlindungan',
+                            'Perlindungan',
+                            Icons.shield_rounded,
+                            isDark,
+                          ),
                           const SizedBox(width: 8),
-                          _buildCategoryChip('maulid', 'Maulid & Qasidah', Icons.library_music_rounded, isDark),
+                          _buildCategoryChip(
+                            'maulid',
+                            'Maulid & Qasidah',
+                            Icons.library_music_rounded,
+                            isDark,
+                          ),
                         ],
                       ),
                     ),
@@ -163,7 +208,9 @@ class _SholawatPageState extends State<SholawatPage> {
                             Icon(
                               Icons.search_off_rounded,
                               size: 64,
-                              color: isDark ? Colors.white24 : Colors.grey.shade300,
+                              color: isDark
+                                  ? Colors.white24
+                                  : Colors.grey.shade300,
                             ),
                             const SizedBox(height: 12),
                             Text(
@@ -171,7 +218,9 @@ class _SholawatPageState extends State<SholawatPage> {
                               style: GoogleFonts.poppins(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -179,14 +228,19 @@ class _SholawatPageState extends State<SholawatPage> {
                               "Coba kata kunci pencarian lainnya",
                               style: GoogleFonts.poppins(
                                 fontSize: 12,
-                                color: isDark ? Colors.white38 : Colors.grey.shade400,
+                                color: isDark
+                                    ? Colors.white38
+                                    : Colors.grey.shade400,
                               ),
                             ),
                           ],
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final item = filtered[index];
@@ -201,7 +255,12 @@ class _SholawatPageState extends State<SholawatPage> {
     );
   }
 
-  Widget _buildCategoryChip(String id, String label, IconData icon, bool isDark) {
+  Widget _buildCategoryChip(
+    String id,
+    String label,
+    IconData icon,
+    bool isDark,
+  ) {
     final isSelected = _selectedCategory == id;
 
     return InkWell(
@@ -217,8 +276,8 @@ class _SholawatPageState extends State<SholawatPage> {
           color: isSelected
               ? mainColor
               : isDark
-                  ? const Color(0xFF282828)
-                  : const Color(0xFFF0F1F5),
+              ? const Color(0xFF282828)
+              : const Color(0xFFF0F1F5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -230,8 +289,8 @@ class _SholawatPageState extends State<SholawatPage> {
               color: isSelected
                   ? Colors.white
                   : isDark
-                      ? Colors.white70
-                      : Colors.grey.shade700,
+                  ? Colors.white70
+                  : Colors.grey.shade700,
             ),
             const SizedBox(width: 6),
             Text(
@@ -242,8 +301,8 @@ class _SholawatPageState extends State<SholawatPage> {
                 color: isSelected
                     ? Colors.white
                     : isDark
-                        ? Colors.white70
-                        : Colors.grey.shade700,
+                    ? Colors.white70
+                    : Colors.grey.shade700,
               ),
             ),
           ],
@@ -288,7 +347,9 @@ class _SholawatPageState extends State<SholawatPage> {
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.05),
+            color: isDark
+                ? Colors.black26
+                : Colors.grey.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -345,7 +406,10 @@ class _SholawatPageState extends State<SholawatPage> {
                       if (item.anjuranBaca != null) ...[
                         const SizedBox(height: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: mainColor.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(6),
@@ -497,7 +561,10 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                     if (item.anjuranBaca != null) ...[
                       const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(10),
@@ -533,7 +600,11 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.auto_awesome_rounded, color: mainColor, size: 18),
+                        const Icon(
+                          Icons.auto_awesome_rounded,
+                          color: mainColor,
+                          size: 18,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -594,7 +665,9 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.05),
+                      color: isDark
+                          ? Colors.black26
+                          : Colors.grey.withValues(alpha: 0.05),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -607,7 +680,10 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 3,
+                          ),
                           decoration: BoxDecoration(
                             color: mainColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
@@ -622,7 +698,11 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.copy_rounded, size: 18, color: mainColor),
+                          icon: const Icon(
+                            Icons.copy_rounded,
+                            size: 18,
+                            color: mainColor,
+                          ),
                           tooltip: "Salin Shalawat",
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -657,7 +737,8 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                         ),
                       ),
                     ],
-                    if (quranSettings.showTranslation && item.translation.isNotEmpty) ...[
+                    if (quranSettings.showTranslation &&
+                        item.translation.isNotEmpty) ...[
                       const SizedBox(height: 10),
                       Text(
                         "Artinya: \"${item.translation}\"",
@@ -691,7 +772,11 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.touch_app_rounded, color: mainColor, size: 18),
+                            const Icon(
+                              Icons.touch_app_rounded,
+                              color: mainColor,
+                              size: 18,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               "Penghitung Wirid (Tasbih)",
@@ -731,8 +816,14 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                               selectedColor: mainColor,
                               labelStyle: GoogleFonts.poppins(
                                 fontSize: 11,
-                                fontWeight: isSel ? FontWeight.bold : FontWeight.normal,
-                                color: isSel ? Colors.white : (isDark ? Colors.white70 : Colors.grey.shade700),
+                                fontWeight: isSel
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: isSel
+                                    ? Colors.white
+                                    : (isDark
+                                          ? Colors.white70
+                                          : Colors.grey.shade700),
                               ),
                               onSelected: (_) => setState(() => _target = t),
                             ),
@@ -751,14 +842,21 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: _counter >= _target
-                                ? [const Color(0xFF00E676), const Color(0xFF00C853)]
+                                ? [
+                                    const Color(0xFF00E676),
+                                    const Color(0xFF00C853),
+                                  ]
                                 : [const Color(0xFFB176F2), mainColor],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: (_counter >= _target ? const Color(0xFF00C853) : mainColor).withValues(alpha: 0.35),
+                              color:
+                                  (_counter >= _target
+                                          ? const Color(0xFF00C853)
+                                          : mainColor)
+                                      .withValues(alpha: 0.35),
                               blurRadius: 16,
                               offset: const Offset(0, 6),
                             ),
@@ -790,11 +888,17 @@ class _SholawatDetailPageState extends State<SholawatDetailPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      _counter >= _target ? "🎉 Target tercapai! Alhamdulillah" : "Ketuk lingkaran untuk menghitung",
+                      _counter >= _target
+                          ? "🎉 Target tercapai! Alhamdulillah"
+                          : "Ketuk lingkaran untuk menghitung",
                       style: GoogleFonts.poppins(
                         fontSize: 11,
-                        color: _counter >= _target ? const Color(0xFF00C853) : (isDark ? Colors.white38 : Colors.grey.shade500),
-                        fontWeight: _counter >= _target ? FontWeight.bold : FontWeight.normal,
+                        color: _counter >= _target
+                            ? const Color(0xFF00C853)
+                            : (isDark ? Colors.white38 : Colors.grey.shade500),
+                        fontWeight: _counter >= _target
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     ),
                   ],

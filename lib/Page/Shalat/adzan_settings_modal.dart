@@ -83,7 +83,7 @@ class AdzanSettingsModal extends StatelessWidget {
                           : const Color(0xFFF9F6FF),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: mainColor.withOpacity(isDark ? 0.3 : 0.15),
+                        color: mainColor.withValues(alpha: isDark ? 0.3 : 0.15),
                       ),
                     ),
                     child: Row(
@@ -91,7 +91,7 @@ class AdzanSettingsModal extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: mainColor.withOpacity(0.15),
+                            color: mainColor.withValues(alpha: 0.15),
                             shape: BoxShape.circle,
                           ),
                           child: const Icon(
@@ -136,6 +136,73 @@ class AdzanSettingsModal extends StatelessWidget {
                     ),
                   ),
 
+                  const SizedBox(height: 10),
+
+                  // Vibration Switch Card
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0xFF242424)
+                          : const Color(0xFFF7F8FA),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark ? Colors.white10 : Colors.grey.shade200,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF00C853).withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.vibration_rounded,
+                            color: Color(0xFF00C853),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Getar Saat Adzan",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
+                              ),
+                              Text(
+                                "Perangkat bergetar saat adzan berkumandang",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 11,
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Switch.adaptive(
+                          value: adzanService.isVibrationEnabled,
+                          activeTrackColor: const Color(0xFF00C853),
+                          onChanged: (val) {
+                            adzanService.toggleVibration(val);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
                   const SizedBox(height: 20),
 
                   // Audio Selection Header
@@ -157,7 +224,7 @@ class AdzanSettingsModal extends StatelessWidget {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Material(
                         color: isSelected
-                            ? mainColor.withOpacity(isDark ? 0.18 : 0.08)
+                            ? mainColor.withValues(alpha: isDark ? 0.18 : 0.08)
                             : (isDark
                                   ? const Color(0xFF242424)
                                   : const Color(0xFFF7F8FA)),
@@ -293,7 +360,7 @@ class AdzanSettingsModal extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: isActive
-                                ? mainColor.withOpacity(isDark ? 0.22 : 0.1)
+                                ? mainColor.withValues(alpha: isDark ? 0.22 : 0.1)
                                 : (isDark
                                       ? const Color(0xFF242424)
                                       : Colors.grey.shade100),

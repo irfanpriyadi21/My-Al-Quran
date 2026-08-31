@@ -16,7 +16,8 @@ class YasinTahlilPage extends StatefulWidget {
   State<YasinTahlilPage> createState() => _YasinTahlilPageState();
 }
 
-class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProviderStateMixin {
+class _YasinTahlilPageState extends State<YasinTahlilPage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -81,7 +82,9 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
             bottom: TabBar(
               controller: _tabController,
               labelColor: mainColor,
-              unselectedLabelColor: isDark ? Colors.white60 : Colors.grey.shade600,
+              unselectedLabelColor: isDark
+                  ? Colors.white60
+                  : Colors.grey.shade600,
               indicatorColor: mainColor,
               indicatorWeight: 3,
               isScrollable: true,
@@ -134,7 +137,10 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
     );
   }
 
-  Widget _buildYasinHeaderCard(bool isDark, QuranSettingsProvider quranSettings) {
+  Widget _buildYasinHeaderCard(
+    bool isDark,
+    QuranSettingsProvider quranSettings,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(18),
@@ -196,7 +202,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
     );
   }
 
-  Widget _buildAyatCard(ModelAyatYasin ayat, bool isDark, QuranSettingsProvider quranSettings) {
+  Widget _buildAyatCard(
+    ModelAyatYasin ayat,
+    bool isDark,
+    QuranSettingsProvider quranSettings,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -208,7 +218,9 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black26
+                : Colors.grey.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -239,7 +251,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.copy_rounded, size: 18, color: mainColor),
+                icon: const Icon(
+                  Icons.copy_rounded,
+                  size: 18,
+                  color: mainColor,
+                ),
                 tooltip: "Salin Ayat",
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -256,9 +272,7 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
             child: Text(
               ayat.arabic,
               textAlign: TextAlign.right,
-              style: quranSettings.getArabicTextStyle(
-                color: mainColor,
-              ),
+              style: quranSettings.getArabicTextStyle(color: mainColor),
             ),
           ),
           if (quranSettings.showLatin && ayat.latin.isNotEmpty) ...[
@@ -291,6 +305,7 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
   // ==========================================
   // TAB 2: SUSUNAN TAHLIL
   // ==========================================
+
   Widget _buildTahlilTab(bool isDark, QuranSettingsProvider quranSettings) {
     final list = YasinTahlilData.bacaanTahlil;
 
@@ -304,7 +319,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
     );
   }
 
-  Widget _buildTahlilCard(ModelBacaanTahlil tahlil, bool isDark, QuranSettingsProvider quranSettings) {
+  Widget _buildTahlilCard(
+    ModelBacaanTahlil tahlil,
+    bool isDark,
+    QuranSettingsProvider quranSettings,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -316,7 +335,9 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.04),
+            color: isDark
+                ? Colors.black26
+                : Colors.grey.withValues(alpha: 0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -368,7 +389,10 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
               if (tahlil.pengulangan != null) ...[
                 const SizedBox(width: 6),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF00C853).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
@@ -385,7 +409,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
               ],
               const SizedBox(width: 6),
               IconButton(
-                icon: const Icon(Icons.copy_rounded, size: 18, color: mainColor),
+                icon: const Icon(
+                  Icons.copy_rounded,
+                  size: 18,
+                  color: mainColor,
+                ),
                 tooltip: "Salin Bacaan",
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -402,9 +430,7 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
             child: Text(
               tahlil.arabic,
               textAlign: TextAlign.right,
-              style: quranSettings.getArabicTextStyle(
-                color: mainColor,
-              ),
+              style: quranSettings.getArabicTextStyle(color: mainColor),
             ),
           ),
           if (quranSettings.showLatin && tahlil.latin.isNotEmpty) ...[
@@ -418,7 +444,8 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
               ),
             ),
           ],
-          if (quranSettings.showTranslation && tahlil.translation.isNotEmpty) ...[
+          if (quranSettings.showTranslation &&
+              tahlil.translation.isNotEmpty) ...[
             const SizedBox(height: 6),
             Text(
               "Artinya: \"${tahlil.translation}\"",
@@ -464,7 +491,9 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
             ),
             boxShadow: [
               BoxShadow(
-                color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.05),
+                color: isDark
+                    ? Colors.black26
+                    : Colors.grey.withValues(alpha: 0.05),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -488,7 +517,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    icon: const Icon(Icons.copy_rounded, size: 18, color: mainColor),
+                    icon: const Icon(
+                      Icons.copy_rounded,
+                      size: 18,
+                      color: mainColor,
+                    ),
                     tooltip: "Salin Doa Tahlil",
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -532,7 +565,8 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                   ),
                 ),
               ],
-              if (quranSettings.showTranslation && doa.translation.isNotEmpty) ...[
+              if (quranSettings.showTranslation &&
+                  doa.translation.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Text(
                   "Terjemahan:",
@@ -581,7 +615,9 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
             ),
             boxShadow: [
               BoxShadow(
-                color: isDark ? Colors.black26 : Colors.grey.withValues(alpha: 0.04),
+                color: isDark
+                    ? Colors.black26
+                    : Colors.grey.withValues(alpha: 0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -605,7 +641,11 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                   ),
                   const SizedBox(width: 8),
                   IconButton(
-                    icon: const Icon(Icons.copy_rounded, size: 18, color: mainColor),
+                    icon: const Icon(
+                      Icons.copy_rounded,
+                      size: 18,
+                      color: mainColor,
+                    ),
                     tooltip: "Salin",
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -623,9 +663,7 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                   child: Text(
                     item.arabic,
                     textAlign: TextAlign.right,
-                    style: quranSettings.getArabicTextStyle(
-                      color: mainColor,
-                    ),
+                    style: quranSettings.getArabicTextStyle(color: mainColor),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -641,7 +679,8 @@ class _YasinTahlilPageState extends State<YasinTahlilPage> with SingleTickerProv
                 ),
                 const SizedBox(height: 6),
               ],
-              if (quranSettings.showTranslation && item.translation.isNotEmpty) ...[
+              if (quranSettings.showTranslation &&
+                  item.translation.isNotEmpty) ...[
                 Text(
                   item.translation,
                   style: GoogleFonts.poppins(

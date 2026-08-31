@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
 import 'package:my_quran/Provider/Shalat/adzan_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,10 +40,14 @@ class AdzanAlarmService extends ChangeNotifier {
   bool _disposed = false;
   late final AudioPlayer _audioPlayer;
   StreamSubscription<PlayerState>? _playerSubscription;
+  Timer? _vibrationTimer;
   ModelJadwalSholat? _lastKnownJadwal;
 
   bool _isMasterAlarmEnabled = true;
   bool get isMasterAlarmEnabled => _isMasterAlarmEnabled;
+
+  bool _isVibrationEnabled = true;
+  bool get isVibrationEnabled => _isVibrationEnabled;
 
   // Map status alarm per waktu shalat
   final Map<String, bool> _prayerAlarms = {
@@ -57,7 +62,7 @@ class AdzanAlarmService extends ChangeNotifier {
   };
   Map<String, bool> get prayerAlarms => _prayerAlarms;
 
-  // Daftar Pilihan Suara Adzan (Menggunakan High-Quality Direct CDN Streams)
+  // Daftar Pilihan Suara Adzan
   static const List<AdzanAudioOption> adzanOptions = [
     AdzanAudioOption(
       id: 'makkah',
@@ -101,7 +106,7 @@ class AdzanAlarmService extends ChangeNotifier {
   String? _currentlyPlayingPrayer;
   String? get currentlyPlayingPrayer => _currentlyPlayingPrayer;
 
-  String? _lastTriggeredKey; // e.g. "2026-08-27_Maghrib" to prevent retriggering in the same minute
+  String? _lastTriggeredKey;
 
   void _initAudioPlayer() {
     _audioPlayer = AudioPlayer();
@@ -135,9 +140,30 @@ class AdzanAlarmService extends ChangeNotifier {
       if (state == PlayerState.completed || state == PlayerState.stopped) {
         _currentlyPlayingPrayer = null;
         _isLoading = false;
+        _stopVibration();
       }
       notifyListeners();
     });
+  }
+
+  void _startVibration() {
+    if (!_isVibrationEnabled) return;
+    _stopVibration();
+    HapticFeedback.vibrate();
+    int count = 0;
+    _vibrationTimer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
+      if (!_isPlaying || count >= 15) {
+        timer.cancel();
+      } else {
+        HapticFeedback.vibrate();
+        count++;
+      }
+    });
+  }
+
+  void _stopVibration() {
+    _vibrationTimer?.cancel();
+    _vibrationTimer = null;
   }
 
   @override
@@ -150,6 +176,7 @@ class AdzanAlarmService extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    _stopVibration();
     _playerSubscription?.cancel();
     _audioPlayer.dispose();
     super.dispose();
@@ -158,6 +185,7 @@ class AdzanAlarmService extends ChangeNotifier {
   Future<void> _loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
     _isMasterAlarmEnabled = prefs.getBool('adzan_master_enabled') ?? true;
+    _isVibrationEnabled = prefs.getBool('adzan_vibration_enabled') ?? true;
     _selectedAdzanId = prefs.getString('adzan_selected_audio') ?? 'makkah';
 
     for (var key in _prayerAlarms.keys) {
@@ -182,6 +210,7 @@ class AdzanAlarmService extends ChangeNotifier {
   Future<void> _savePreferences() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('adzan_master_enabled', _isMasterAlarmEnabled);
+    await prefs.setBool('adzan_vibration_enabled', _isVibrationEnabled);
     await prefs.setString('adzan_selected_audio', _selectedAdzanId);
 
     for (var entry in _prayerAlarms.entries) {
@@ -203,6 +232,7 @@ class AdzanAlarmService extends ChangeNotifier {
         jadwal: _lastKnownJadwal!,
         prayerAlarms: _prayerAlarms,
         isMasterEnabled: _isMasterAlarmEnabled,
+        isVibrationEnabled: _isVibrationEnabled,
       );
     }
   }
@@ -224,6 +254,13 @@ class AdzanAlarmService extends ChangeNotifier {
   // Toggle Master Switch
   void toggleMasterAlarm(bool value) {
     _isMasterAlarmEnabled = value;
+    _savePreferences();
+    notifyListeners();
+  }
+
+  // Toggle Vibration Switch
+  void toggleVibration(bool value) {
+    _isVibrationEnabled = value;
     _savePreferences();
     notifyListeners();
   }
@@ -255,12 +292,14 @@ class AdzanAlarmService extends ChangeNotifier {
       await _audioPlayer.play(UrlSource(url));
       _isPlaying = true;
       _isLoading = false;
+      _startVibration();
       notifyListeners();
     } catch (e) {
       debugPrint("Error playAdzan: $e");
       _isPlaying = false;
       _isLoading = false;
       _currentlyPlayingPrayer = null;
+      _stopVibration();
       notifyListeners();
     }
   }
@@ -268,6 +307,7 @@ class AdzanAlarmService extends ChangeNotifier {
   // Hentikan Adzan
   Future<void> stopAdzan() async {
     try {
+      _stopVibration();
       await _audioPlayer.stop();
       _isPlaying = false;
       _isLoading = false;

@@ -114,6 +114,7 @@ class AdzanNotificationService {
     required ModelJadwalSholat jadwal,
     required Map<String, bool> prayerAlarms,
     required bool isMasterEnabled,
+    bool isVibrationEnabled = true,
   }) async {
     if (!_isInitialized) {
       await initialize();
@@ -185,8 +186,10 @@ class AdzanNotificationService {
         priority: Priority.max,
         playSound: true,
         sound: RawResourceAndroidNotificationSound(soundName),
-        enableVibration: true,
-        vibrationPattern: Int64List.fromList([0, 1000, 500, 1000, 500, 1000]),
+        enableVibration: isVibrationEnabled,
+        vibrationPattern: isVibrationEnabled
+            ? Int64List.fromList([0, 1000, 500, 1000, 500, 1000, 500, 1000])
+            : null,
         fullScreenIntent: true,
         category: AndroidNotificationCategory.alarm,
         audioAttributesUsage: AudioAttributesUsage.alarm,
