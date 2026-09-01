@@ -12,6 +12,9 @@ import 'package:my_quran/Page/Kiblat/kiblat_page.dart';
 import 'package:my_quran/Page/Masjid/nearby_mosque_page.dart';
 import 'package:my_quran/Page/Shalat/jadwal_shalat_page.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+import 'package:my_quran/Page/Quotes/quotes_islami_page.dart';
+import 'package:my_quran/Utils/quotes_islami_data.dart';
 import '../../Componen/Widget/MenuComponenWidget.dart';
 import '../../Componen/Widget/RealtimeClockWidget.dart';
 import '../../Componen/Widget/TextDataWidget.dart';
@@ -210,7 +213,119 @@ class _DashboardPageState extends State<DashboardPage> {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 20),
+                 const SizedBox(height: 20),
+
+                // Islamic Quotes Quick Banner
+                Builder(
+                  builder: (context) {
+                    final quoteOfTheDay = QuotesIslamiData.getQuoteOfTheDay();
+                    final gradientColors = quoteOfTheDay.gradientColors
+                        .map((c) => Color(c))
+                        .toList();
+
+                    return Material(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(18),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(18),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuotesIslamiPage(
+                                initialQuote: quoteOfTheDay,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Ink(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: gradientColors,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(18),
+                            boxShadow: [
+                              BoxShadow(
+                                color: gradientColors.first.withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.format_quote_rounded,
+                                  color: Colors.white,
+                                  size: 24,
+                                ),
+                              ),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Kata Mutiara Islami",
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Colors.white70,
+                                          size: 12,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "\"${quoteOfTheDay.quote}\"",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 11,
+                                        color: Colors.white.withValues(alpha: 0.9),
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      "— ${quoteOfTheDay.source}",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white70,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 24),
                 const TextData(
                   text: "News",
                   size: 18,

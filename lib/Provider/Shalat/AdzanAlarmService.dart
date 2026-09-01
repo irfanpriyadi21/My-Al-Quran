@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:my_quran/Componen/navigatorKey.dart';
 import 'package:my_quran/Model/model_jadwal_sholat.dart';
+import 'package:my_quran/Page/Shalat/adzan_player_dialog.dart';
 import 'package:my_quran/Provider/Shalat/adzan_notification_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,13 +38,16 @@ class AdzanAlarmService extends ChangeNotifier {
     _disposed = false;
     _initAudioPlayer();
     _loadPreferences();
+    _startForegroundPrayerWatcher();
   }
 
   bool _disposed = false;
   late final AudioPlayer _audioPlayer;
   StreamSubscription<PlayerState>? _playerSubscription;
   Timer? _vibrationTimer;
+  Timer? _foregroundWatcherTimer;
   ModelJadwalSholat? _lastKnownJadwal;
+  bool _isDialogOpen = false;
 
   bool _isMasterAlarmEnabled = true;
   bool get isMasterAlarmEnabled => _isMasterAlarmEnabled;
@@ -68,33 +74,39 @@ class AdzanAlarmService extends ChangeNotifier {
       id: 'makkah',
       name: 'Adzan Makkah (Masjidil Haram)',
       description: 'Lantunan adzan merdu khas Masjidil Haram Makkah',
-      audioUrl: 'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Makkah.mp3',
+      audioUrl:
+          'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Makkah.mp3',
     ),
     AdzanAudioOption(
       id: 'mishary',
       name: 'Adzan Syaikh Mishary Rashid Alafasy',
       description: 'Lantunan adzan syahdu & populer Syaikh Mishary Alafasy',
-      audioUrl: 'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Mishary%20Alafasi.mp3',
+      audioUrl:
+          'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Mishary%20Alafasi.mp3',
     ),
     AdzanAudioOption(
       id: 'subuh',
       name: 'Adzan Khusus Subuh',
       description: 'Lafadz adzan dengan Ash-shalatu khairum minan naum',
-      audioUrl: 'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Al-fajer%20-%20Malek%20chebae.mp3',
+      audioUrl:
+          'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Al-fajer%20-%20Malek%20chebae.mp3',
     ),
     AdzanAudioOption(
       id: 'qatami',
       name: 'Adzan Syaikh Nasser Al-Qatami',
       description: 'Lantunan adzan indah khas Syaikh Nasser Al-Qatami',
-      audioUrl: 'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Nasser%20Alqatami.mp3',
+      audioUrl:
+          'https://raw.githubusercontent.com/abodehq/Athan-MP3/master/Sounds/Athan%20Nasser%20Alqatami.mp3',
     ),
   ];
 
   String _selectedAdzanId = 'makkah';
   String get selectedAdzanId => _selectedAdzanId;
 
-  AdzanAudioOption get selectedAdzanOption =>
-      adzanOptions.firstWhere((o) => o.id == _selectedAdzanId, orElse: () => adzanOptions.first);
+  AdzanAudioOption get selectedAdzanOption => adzanOptions.firstWhere(
+    (o) => o.id == _selectedAdzanId,
+    orElse: () => adzanOptions.first,
+  );
 
   // Audio Player State
   bool _isPlaying = false;
@@ -146,19 +158,53 @@ class AdzanAlarmService extends ChangeNotifier {
     });
   }
 
+  // Global Foreground Prayer Ticker
+  void _startForegroundPrayerWatcher() {
+    _foregroundWatcherTimer?.cancel();
+    _foregroundWatcherTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_disposed || !_isMasterAlarmEnabled || _lastKnownJadwal == null) {
+        return;
+      }
+
+      final now = DateTime.now();
+      final triggeredPrayer = checkPrayerTimeMatch(now, _lastKnownJadwal!);
+      if (triggeredPrayer != null) {
+        playAdzan(prayerName: triggeredPrayer);
+
+        final context = NavigationService.navigatorKey.currentContext;
+        if (context != null && !_isDialogOpen) {
+          _isDialogOpen = true;
+          AdzanPlayerDialog.show(
+            context,
+            prayerName: triggeredPrayer,
+            prayerTime: DateFormat('HH:mm').format(now),
+          );
+          Future.delayed(const Duration(seconds: 3), () {
+            _isDialogOpen = false;
+          });
+        }
+      }
+    });
+  }
+
   void _startVibration() {
     if (!_isVibrationEnabled) return;
     _stopVibration();
+    HapticFeedback.heavyImpact();
     HapticFeedback.vibrate();
     int count = 0;
-    _vibrationTimer = Timer.periodic(const Duration(milliseconds: 1600), (timer) {
-      if (!_isPlaying || count >= 15) {
-        timer.cancel();
-      } else {
-        HapticFeedback.vibrate();
-        count++;
-      }
-    });
+    _vibrationTimer = Timer.periodic(
+      const Duration(milliseconds: 1400),
+      (timer) {
+        if (!_isPlaying || count >= 20) {
+          timer.cancel();
+        } else {
+          HapticFeedback.heavyImpact();
+          HapticFeedback.vibrate();
+          count++;
+        }
+      },
+    );
   }
 
   void _stopVibration() {
@@ -177,6 +223,7 @@ class AdzanAlarmService extends ChangeNotifier {
   void dispose() {
     _disposed = true;
     _stopVibration();
+    _foregroundWatcherTimer?.cancel();
     _playerSubscription?.cancel();
     _audioPlayer.dispose();
     super.dispose();
@@ -237,6 +284,14 @@ class AdzanAlarmService extends ChangeNotifier {
     }
   }
 
+  // Uji coba alarm notifikasi sistem & getaran perangkat
+  Future<void> testAlarmNotification() async {
+    await AdzanNotificationService().testNotificationNow(
+      isSubuh: _selectedAdzanId == 'subuh',
+      isVibrationEnabled: _isVibrationEnabled,
+    );
+  }
+
   // Toggle alarm untuk waktu shalat tertentu
   void togglePrayerAlarm(String prayerName) {
     if (_prayerAlarms.containsKey(prayerName)) {
@@ -285,7 +340,10 @@ class AdzanAlarmService extends ChangeNotifier {
       // Pilih audio: jika waktu Subuh dan tidak ada customUrl, pakai adzan subuh
       String url = customUrl ?? selectedAdzanOption.audioUrl;
       if (prayerName == 'Subuh' && customUrl == null) {
-        final subuhOption = adzanOptions.firstWhere((o) => o.id == 'subuh', orElse: () => selectedAdzanOption);
+        final subuhOption = adzanOptions.firstWhere(
+          (o) => o.id == 'subuh',
+          orElse: () => selectedAdzanOption,
+        );
         url = subuhOption.audioUrl;
       }
 

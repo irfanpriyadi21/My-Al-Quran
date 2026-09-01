@@ -5,6 +5,7 @@ import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/AsmaulHusna/asmaul_husna_page.dart';
 import 'package:my_quran/Page/Kalender/kalender_hijriah_page.dart';
 import 'package:my_quran/Page/Profile/profile.dart';
+import 'package:my_quran/Page/Quotes/quotes_islami_page.dart';
 import 'package:my_quran/Page/Shalat/adzan_settings_modal.dart';
 import 'package:my_quran/Page/Shalat/tuntunan_sholat_page.dart';
 import 'package:my_quran/Page/Sholawat/sholawat_page.dart';
@@ -268,6 +269,24 @@ class MenuLainnyaModal extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SholawatPage()),
+                );
+              },
+              isDark: isDark,
+            ),
+
+            const SizedBox(height: 10),
+
+            _buildFeatureTile(
+              context: context,
+              icon: Icons.format_quote_rounded,
+              iconColor: const Color(0xFF8E24AA),
+              title: "Kata-Kata Mutiara Islami",
+              subtitle: "Quotes bijak, motivasi hijrah, & mutiara sahabat nabi",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const QuotesIslamiPage()),
                 );
               },
               isDark: isDark,
