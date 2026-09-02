@@ -9,6 +9,7 @@ class SurahCard extends StatelessWidget {
   final String subtitle;
   final String arabic;
   final Color primaryColor;
+  final VoidCallback? onInfoTap;
 
   const SurahCard({
     super.key,
@@ -17,6 +18,7 @@ class SurahCard extends StatelessWidget {
     required this.subtitle,
     required this.arabic,
     required this.primaryColor,
+    this.onInfoTap,
   });
 
   @override
@@ -36,8 +38,8 @@ class SurahCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -71,7 +73,7 @@ class SurahCard extends StatelessWidget {
           ),
           const SizedBox(width: 16),
 
-          /// TITLE
+          /// TITLE & SUBTITLE
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,18 +94,38 @@ class SurahCard extends StatelessWidget {
             ),
           ),
 
-          /// ARABIC
-          Consumer<QuranSettingsProvider>(
-            builder: (context, quranSettings, _) {
-              return Text(
-                arabic,
-                style: quranSettings.getArabicTextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: primaryColor,
+          /// ARABIC & INFO ACTION
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Consumer<QuranSettingsProvider>(
+                builder: (context, quranSettings, _) {
+                  return Text(
+                    arabic,
+                    style: quranSettings.getArabicTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                    ),
+                  );
+                },
+              ),
+              if (onInfoTap != null) ...[
+                const SizedBox(width: 8),
+                IconButton(
+                  visualDensity: VisualDensity.compact,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  icon: Icon(
+                    Icons.info_outline_rounded,
+                    size: 18,
+                    color: isDark ? Colors.white38 : Colors.grey.shade400,
+                  ),
+                  tooltip: "Info Surah",
+                  onPressed: onInfoTap,
                 ),
-              );
-            },
+              ],
+            ],
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:my_quran/Componen/News/NewsWidget.dart';
+import 'package:my_quran/Componen/News/news_list_page.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/Alquran/AlQuran.dart';
 import 'package:my_quran/Page/Dashboard/menu_lainnya_modal.dart';
@@ -326,12 +327,52 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
 
                 const SizedBox(height: 24),
-                const TextData(
-                  text: "News",
-                  size: 18,
-                  fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const TextData(
+                      text: "Berita & Informasi Islam",
+                      size: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const NewsListPage(),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 2,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Lihat Semua",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: mainColor,
+                              ),
+                            ),
+                            const SizedBox(width: 2),
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 11,
+                              color: mainColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 14),
                 const NewsWidget(),
                 const SizedBox(height: 20),
               ],

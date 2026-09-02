@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
+import 'package:my_quran/Page/Alquran/surah_info_modal.dart';
 import 'package:my_quran/Page/Alquran/surah_pdf_export_modal.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../../Componen/Widget/QuranAudioPlayerWidget.dart';
@@ -191,6 +192,25 @@ class _AyatPageState extends State<AyatPage> {
                           ),
                           IconButton(
                             icon: const Icon(
+                              Icons.info_outline_rounded,
+                              color: mainColor,
+                            ),
+                            tooltip: "Info & Deskripsi Surah",
+                            onPressed: () {
+                              SurahInfoModal.show(
+                                context,
+                                surahNumber: widget.id,
+                                arabicName: listAyat.nama ?? widget.name,
+                                latinName: listAyat.namaLatin ?? widget.name,
+                                translation: widget.arti,
+                                revelationPlace: widget.tempatTurun,
+                                verseCount: widget.jumlahAyat,
+                                description: listAyat.deskripsi,
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(
                               Icons.picture_as_pdf_rounded,
                               color: Color(0xFFFF5722),
                             ),
@@ -229,7 +249,7 @@ class _AyatPageState extends State<AyatPage> {
                       // SURAH HERO CARD
                       Container(
                         width: double.infinity,
-                        height: 250,
+                        height: 260,
                         padding: const EdgeInsets.only(top: 10, bottom: 10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24),
@@ -256,8 +276,8 @@ class _AyatPageState extends State<AyatPage> {
                                   borderRadius: BorderRadius.circular(24),
                                   gradient: LinearGradient(
                                     colors: [
-                                      const Color(0xffC58AF9).withOpacity(0.85),
-                                      const Color(0xff7B3FE4).withOpacity(0.85),
+                                      const Color(0xffC58AF9).withValues(alpha: 0.85),
+                                      const Color(0xff7B3FE4).withValues(alpha: 0.85),
                                     ],
                                   ),
                                 ),
@@ -267,31 +287,84 @@ class _AyatPageState extends State<AyatPage> {
                             Center(
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 16),
                                   TextData(
                                     text: widget.name,
                                     size: 18,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  const SizedBox(height: 6),
+                                  const SizedBox(height: 4),
                                   TextData(
                                     text: widget.arti,
-                                    size: 14,
+                                    size: 13,
                                     color: Colors.white,
                                     fontWeight: FontWeight.normal,
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 8),
                                   const Divider(color: Colors.white38),
-                                  const SizedBox(height: 10),
-                                  TextData(
-                                    text:
-                                        "${widget.tempatTurun} • ${widget.jumlahAyat} Ayat",
-                                    size: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.normal,
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextData(
+                                        text:
+                                            "${widget.tempatTurun} • ${widget.jumlahAyat} Ayat",
+                                        size: 12,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      GestureDetector(
+                                        onTap: () {
+                                          SurahInfoModal.show(
+                                            context,
+                                            surahNumber: widget.id,
+                                            arabicName: listAyat.nama ?? widget.name,
+                                            latinName: listAyat.namaLatin ?? widget.name,
+                                            translation: widget.arti,
+                                            revelationPlace: widget.tempatTurun,
+                                            verseCount: widget.jumlahAyat,
+                                            description: listAyat.deskripsi,
+                                          );
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 2,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white.withValues(alpha: 0.2),
+                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.white38,
+                                              width: 0.8,
+                                            ),
+                                          ),
+                                          child: const Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.info_outline_rounded,
+                                                size: 12,
+                                                color: Colors.white,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                "Info Surat",
+                                                style: TextStyle(
+                                                  fontSize: 10.5,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 20),
+                                  const SizedBox(height: 16),
                                   const TextData(
                                     text: "بِسْمِ ٱللّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
                                     size: 24,

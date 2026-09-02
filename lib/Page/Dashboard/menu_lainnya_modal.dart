@@ -4,6 +4,7 @@ import 'package:hijri/hijri_calendar.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/AsmaulHusna/asmaul_husna_page.dart';
 import 'package:my_quran/Page/Kalender/kalender_hijriah_page.dart';
+import 'package:my_quran/Page/Profile/app_info_page.dart';
 import 'package:my_quran/Page/Profile/profile.dart';
 import 'package:my_quran/Page/Quotes/quotes_islami_page.dart';
 import 'package:my_quran/Page/Shalat/adzan_settings_modal.dart';
@@ -336,6 +337,22 @@ class MenuLainnyaModal extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 _showZakatCalculatorModal(context);
+              },
+              isDark: isDark,
+            ),
+
+            _buildFeatureTile(
+              context: context,
+              icon: Icons.info_outline_rounded,
+              iconColor: mainColor,
+              title: "Tentang & Info Aplikasi",
+              subtitle: "Versi 1.0.0, sumber data API, pengembang, & fitur",
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const AppInfoPage()),
+                );
               },
               isDark: isDark,
             ),

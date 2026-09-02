@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Page/Alquran/AyatPage.dart';
 import 'package:my_quran/Page/Alquran/quran_font_settings_modal.dart';
+import 'package:my_quran/Page/Alquran/surah_info_modal.dart';
 import 'package:my_quran/Page/Alquran/surah_pdf_export_modal.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -509,6 +510,18 @@ class _AlQuranState extends State<AlQuran> {
                                 "${datas.tempatTurun} • ${datas.jumlahAyat!} Ayat",
                             arabic: datas.nama!,
                             primaryColor: mainColor,
+                            onInfoTap: () {
+                              SurahInfoModal.show(
+                                context,
+                                surahNumber: datas.nomor!.toInt(),
+                                arabicName: datas.nama!,
+                                latinName: datas.namaLatin!,
+                                translation: datas.arti ?? '',
+                                revelationPlace: datas.tempatTurun ?? '',
+                                verseCount: datas.jumlahAyat?.toString() ?? '',
+                                description: datas.deskripsi,
+                              );
+                            },
                           ),
                         );
                       },

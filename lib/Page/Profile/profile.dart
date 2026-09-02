@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_quran/Page/Profile/app_info_page.dart';
 import 'package:my_quran/Page/Profile/privacy_policy_page.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/app_provider.dart';
@@ -186,6 +187,34 @@ class _ProfileState extends State<Profile> {
                     fontWeight: FontWeight.normal,
                   ),
                   const SizedBox(height: 40),
+
+                  // TENTANG APLIKASI / APP INFO
+                  SettingItemWidget(
+                    title: 'Tentang Aplikasi',
+                    titleTextStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    decoration: boxDecorationRoundedWithShadow(
+                      12,
+                      backgroundColor: cardColor,
+                    ),
+                    trailing: const Icon(
+                      Icons.info_outline_rounded,
+                      color: mainColor,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AppInfoPage(),
+                        ),
+                      );
+                    },
+                  ).paddingOnly(bottom: 10),
 
                   // PRIVACY POLICY
                   SettingItemWidget(
