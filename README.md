@@ -8,6 +8,7 @@
   <img src="/WhatsApp Image 2026-02-13 at 10.31.24 (1).jpeg" width="200" />
   <img src="/WhatsApp Image 2026-02-13 at 10.31.23 (1).jpeg" width="200" /> 
 </p>
+https://irfanpriyadi21.github.io/My-Al-Quran/
 
 A new Flutter project.
 
