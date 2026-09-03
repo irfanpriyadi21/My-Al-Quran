@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'firebase_options.dart';
 import 'package:my_quran/Page/indexPage.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
@@ -23,24 +25,38 @@ import 'Componen/navigatorKey.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  // Initialize Firebase (Web, Android, iOS)
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint("Firebase initialization failed: $e");
+  }
+
   await initializeDateFormatting('id_ID', null);
 
-  // Initialize Background Adzan Alarm Notification Service
-  try {
-    await AdzanNotificationService().initialize();
-  } catch (e) {
-    debugPrint("Failed to initialize AdzanNotificationService: $e");
+  // Initialize Background Adzan Alarm Notification Service (Mobile only)
+  if (!kIsWeb) {
+    try {
+      await AdzanNotificationService().initialize();
+    } catch (e) {
+      debugPrint("Failed to initialize AdzanNotificationService: $e");
+    }
   }
 
   final prefs = await SharedPreferences.getInstance();
   final isLogin = prefs.getBool('isLogin') ?? false;
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),
-  );
+
+  if (!kIsWeb) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
+  }
 
   runApp(MyApp(isLogin));
 }

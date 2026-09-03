@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -53,6 +53,7 @@ class AdzanNotificationService {
   ]);
 
   Future<void> initialize() async {
+    if (kIsWeb) return;
     if (_isInitialized) return;
 
     // 1. Initialize Timezone database with device local detection
@@ -197,13 +198,13 @@ class AdzanNotificationService {
     }
   }
 
-  // Schedule exact alarms for daily prayers
   Future<void> scheduleDailyPrayerAlarms({
     required ModelJadwalSholat jadwal,
     required Map<String, bool> prayerAlarms,
     required bool isMasterEnabled,
     bool isVibrationEnabled = true,
   }) async {
+    if (kIsWeb) return;
     if (!_isInitialized) {
       await initialize();
     }
@@ -336,11 +337,11 @@ class AdzanNotificationService {
     }
   }
 
-  // Uji coba notifikasi adzan & getaran langsung saat ini juga
   Future<void> testNotificationNow({
     bool isSubuh = false,
     bool isVibrationEnabled = true,
   }) async {
+    if (kIsWeb) return;
     if (!_isInitialized) {
       await initialize();
     }
@@ -398,6 +399,7 @@ class AdzanNotificationService {
 
   // Cancel all prayer notification alarms
   Future<void> cancelAllPrayerAlarms() async {
+    if (kIsWeb) return;
     for (var id in _prayerIds.values) {
       await _notificationsPlugin.cancel(id: id);
     }

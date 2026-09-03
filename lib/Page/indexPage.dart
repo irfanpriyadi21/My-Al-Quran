@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -77,8 +78,14 @@ class _IndexPageState extends State<IndexPage> {
                             ),
                           ),
                           onPressed: () async {
-                            await _googleSignIn.signOut();
-                            await FirebaseAuth.instance.signOut();
+                            try {
+                              await _googleSignIn.signOut();
+                            } catch (_) {}
+                            if (Firebase.apps.isNotEmpty) {
+                              try {
+                                await FirebaseAuth.instance.signOut();
+                              } catch (_) {}
+                            }
 
                             if (mounted) {
                               Navigator.pushAndRemoveUntil(

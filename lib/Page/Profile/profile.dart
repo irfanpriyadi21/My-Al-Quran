@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -68,8 +69,14 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           onPressed: () async {
-                            await googleSignIn.signOut();
-                            await FirebaseAuth.instance.signOut();
+                            try {
+                              await googleSignIn.signOut();
+                            } catch (_) {}
+                            if (Firebase.apps.isNotEmpty) {
+                              try {
+                                await FirebaseAuth.instance.signOut();
+                              } catch (_) {}
+                            }
 
                             if (mounted) {
                               Navigator.pushAndRemoveUntil(
@@ -131,7 +138,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = Theme.of(context).cardColor;
-    final user = FirebaseAuth.instance.currentUser;
+    final user = Firebase.apps.isNotEmpty ? FirebaseAuth.instance.currentUser : null;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

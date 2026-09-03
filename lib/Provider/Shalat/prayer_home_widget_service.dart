@@ -51,6 +51,7 @@ class PrayerHomeWidgetService {
     required ModelJadwalSholat jadwal,
     required String cityName,
   }) async {
+    if (kIsWeb) return;
     try {
       final nextPrayer = _calculateNextPrayer(jadwal);
 

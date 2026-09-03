@@ -8,9 +8,6 @@ import 'package:my_quran/Model/ModelListArtikel.dart';
 import 'package:my_quran/Provider/Artikel/ArtikelApi.dart';
 import 'package:provider/provider.dart';
 
-import '../../Model/string_http_exception.dart';
-import '../alert.dart';
-
 class NewsWidget extends StatefulWidget {
   const NewsWidget({super.key});
 
@@ -63,12 +60,8 @@ class _NewsWidgetState extends State<NewsWidget> {
     });
     try {
       await Provider.of<Artikel>(context, listen: false).getArtikel();
-    } on StringHttpException catch (e) {
-      var errorMessage = e.toString();
-      AlertFail(errorMessage);
-    } catch (error, s) {
-      debugPrint("Error getArtikel: $error \n $s");
-      AlertFail("Terjadi Kesalahan !! $s");
+    } catch (error) {
+      debugPrint("Error getArtikel: $error");
     }
     if (mounted) {
       setState(() {

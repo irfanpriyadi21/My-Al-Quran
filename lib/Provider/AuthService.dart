@@ -1,38 +1,64 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuth? get _auth =>
+      Firebase.apps.isNotEmpty ? FirebaseAuth.instance : null;
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+
+  static const String _webClientId =
+      "953324306666-bgl2q3f9nprthu1chk5h4fuqcuci201h.apps.googleusercontent.com";
 
   Future<User?> signInWithGoogle() async {
     try {
-      // Initialize (WAJIB di versi 7)
-      await _googleSignIn.initialize(
-        serverClientId: "953324306666-bgl2q3f9nprthu1chk5h4fuqcuci201h.apps.googleusercontent.com"
-      );
-      // Authenticate user
-      final GoogleSignInAccount googleUser =
-      await _googleSignIn.authenticate();
+      if (_auth == null) {
+        throw Exception("Firebase belum siap diinisialisasi.");
+      }
 
-      // Get ID token
-      final GoogleSignInAuthentication googleAuth =
-          googleUser.authentication;
+      if (kIsWeb) {
+        // Pada Web, Firebase Auth menyediakan signInWithPopup yang memunculkan pemilihan akun Google
+        final GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('email');
+        googleProvider.addScope('profile');
+        googleProvider.setCustomParameters({
+          'prompt': 'select_account',
+        });
 
-      // Create Firebase credential
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-      );
-      // Sign in to Firebase
-      final userCredential =
-      await _auth.signInWithCredential(credential);
+        final UserCredential userCredential =
+            await _auth!.signInWithPopup(googleProvider);
+        return userCredential.user;
+      } else {
+        // Pada Mobile (Android / iOS)
+        await _googleSignIn.initialize(
+          serverClientId: _webClientId,
+        );
 
-      return userCredential.user;
+        final GoogleSignInAccount googleUser =
+            await _googleSignIn.authenticate();
+
+        final GoogleSignInAuthentication googleAuth =
+            googleUser.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+        );
+
+        final userCredential =
+            await _auth!.signInWithCredential(credential);
+
+        return userCredential.user;
+      }
     } catch (e) {
-      print("gagall $e");
+      debugPrint("gagal login google: $e");
       if (e is GoogleSignInException &&
           e.code == GoogleSignInExceptionCode.canceled) {
-        return null; // jangan anggap error
+        return null;
+      }
+      if (e is FirebaseAuthException &&
+          (e.code == 'popup-closed-by-user' || e.code == 'cancelled')) {
+        return null; // pop-up ditutup oleh user
       }
       rethrow;
     }
