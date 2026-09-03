@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -124,24 +125,26 @@ class AdzanAlarmService extends ChangeNotifier {
     _audioPlayer = AudioPlayer();
 
     // Set Audio context for proper speaker playback on Android/iOS
-    _audioPlayer.setAudioContext(
-      const AudioContext(
-        android: AudioContextAndroid(
-          isSpeakerphoneOn: true,
-          stayAwake: true,
-          contentType: AndroidContentType.music,
-          usageType: AndroidUsageType.media,
-          audioFocus: AndroidAudioFocus.gainTransientMayDuck,
+    if (!kIsWeb) {
+      _audioPlayer.setAudioContext(
+        const AudioContext(
+          android: AudioContextAndroid(
+            isSpeakerphoneOn: true,
+            stayAwake: true,
+            contentType: AndroidContentType.music,
+            usageType: AndroidUsageType.media,
+            audioFocus: AndroidAudioFocus.gainTransientMayDuck,
+          ),
+          iOS: AudioContextIOS(
+            category: AVAudioSessionCategory.playback,
+            options: [
+              AVAudioSessionOptions.duckOthers,
+              AVAudioSessionOptions.defaultToSpeaker,
+            ],
+          ),
         ),
-        iOS: AudioContextIOS(
-          category: AVAudioSessionCategory.playback,
-          options: [
-            AVAudioSessionOptions.duckOthers,
-            AVAudioSessionOptions.defaultToSpeaker,
-          ],
-        ),
-      ),
-    );
+      );
+    }
 
     _playerSubscription = _audioPlayer.onPlayerStateChanged.listen((state) {
       if (_disposed) return;

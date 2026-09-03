@@ -29,10 +29,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
   Future<void> _launchEmail(BuildContext context) async {
     final Uri emailUri = Uri(
       scheme: 'mailto',
-      path: 'irfanpriyadi21@gmail.com',
-      queryParameters: {
-        'subject': 'Feedback & Masukan Aplikasi My Al-Quran',
-      },
+      path: 'irfanpnf@gmail.com',
+      queryParameters: {'subject': 'Feedback & Masukan Aplikasi My Al-Quran'},
     );
     try {
       if (await canLaunchUrl(emailUri)) {
@@ -41,7 +39,7 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Email pengembang: irfanpriyadi21@gmail.com"),
+              content: Text("Email pengembang: irfanpnf@gmail.com"),
             ),
           );
         }
@@ -49,9 +47,7 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
     } catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Email pengembang: irfanpriyadi21@gmail.com"),
-          ),
+          const SnackBar(content: Text("Email pengembang: irfanpnf@gmail.com")),
         );
       }
     }
@@ -66,7 +62,11 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: mainColor, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: mainColor,
+            size: 20,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.transparent,
@@ -151,7 +151,10 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.22),
                       borderRadius: BorderRadius.circular(20),
@@ -275,7 +278,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.menu_book_rounded,
               iconColor: const Color(0xFF673AB7),
               title: "Al-Quran Digital & Audio Murottal",
-              description: "114 Surah lengkap, teks Arab Utsmani, terjemahan Kemenag RI, transliterasi Latin, audio murottal per ayat, pencarian cerdas, dan ekspor surah ke format PDF.",
+              description:
+                  "114 Surah lengkap, teks Arab Utsmani, terjemahan Kemenag RI, transliterasi Latin, audio murottal per ayat, pencarian cerdas, dan ekspor surah ke format PDF.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -283,7 +287,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.access_time_filled_rounded,
               iconColor: const Color(0xFF00897B),
               title: "Jadwal Shalat & Notifikasi Adzan",
-              description: "Waktu sholat 5 waktu & Imsakiyah akurat harian dan bulanan otomatis sesuai lokasi GPS pengguna, dilengkapi alarm adzan bersuara merdu.",
+              description:
+                  "Waktu sholat 5 waktu & Imsakiyah akurat harian dan bulanan otomatis sesuai lokasi GPS pengguna, dilengkapi alarm adzan bersuara merdu.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -291,7 +296,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.explore_rounded,
               iconColor: const Color(0xFFFF5722),
               title: "Kompas Arah Kiblat Presisi",
-              description: "Penunjuk arah Ka'bah interaktif dengan sensor kompas dan perhitungan derajat azimuth dari lokasi pengguna.",
+              description:
+                  "Penunjuk arah Ka'bah interaktif dengan sensor kompas dan perhitungan derajat azimuth dari lokasi pengguna.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -299,7 +305,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.pan_tool_rounded,
               iconColor: const Color(0xFFE91E63),
               title: "Doa Harian & Dzikir Pagi Petang",
-              description: "Kumpulan doa sehari-hari lengkap dan dzikir pagi petang shahih dilengkapi tasbih digital counter dengan getar haptic.",
+              description:
+                  "Kumpulan doa sehari-hari lengkap dan dzikir pagi petang shahih dilengkapi tasbih digital counter dengan getar haptic.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -307,7 +314,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.library_books_rounded,
               iconColor: const Color(0xFF3F51B5),
               title: "Hadits 9 Imam Terkemuka",
-              description: "Koleksi hadits shahih dari Imam Bukhari, Muslim, Abu Daud, Tirmidzi, Nasai, Ibnu Majah, Ahmad, Malik, dan Darimi.",
+              description:
+                  "Koleksi hadits shahih dari Imam Bukhari, Muslim, Abu Daud, Tirmidzi, Nasai, Ibnu Majah, Ahmad, Malik, dan Darimi.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -315,7 +323,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.calendar_month_rounded,
               iconColor: const Color(0xFF8E24AA),
               title: "Kalender Hijriah & Hari Besar Islam",
-              description: "Penanggalan Hijriah interaktif, konversi masehi-hijriah, pengingat hari besar Islam, dan jadwal puasa sunnah.",
+              description:
+                  "Penanggalan Hijriah interaktif, konversi masehi-hijriah, pengingat hari besar Islam, dan jadwal puasa sunnah.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -323,7 +332,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.accessibility_new_rounded,
               iconColor: const Color(0xFF00ACC1),
               title: "Tuntunan Sholat & Wudhu",
-              description: "Panduan shalat fardhu 5 waktu, sholat sunnah, tata cara wudhu, tayamum, serta bacaan dzikir setelah shalat.",
+              description:
+                  "Panduan shalat fardhu 5 waktu, sholat sunnah, tata cara wudhu, tayamum, serta bacaan dzikir setelah shalat.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -331,7 +341,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.record_voice_over_rounded,
               iconColor: const Color(0xFF43A047),
               title: "Panduan Lengkap Ilmu Tajwid",
-              description: "Hukum nun mati, tanwin, mim mati, mad far'i, qalqalah, dan tanda waqaf disertai contoh bacaan Arab.",
+              description:
+                  "Hukum nun mati, tanwin, mim mati, mad far'i, qalqalah, dan tanda waqaf disertai contoh bacaan Arab.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -339,7 +350,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.book_outlined,
               iconColor: const Color(0xFFD81B60),
               title: "Surat Yasin & Tahlil Lengkap",
-              description: "Surat Yasin 83 ayat, susunan tahlil lengkap dengan doa arwah dan doa selamat.",
+              description:
+                  "Surat Yasin 83 ayat, susunan tahlil lengkap dengan doa arwah dan doa selamat.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -347,7 +359,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.favorite_rounded,
               iconColor: const Color(0xFFFF7043),
               title: "Kumpulan Shalawat Nabi",
-              description: "Shalawat Nariyah, Thibbil Qulub, Munjiyat, Jibril, Fatih, Ibrahimiyah, Asyghil, dan Busyro.",
+              description:
+                  "Shalawat Nariyah, Thibbil Qulub, Munjiyat, Jibril, Fatih, Ibrahimiyah, Asyghil, dan Busyro.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -355,7 +368,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.stars_rounded,
               iconColor: const Color(0xFF26A69A),
               title: "99 Asmaul Husna",
-              description: "99 Nama-nama terindah Allah SWT lengkap dengan kaligrafi Arab, arti bahasa Indonesia, dan dzikir.",
+              description:
+                  "99 Nama-nama terindah Allah SWT lengkap dengan kaligrafi Arab, arti bahasa Indonesia, dan dzikir.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -363,7 +377,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.format_quote_rounded,
               iconColor: const Color(0xFF7E57C2),
               title: "Kata-Kata Mutiara Islami",
-              description: "Quotes mutiara motivasi islami harian, kata bijak sahabat nabi, dan kemudahan salin/bagikan ke media sosial.",
+              description:
+                  "Quotes mutiara motivasi islami harian, kata bijak sahabat nabi, dan kemudahan salin/bagikan ke media sosial.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -371,7 +386,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.mosque_rounded,
               iconColor: const Color(0xFF009688),
               title: "Masjid Terdekat & Navigasi Peta",
-              description: "Pencarian lokasi masjid dan musholla terdekat dari posisi saat ini dilengkapi estimasi jarak dan rute peta.",
+              description:
+                  "Pencarian lokasi masjid dan musholla terdekat dari posisi saat ini dilengkapi estimasi jarak dan rute peta.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -379,7 +395,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
               icon: Icons.calculate_rounded,
               iconColor: const Color(0xFF0288D1),
               title: "Kalkulator Zakat Maal & Emas",
-              description: "Kalkulator zakat maal 2.5% berdasarkan nisab emas untuk membantu menghitung kewajiban zakat.",
+              description:
+                  "Kalkulator zakat maal 2.5% berdasarkan nisab emas untuk membantu menghitung kewajiban zakat.",
               isDark: isDark,
               cardColor: cardColor,
             ),
@@ -412,7 +429,8 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
                 children: [
                   _buildSourceItem(
                     title: "Al-Quran & Terjemahan",
-                    source: "Kementerian Agama Republik Indonesia (Kemenag RI) & equran.id API",
+                    source:
+                        "Kementerian Agama Republik Indonesia (Kemenag RI) & equran.id API",
                     isDark: isDark,
                   ),
                   const Divider(height: 20),
@@ -473,7 +491,11 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
                       CircleAvatar(
                         radius: 24,
                         backgroundColor: mainColor.withValues(alpha: 0.15),
-                        child: const Icon(Icons.developer_mode_rounded, color: mainColor, size: 26),
+                        child: const Icon(
+                          Icons.developer_mode_rounded,
+                          color: mainColor,
+                          size: 26,
+                        ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -492,7 +514,9 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
                               "Flutter Mobile App Developer",
                               style: GoogleFonts.poppins(
                                 fontSize: 11,
-                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                                color: isDark
+                                    ? Colors.white60
+                                    : Colors.grey.shade600,
                               ),
                             ),
                           ],
@@ -506,15 +530,23 @@ Semoga bermanfaat dan menjadi amal jariyah untuk kita semua! Aamiin. 🤲
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     dense: true,
-                    leading: const Icon(Icons.email_outlined, color: mainColor, size: 20),
+                    leading: const Icon(
+                      Icons.email_outlined,
+                      color: mainColor,
+                      size: 20,
+                    ),
                     title: Text(
-                      "irfanpriyadi21@gmail.com",
+                      "irfanpnf@gmail.com",
                       style: GoogleFonts.poppins(
                         fontSize: 12,
                         color: isDark ? Colors.white70 : Colors.black87,
                       ),
                     ),
-                    trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: Colors.grey),
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 13,
+                      color: Colors.grey,
+                    ),
                     onTap: () => _launchEmail(context),
                   ),
                 ],

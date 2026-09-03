@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_quran/Model/ModelDetailArtikel.dart';
 import 'package:my_quran/Model/ModelListArtikel.dart';
+import 'package:my_quran/Utils/default_articles_data.dart';
 
 import '../url_api.dart';
 
@@ -22,10 +23,17 @@ class Artikel with ChangeNotifier {
           Iterable data = responseData['data']['data'];
           listArtikel = data.map((e) => ModelListArtikel.fromJson(e)).toList();
           notifyListeners();
+          return;
         }
       }
     } catch (e) {
-      debugPrint("Gagal mengambil artikel: $e");
+      debugPrint("Gagal mengambil artikel dari server: $e");
+    }
+
+    // Fallback jika API server gagal/CORS di web
+    if (listArtikel.isEmpty) {
+      listArtikel = DefaultArticlesData.getListArtikel();
+      notifyListeners();
     }
   }
 
@@ -42,10 +50,11 @@ class Artikel with ChangeNotifier {
           return ModelDetailArtikel.fromJson(responseData);
         }
       }
-      return ModelDetailArtikel();
     } catch (e) {
-      debugPrint("Gagal mengambil detail artikel: $e");
-      return ModelDetailArtikel();
+      debugPrint("Gagal mengambil detail artikel dari server: $e");
     }
+
+    // Fallback detail artikel jika server gagal/CORS di web
+    return DefaultArticlesData.getDetailArtikel(id.toString());
   }
 }

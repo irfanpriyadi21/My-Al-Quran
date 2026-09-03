@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../Model/ModelListAyat.dart';
 
@@ -40,23 +41,25 @@ class QuranAudioProvider with ChangeNotifier {
   }
 
   void _initAudioPlayer() {
-    _audioPlayer.setAudioContext(
-      const AudioContext(
-        android: AudioContextAndroid(
-          isSpeakerphoneOn: false,
-          stayAwake: false,
-          contentType: AndroidContentType.music,
-          usageType: AndroidUsageType.media,
-          audioFocus: AndroidAudioFocus.none,
+    if (!kIsWeb) {
+      _audioPlayer.setAudioContext(
+        const AudioContext(
+          android: AudioContextAndroid(
+            isSpeakerphoneOn: false,
+            stayAwake: false,
+            contentType: AndroidContentType.music,
+            usageType: AndroidUsageType.media,
+            audioFocus: AndroidAudioFocus.none,
+          ),
+          iOS: AudioContextIOS(
+            category: AVAudioSessionCategory.playback,
+            options: [
+              AVAudioSessionOptions.defaultToSpeaker,
+            ],
+          ),
         ),
-        iOS: AudioContextIOS(
-          category: AVAudioSessionCategory.playback,
-          options: [
-            AVAudioSessionOptions.defaultToSpeaker,
-          ],
-        ),
-      ),
-    );
+      );
+    }
 
     _playerStateSubscription = _audioPlayer.onPlayerStateChanged.listen((
       state,
@@ -207,8 +210,13 @@ class QuranAudioProvider with ChangeNotifier {
 
     try {
       await _audioPlayer.stop();
-      await _audioPlayer.setPlaybackRate(_playbackSpeed);
+      await _audioPlayer.setVolume(1.0);
       await _audioPlayer.play(UrlSource(audioUrl));
+      if (_playbackSpeed != 1.0) {
+        try {
+          await _audioPlayer.setPlaybackRate(_playbackSpeed);
+        } catch (_) {}
+      }
       _isLoading = false;
       notifyListeners();
     } catch (e) {
