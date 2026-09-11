@@ -5,6 +5,7 @@ import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Page/AsmaulHusna/asmaul_husna_page.dart';
 import 'package:my_quran/Page/Hijaiyah/belajar_hijaiyah_page.dart';
 import 'package:my_quran/Page/Kalender/kalender_hijriah_page.dart';
+import 'package:my_quran/Page/KisahNabi/kisah_nabi_page.dart';
 import 'package:my_quran/Page/Profile/app_info_page.dart';
 import 'package:my_quran/Page/Profile/privacy_policy_page.dart';
 import 'package:my_quran/Page/Profile/profile.dart';
@@ -49,6 +50,12 @@ class MenuLainnyaModal extends StatelessWidget {
 
   List<_MoreMenuItem> _getMenuItems() {
     return [
+      const _MoreMenuItem(
+        icon: Icons.history_edu_rounded,
+        iconColor: Color(0xFFE65100),
+        title: "Kisah 25 Nabi",
+        page: KisahNabiPage(),
+      ),
       const _MoreMenuItem(
         icon: Icons.spellcheck_rounded,
         iconColor: Color(0xFF00897B),

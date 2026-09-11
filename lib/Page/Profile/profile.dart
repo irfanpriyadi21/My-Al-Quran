@@ -42,7 +42,11 @@ class _ProfileState extends State<Profile> {
               ),
               child: Container(
                 padding: const EdgeInsets.only(
-                    bottom: 40, right: 16, left: 16, top: 30),
+                  bottom: 40,
+                  right: 16,
+                  left: 16,
+                  top: 30,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -63,7 +67,11 @@ class _ProfileState extends State<Profile> {
                             minimumSize: const Size(120, 25),
                             backgroundColor: mainColor,
                             padding: const EdgeInsets.only(
-                                top: 12, bottom: 14, left: 40, right: 40),
+                              top: 12,
+                              bottom: 14,
+                              left: 40,
+                              right: 40,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -105,7 +113,11 @@ class _ProfileState extends State<Profile> {
                                 ? const Color(0xFF2C2C2C)
                                 : Colors.grey[200],
                             padding: const EdgeInsets.only(
-                                top: 14, bottom: 14, left: 40, right: 40),
+                              top: 14,
+                              bottom: 14,
+                              left: 40,
+                              right: 40,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0),
                             ),
@@ -138,7 +150,9 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = Theme.of(context).cardColor;
-    final user = Firebase.apps.isNotEmpty ? FirebaseAuth.instance.currentUser : null;
+    final user = Firebase.apps.isNotEmpty
+        ? FirebaseAuth.instance.currentUser
+        : null;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
