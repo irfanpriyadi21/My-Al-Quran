@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_quran/Componen/colors.dart';
+import 'package:my_quran/Page/Hijaiyah/belajar_hijaiyah_page.dart';
 import 'package:my_quran/Utils/tajwid_data.dart';
 
 class TajwidPage extends StatefulWidget {
@@ -59,6 +60,18 @@ class _TajwidPageState extends State<TajwidPage> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: "Belajar Huruf Hijaiyah",
+            icon: const Icon(Icons.spellcheck_rounded, color: mainColor),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BelajarHijaiyahPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
