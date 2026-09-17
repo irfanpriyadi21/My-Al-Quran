@@ -6,6 +6,7 @@ import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Model/model_hadits_perawi.dart';
 import 'package:my_quran/Page/Hadits/hadits_detail_page.dart';
 import 'package:my_quran/Provider/Hadits/hadits_provider.dart';
+import 'package:my_quran/Provider/app_provider.dart';
 import 'package:provider/provider.dart';
 
 class HaditsPage extends StatefulWidget {
@@ -41,6 +42,7 @@ class _HaditsPageState extends State<HaditsPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = Theme.of(context).cardColor;
+    final appProvider = context.watch<AppProvider>();
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -52,7 +54,7 @@ class _HaditsPageState extends State<HaditsPage> {
           onPressed: () => Navigator.pop(context),
         ),
         title: TextData(
-          text: "Kitab Hadits",
+          text: appProvider.tr('hadits_title'),
           size: 20,
           color: mainColor,
           fontWeight: FontWeight.bold,
@@ -61,53 +63,9 @@ class _HaditsPageState extends State<HaditsPage> {
       ),
       body: Consumer<HaditsProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading) {
+          if (provider.isLoading && provider.listPerawi.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(color: mainColor),
-            );
-          }
-
-          if (provider.errorMessage.isNotEmpty && provider.listPerawi.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cloud_off_rounded,
-                      size: 64,
-                      color: Colors.grey.shade400,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      provider.errorMessage,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: isDark ? Colors.white70 : Colors.black54,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
-                        ),
-                      ),
-                      onPressed: () => provider.getPerawi(),
-                      icon: const Icon(Icons.refresh),
-                      label: const Text("Coba Lagi"),
-                    ),
-                  ],
-                ),
-              ),
             );
           }
 
@@ -142,7 +100,7 @@ class _HaditsPageState extends State<HaditsPage> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff7B3FE4).withOpacity(0.25),
+                        color: const Color(0xff7B3FE4).withValues(alpha: 0.25),
                         blurRadius: 12,
                         offset: const Offset(0, 4),
                       ),
@@ -154,16 +112,16 @@ class _HaditsPageState extends State<HaditsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Row(
+                            Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.menu_book_rounded,
                                   color: Colors.white,
                                   size: 16,
                                 ),
-                                SizedBox(width: 6),
+                                const SizedBox(width: 6),
                                 TextData(
-                                  text: "Kutubut Tis'ah",
+                                  text: appProvider.tr('hadits_banner_sub'),
                                   size: 13,
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
@@ -171,8 +129,8 @@ class _HaditsPageState extends State<HaditsPage> {
                               ],
                             ),
                             const SizedBox(height: 10),
-                            const TextData(
-                              text: "9 Kitab Hadits",
+                            TextData(
+                              text: appProvider.tr('hadits_banner_title'),
                               size: 20,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -180,8 +138,8 @@ class _HaditsPageState extends State<HaditsPage> {
                             const SizedBox(height: 4),
                             TextData(
                               text: totalAllHadits > 0
-                                  ? "${_numberFormat.format(totalAllHadits)} Total Hadits"
-                                  : "9 Perawi Terkemuka",
+                                  ? "${_numberFormat.format(totalAllHadits)} ${appProvider.tr('hadits_total_count')}"
+                                  : appProvider.tr('hadits_top_narrators'),
                               size: 12,
                               color: Colors.white70,
                               fontWeight: FontWeight.normal,
@@ -217,8 +175,8 @@ class _HaditsPageState extends State<HaditsPage> {
                     boxShadow: [
                       BoxShadow(
                         color: isDark
-                            ? Colors.black.withOpacity(0.2)
-                            : Colors.black.withOpacity(0.04),
+                            ? Colors.black.withValues(alpha: 0.2)
+                            : Colors.black.withValues(alpha: 0.04),
                         blurRadius: 10,
                         offset: const Offset(0, 3),
                       ),
@@ -236,8 +194,7 @@ class _HaditsPageState extends State<HaditsPage> {
                       });
                     },
                     decoration: InputDecoration(
-                      hintText:
-                          "Cari nama perawi hadits (contoh: Bukhari, Muslim)...",
+                      hintText: appProvider.tr('hadits_search_narrator_hint'),
                       hintStyle: GoogleFonts.poppins(
                         color: isDark ? Colors.white38 : Colors.grey.shade400,
                         fontSize: 13,
@@ -287,7 +244,7 @@ class _HaditsPageState extends State<HaditsPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            "Kitab hadits tidak ditemukan",
+                            appProvider.tr('hadits_not_found'),
                             style: GoogleFonts.poppins(
                               color: isDark
                                   ? Colors.white60
@@ -314,6 +271,7 @@ class _HaditsPageState extends State<HaditsPage> {
                         index + 1,
                         isDark,
                         cardColor,
+                        appProvider,
                       );
                     },
                   ),
@@ -332,6 +290,7 @@ class _HaditsPageState extends State<HaditsPage> {
     int index,
     bool isDark,
     Color cardColor,
+    AppProvider appProvider,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -340,8 +299,8 @@ class _HaditsPageState extends State<HaditsPage> {
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.25)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.black.withValues(alpha: 0.25)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -368,7 +327,7 @@ class _HaditsPageState extends State<HaditsPage> {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: mainColor.withOpacity(0.12),
+                    color: mainColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14),
                   ),
                   alignment: Alignment.center,
@@ -406,7 +365,7 @@ class _HaditsPageState extends State<HaditsPage> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            "${_numberFormat.format(perawi.total)} Hadits",
+                            "${_numberFormat.format(perawi.total)} ${appProvider.tr('hadits_total_count')}",
                             style: GoogleFonts.poppins(
                               fontSize: 12,
                               color: isDark ? Colors.white60 : Colors.black54,

@@ -5,6 +5,7 @@ import 'package:my_quran/Componen/Widget/TextDataWidget.dart';
 import 'package:my_quran/Componen/colors.dart';
 import 'package:my_quran/Model/model_doa_harian.dart';
 import 'package:my_quran/Provider/Doa/doa_provider.dart';
+import 'package:my_quran/Provider/app_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -36,7 +37,7 @@ class _DoaHarianPageState extends State<DoaHarianPage> {
     super.dispose();
   }
 
-  void _copyDoa(ModelDoaHarian doa) {
+  void _copyDoa(ModelDoaHarian doa, AppProvider appProvider) {
     final text =
         '''${doa.title}
 
@@ -58,7 +59,7 @@ Artinya:
             const Icon(Icons.check_circle, color: Colors.white, size: 20),
             const SizedBox(width: 8),
             Text(
-              "Doa berhasil disalin ke clipboard",
+              appProvider.tr('doa_copied'),
               style: GoogleFonts.poppins(fontSize: 13),
             ),
           ],
@@ -92,277 +93,281 @@ Dibagikan dari Aplikasi My Alquran Mobile App''';
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = Theme.of(context).cardColor;
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: cardColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: mainColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: TextData(
-          text: "Doa Harian",
-          size: 20,
-          color: mainColor,
-          fontWeight: FontWeight.bold,
-        ),
-        centerTitle: true,
-      ),
-      body: Consumer<DoaProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: mainColor),
-            );
-          }
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, _) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          appBar: AppBar(
+            backgroundColor: cardColor,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: mainColor),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: TextData(
+              text: appProvider.tr('menu_doa'),
+              size: 20,
+              color: mainColor,
+              fontWeight: FontWeight.bold,
+            ),
+            centerTitle: true,
+          ),
+          body: Consumer<DoaProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading && provider.listDoa.isEmpty) {
+                return const Center(
+                  child: CircularProgressIndicator(color: mainColor),
+                );
+              }
 
-          if (provider.errorMessage.isNotEmpty && provider.listDoa.isEmpty) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.cloud_off_rounded,
-                      size: 64,
-                      color: Colors.grey.shade400,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      provider.errorMessage,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        color: isDark ? Colors.white70 : Colors.black54,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+              if (provider.errorMessage.isNotEmpty && provider.listDoa.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.cloud_off_rounded,
+                          size: 64,
+                          color: Colors.grey.shade400,
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
+                        const SizedBox(height: 16),
+                        Text(
+                          provider.errorMessage,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            color: isDark ? Colors.white70 : Colors.black54,
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      onPressed: () => provider.getDoa(),
-                      icon: const Icon(Icons.refresh),
-                      label: const Text("Coba Lagi"),
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: mainColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                          ),
+                          onPressed: () => provider.getDoa(),
+                          icon: const Icon(Icons.refresh),
+                          label: Text(appProvider.tr('try_again')),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          // Filter by search query
-          final filteredList = provider.listDoa.where((doa) {
-            final query = _searchQuery.toLowerCase().trim();
-            if (query.isEmpty) return true;
-            return doa.title.toLowerCase().contains(query) ||
-                doa.latin.toLowerCase().contains(query) ||
-                doa.translation.toLowerCase().contains(query);
-          }).toList();
-
-          return RefreshIndicator(
-            color: mainColor,
-            onRefresh: () => provider.getDoa(),
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-              children: [
-                // Top Banner
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff7B3FE4).withOpacity(0.25),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Row(
+                );
+              }
+
+              // Filter by search query
+              final filteredList = provider.listDoa.where((doa) {
+                final query = _searchQuery.toLowerCase().trim();
+                if (query.isEmpty) return true;
+                return doa.title.toLowerCase().contains(query) ||
+                    doa.latin.toLowerCase().contains(query) ||
+                    doa.translation.toLowerCase().contains(query);
+              }).toList();
+
+              return RefreshIndicator(
+                color: mainColor,
+                onRefresh: () => provider.getDoa(),
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+                  children: [
+                    // Top Banner
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Color(0xffC58AF9), Color(0xff7B3FE4)],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff7B3FE4).withValues(alpha: 0.25),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.menu_book_rounded,
-                                  color: Colors.white,
-                                  size: 16,
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.menu_book_rounded,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    TextData(
+                                      text: appProvider.tr('doa_banner_sub'),
+                                      size: 13,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 6),
+                                const SizedBox(height: 10),
                                 TextData(
-                                  text: "Kumpulan Doa Pilihan",
-                                  size: 13,
+                                  text: appProvider.tr('doa_banner_title'),
+                                  size: 20,
                                   color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                const SizedBox(height: 4),
+                                TextData(
+                                  text: "${provider.listDoa.length} ${appProvider.tr('doa_available')}",
+                                  size: 12,
+                                  color: Colors.white70,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 10),
-                            const TextData(
-                              text: "Doa Sehari-hari",
-                              size: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            const SizedBox(height: 4),
-                            TextData(
-                              text: "${provider.listDoa.length} Doa Tersedia",
-                              size: 12,
-                              color: Colors.white70,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Opacity(
-                        opacity: 0.9,
-                        child: Image.asset(
-                          "assets/image/doa.png",
-                          width: 80,
-                          height: 80,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                                Icons.auto_stories,
-                                size: 60,
-                                color: Colors.white,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Search Bar
-                Container(
-                  decoration: BoxDecoration(
-                    color: cardColor,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDark
-                            ? Colors.black.withOpacity(0.2)
-                            : Colors.black.withOpacity(0.04),
-                        blurRadius: 10,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    style: GoogleFonts.poppins(
-                      color: isDark ? Colors.white : Colors.black87,
-                      fontSize: 13,
-                    ),
-                    onChanged: (val) {
-                      setState(() {
-                        _searchQuery = val;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      hintText: "Cari doa harian (contoh: makan, tidur)...",
-                      hintStyle: GoogleFonts.poppins(
-                        color: isDark ? Colors.white38 : Colors.grey.shade400,
-                        fontSize: 13,
-                      ),
-                      prefixIcon: const Icon(
-                        Icons.search_rounded,
-                        color: mainColor,
-                      ),
-                      suffixIcon: _searchQuery.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(
-                                Icons.clear_rounded,
-                                color: Colors.grey,
-                                size: 20,
-                              ),
-                              onPressed: () {
-                                _searchController.clear();
-                                setState(() {
-                                  _searchQuery = '';
-                                });
-                              },
-                            )
-                          : null,
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                if (filteredList.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.search_off_rounded,
-                            size: 60,
-                            color: isDark
-                                ? Colors.grey.shade700
-                                : Colors.grey.shade300,
                           ),
-                          const SizedBox(height: 12),
-                          Text(
-                            "Doa tidak ditemukan",
-                            style: GoogleFonts.poppins(
-                              color: isDark
-                                  ? Colors.white60
-                                  : Colors.grey.shade600,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                          Opacity(
+                            opacity: 0.9,
+                            child: Image.asset(
+                              "assets/image/doa.png",
+                              width: 80,
+                              height: 80,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                    Icons.auto_stories,
+                                    size: 60,
+                                    color: Colors.white,
+                                  ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  )
-                else
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredList.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 14),
-                    itemBuilder: (context, index) {
-                      final doa = filteredList[index];
-                      return _buildDoaCard(doa, index + 1, isDark, cardColor);
-                    },
-                  ),
 
-                const SizedBox(height: 24),
-              ],
-            ),
-          );
-        },
-      ),
+                    const SizedBox(height: 16),
+
+                    // Search Bar
+                    Container(
+                      decoration: BoxDecoration(
+                        color: cardColor,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark
+                                ? Colors.black.withValues(alpha: 0.2)
+                                : Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        style: GoogleFonts.poppins(
+                          color: isDark ? Colors.white : Colors.black87,
+                          fontSize: 13,
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            _searchQuery = val;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: appProvider.tr('doa_search_hint'),
+                          hintStyle: GoogleFonts.poppins(
+                            color: isDark ? Colors.white38 : Colors.grey.shade400,
+                            fontSize: 13,
+                          ),
+                          prefixIcon: const Icon(
+                            Icons.search_rounded,
+                            color: mainColor,
+                          ),
+                          suffixIcon: _searchQuery.isNotEmpty
+                              ? IconButton(
+                                  icon: const Icon(
+                                    Icons.clear_rounded,
+                                    color: Colors.grey,
+                                    size: 20,
+                                  ),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    setState(() {
+                                      _searchQuery = '';
+                                    });
+                                  },
+                                )
+                              : null,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    if (filteredList.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.search_off_rounded,
+                                size: 60,
+                                color: isDark
+                                    ? Colors.grey.shade700
+                                    : Colors.grey.shade300,
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                appProvider.tr('doa_not_found'),
+                                style: GoogleFonts.poppins(
+                                  color: isDark
+                                      ? Colors.white60
+                                      : Colors.grey.shade600,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: filteredList.length,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 14),
+                        itemBuilder: (context, index) {
+                          final doa = filteredList[index];
+                          return _buildDoaCard(doa, index + 1, isDark, cardColor, appProvider);
+                        },
+                      ),
+
+                    const SizedBox(height: 24),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -371,6 +376,7 @@ Dibagikan dari Aplikasi My Alquran Mobile App''';
     int number,
     bool isDark,
     Color cardColor,
+    AppProvider appProvider,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -379,8 +385,8 @@ Dibagikan dari Aplikasi My Alquran Mobile App''';
         boxShadow: [
           BoxShadow(
             color: isDark
-                ? Colors.black.withOpacity(0.25)
-                : Colors.black.withOpacity(0.04),
+                ? Colors.black.withValues(alpha: 0.25)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -399,7 +405,7 @@ Dibagikan dari Aplikasi My Alquran Mobile App''';
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: mainColor.withOpacity(0.12),
+                    color: mainColor.withValues(alpha: 0.12),
                     shape: BoxShape.circle,
                   ),
                   alignment: Alignment.center,
@@ -430,7 +436,7 @@ Dibagikan dari Aplikasi My Alquran Mobile App''';
                     color: isDark ? Colors.white60 : Colors.black45,
                   ),
                   tooltip: "Salin",
-                  onPressed: () => _copyDoa(doa),
+                  onPressed: () => _copyDoa(doa, appProvider),
                   constraints: const BoxConstraints(),
                   padding: const EdgeInsets.all(6),
                 ),

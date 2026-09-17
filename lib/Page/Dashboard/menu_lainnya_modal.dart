@@ -15,6 +15,8 @@ import 'package:my_quran/Page/Shalat/tuntunan_sholat_page.dart';
 import 'package:my_quran/Page/Sholawat/sholawat_page.dart';
 import 'package:my_quran/Page/Tajwid/tajwid_page.dart';
 import 'package:my_quran/Page/YasinTahlil/yasin_tahlil_page.dart';
+import 'package:my_quran/Provider/app_provider.dart';
+import 'package:provider/provider.dart';
 
 class _MoreMenuItem {
   final IconData icon;
@@ -48,91 +50,91 @@ class MenuLainnyaModal extends StatelessWidget {
     );
   }
 
-  List<_MoreMenuItem> _getMenuItems() {
+  List<_MoreMenuItem> _getMenuItems(AppProvider appProvider) {
     return [
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.history_edu_rounded,
-        iconColor: Color(0xFFE65100),
-        title: "Kisah 25 Nabi",
-        page: KisahNabiPage(),
+        iconColor: const Color(0xFFE65100),
+        title: appProvider.tr('menu_kisah_nabi'),
+        page: const KisahNabiPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.spellcheck_rounded,
-        iconColor: Color(0xFF00897B),
-        title: "Huruf Hijaiyah",
-        page: BelajarHijaiyahPage(),
+        iconColor: const Color(0xFF00897B),
+        title: appProvider.tr('menu_hijaiyah'),
+        page: const BelajarHijaiyahPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.calendar_month_rounded,
-        iconColor: Color(0xFF673AB7),
-        title: "Kalender Hijriah",
-        page: KalenderHijriahPage(),
+        iconColor: const Color(0xFF673AB7),
+        title: appProvider.tr('menu_kalender'),
+        page: const KalenderHijriahPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.menu_book_rounded,
-        iconColor: Color(0xFF2E7D32),
-        title: "Tuntunan Sholat",
-        page: TuntunanSholatPage(),
+        iconColor: const Color(0xFF2E7D32),
+        title: appProvider.tr('menu_tuntunan_sholat'),
+        page: const TuntunanSholatPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.record_voice_over_rounded,
-        iconColor: Color(0xFF3F51B5),
-        title: "Ilmu Tajwid",
-        page: TajwidPage(),
+        iconColor: const Color(0xFF3F51B5),
+        title: appProvider.tr('menu_tajwid'),
+        page: const TajwidPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.book_outlined,
-        iconColor: Color(0xFFE91E63),
-        title: "Yasin & Tahlil",
-        page: YasinTahlilPage(),
+        iconColor: const Color(0xFFE91E63),
+        title: appProvider.tr('menu_yasin_tahlil'),
+        page: const YasinTahlilPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.favorite_rounded,
-        iconColor: Color(0xFFFF5722),
-        title: "Kumpulan Shalawat",
-        page: SholawatPage(),
+        iconColor: const Color(0xFFFF5722),
+        title: appProvider.tr('menu_sholawat'),
+        page: const SholawatPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.format_quote_rounded,
-        iconColor: Color(0xFF8E24AA),
-        title: "Quotes Islami",
-        page: QuotesIslamiPage(),
+        iconColor: const Color(0xFF8E24AA),
+        title: appProvider.tr('menu_quotes'),
+        page: const QuotesIslamiPage(),
       ),
       _MoreMenuItem(
         icon: Icons.notifications_active_rounded,
         iconColor: const Color(0xFFFF9800),
-        title: "Pengaturan Adzan",
+        title: appProvider.tr('menu_adzan_settings'),
         action: (ctx) => AdzanSettingsModal.show(ctx),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.auto_stories_rounded,
-        iconColor: Color(0xFF00C853),
-        title: "99 Asmaul Husna",
-        page: AsmaulHusnaPage(),
+        iconColor: const Color(0xFF00C853),
+        title: appProvider.tr('menu_asmaul_husna'),
+        page: const AsmaulHusnaPage(),
       ),
       _MoreMenuItem(
         icon: Icons.calculate_rounded,
         iconColor: const Color(0xFF00B0FF),
-        title: "Kalkulator Zakat",
+        title: appProvider.tr('menu_zakat'),
         action: (ctx) => _showZakatCalculatorModal(ctx),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.info_outline_rounded,
         iconColor: mainColor,
-        title: "Info Aplikasi",
-        page: AppInfoPage(),
+        title: appProvider.tr('app_info'),
+        page: const AppInfoPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.privacy_tip_outlined,
-        iconColor: Color(0xFF607D8B),
-        title: "Kebijakan Privasi",
-        page: PrivacyPolicyPage(),
+        iconColor: const Color(0xFF607D8B),
+        title: appProvider.tr('privacy_policy'),
+        page: const PrivacyPolicyPage(),
       ),
-      const _MoreMenuItem(
+      _MoreMenuItem(
         icon: Icons.person_rounded,
-        iconColor: Color(0xFF9C27B0),
-        title: "Profil & Akun",
-        page: Profile(),
+        iconColor: const Color(0xFF9C27B0),
+        title: appProvider.tr('menu_profile_account'),
+        page: const Profile(),
       ),
     ];
   }
@@ -141,236 +143,244 @@ class MenuLainnyaModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final hijri = HijriCalendar.now();
-    final menuItems = _getMenuItems();
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height * 0.88,
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 14,
-          bottom: MediaQuery.of(context).padding.bottom + 20,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Handle Bar
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, _) {
+        final menuItems = _getMenuItems(appProvider);
 
-              // Header Title with close button
-              Row(
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.88,
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 14,
+              bottom: MediaQuery.of(context).padding.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: mainColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.grid_view_rounded,
-                      color: mainColor,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Menu Lainnya",
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : Colors.black87,
-                          ),
-                        ),
-                        Text(
-                          "Fitur tambahan & perlengkapan ibadah",
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            color: isDark ? Colors.white60 : Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(
-                      Icons.close_rounded,
-                      color: isDark ? Colors.white54 : Colors.grey.shade600,
-                      size: 22,
-                    ),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 18),
-
-              // Hijri Calendar Quick Banner (Clickable)
-              Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(18),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(18),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const KalenderHijriahPage()),
-                    );
-                  },
-                  child: Ink(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFB176F2), mainColor],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                  // Handle Bar
+                  Center(
+                    child: Container(
+                      width: 44,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(2),
                       ),
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
-                        BoxShadow(
-                          color: mainColor.withValues(alpha: 0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
                     ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Header Title with close button
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: mainColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Icon(
+                          Icons.grid_view_rounded,
+                          color: mainColor,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              appProvider.tr('more_menus'),
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isDark ? Colors.white : Colors.black87,
+                              ),
+                            ),
+                            Text(
+                              appProvider.tr('more_menus_subtitle'),
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                color: isDark ? Colors.white60 : Colors.grey.shade600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: isDark ? Colors.white54 : Colors.grey.shade600,
+                          size: 22,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  // Hijri Calendar Quick Banner (Clickable)
+                  Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(18),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const KalenderHijriahPage()),
+                        );
+                      },
+                      child: Ink(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFB176F2), mainColor],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: mainColor.withValues(alpha: 0.3),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Kalender Hijriyah Hari Ini",
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 11,
-                                      color:
-                                          Colors.white.withValues(alpha: 0.85),
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        appProvider.tr('today_hijri_calendar'),
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 11,
+                                          color:
+                                              Colors.white.withValues(alpha: 0.85),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      const Icon(
+                                        Icons.arrow_forward_rounded,
+                                        color: Colors.white70,
+                                        size: 14,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(width: 6),
-                                  const Icon(
-                                    Icons.arrow_forward_rounded,
-                                    color: Colors.white70,
-                                    size: 14,
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "${hijri.hDay} ${hijri.longMonthName} ${hijri.hYear} H",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                shape: BoxShape.circle,
                               ),
-                            ],
-                          ),
+                              child: const Icon(
+                                Icons.calendar_month_rounded,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.calendar_month_rounded,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Section title
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Daftar Menu",
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white70 : Colors.black87,
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: mainColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "${menuItems.length} Fitur",
-                      style: GoogleFonts.poppins(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: mainColor,
                       ),
                     ),
                   ),
-                ],
-              ),
 
-              const SizedBox(height: 14),
+                  const SizedBox(height: 20),
+
+                  // Section title
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        appProvider.tr('menu_list'),
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: isDark ? Colors.white70 : Colors.black87,
+                        ),
+                      ),
+                      Container(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: mainColor.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "${menuItems.length} ${appProvider.tr('features_count')}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: mainColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 14),
 
               // Grid View for More Menu Items
-              GridView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: menuItems.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.76,
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: GridView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: menuItems.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.76,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = menuItems[index];
+                    return _buildGridMenuItem(
+                      context: context,
+                      item: item,
+                      isDark: isDark,
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  final item = menuItems[index];
-                  return _buildGridMenuItem(
-                    context: context,
-                    item: item,
-                    isDark: isDark,
-                  );
-                },
               ),
             ],
           ),
         ),
       ),
+    );
+      },
     );
   }
 
@@ -451,6 +461,7 @@ class MenuLainnyaModal extends StatelessWidget {
   // --- Zakat Calculator Simple Modal ---
   static void _showZakatCalculatorModal(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
     final controller = TextEditingController();
 
     showModalBottomSheet(
@@ -488,7 +499,7 @@ class MenuLainnyaModal extends StatelessWidget {
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    "Kalkulator Zakat Maal (2.5%)",
+                    appProvider.tr('zakat_title'),
                     style: GoogleFonts.poppins(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -497,7 +508,7 @@ class MenuLainnyaModal extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Nisab zakat setara 85 gram emas per tahun.",
+                    appProvider.tr('zakat_subtitle'),
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       color: isDark ? Colors.white60 : Colors.grey.shade600,
@@ -512,7 +523,7 @@ class MenuLainnyaModal extends StatelessWidget {
                       color: isDark ? Colors.white : Colors.black87,
                     ),
                     decoration: InputDecoration(
-                      labelText: "Total Harta / Simpanan (Rp)",
+                      labelText: appProvider.tr('zakat_input_label'),
                       labelStyle: GoogleFonts.poppins(fontSize: 12),
                       prefixText: "Rp ",
                       border: OutlineInputBorder(
@@ -541,7 +552,7 @@ class MenuLainnyaModal extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Kewajiban Zakat (2.5%):",
+                          appProvider.tr('zakat_obligation'),
                           style: GoogleFonts.poppins(
                             fontSize: 12,
                             color: isDark ? Colors.white70 : Colors.grey.shade700,
@@ -567,3 +578,4 @@ class MenuLainnyaModal extends StatelessWidget {
     );
   }
 }
+

@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_quran/Page/Profile/profile.dart';
 import 'package:my_quran/Page/login_page.dart';
+import 'package:my_quran/Provider/app_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../Componen/colors.dart';
 import 'Dashboard/dashboard_page.dart';
@@ -25,7 +27,7 @@ class _IndexPageState extends State<IndexPage> {
     Profile(),
   ];
 
-  void _showLogoutModal() {
+  void _showLogoutModal(AppProvider appProvider) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
@@ -52,7 +54,8 @@ class _IndexPageState extends State<IndexPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Apakah Anda Yakin Ingin Logout ?",
+                      appProvider.tr('logout_confirm'),
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -97,9 +100,9 @@ class _IndexPageState extends State<IndexPage> {
                               );
                             }
                           },
-                          child: const Text(
-                            "Oke!",
-                            style: TextStyle(
+                          child: Text(
+                            appProvider.tr('yes'),
+                            style: const TextStyle(
                               fontSize: 14.0,
                               color: Colors.white,
                               fontFamily: 'PoppinsSemibold',
@@ -127,7 +130,7 @@ class _IndexPageState extends State<IndexPage> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            "Cancel",
+                            appProvider.tr('cancel'),
                             style: TextStyle(
                               fontSize: 14.0,
                               color: isDark ? Colors.white70 : mainColor,
@@ -149,57 +152,62 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
+    return Consumer<AppProvider>(
+      builder: (context, appProvider, _) {
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
 
-        if (_selectedIndex != 0) {
-          setState(() {
-            _selectedIndex = 0;
-          });
-        } else {
-          _showLogoutModal();
-        }
-      },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: _pages[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Theme.of(context).cardColor,
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
+            if (_selectedIndex != 0) {
+              setState(() {
+                _selectedIndex = 0;
+              });
+            } else {
+              _showLogoutModal(appProvider);
+            }
           },
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: mainColor,
-          unselectedItemColor: Colors.grey,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          selectedLabelStyle: GoogleFonts.poppins(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-          ),
-          unselectedLabelStyle: GoogleFonts.poppins(
-            fontSize: 11,
-            fontWeight: FontWeight.normal,
-          ),
-          selectedFontSize: 11,
-          unselectedFontSize: 11,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'Dashboard',
+          child: Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: _pages[_selectedIndex],
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Theme.of(context).cardColor,
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              type: BottomNavigationBarType.fixed,
+              selectedItemColor: mainColor,
+              unselectedItemColor: Colors.grey,
+              showSelectedLabels: true,
+              showUnselectedLabels: true,
+              selectedLabelStyle: GoogleFonts.poppins(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+              unselectedLabelStyle: GoogleFonts.poppins(
+                fontSize: 11,
+                fontWeight: FontWeight.normal,
+              ),
+              selectedFontSize: 11,
+              unselectedFontSize: 11,
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.home_rounded),
+                  label: appProvider.tr('nav_dashboard'),
+                ),
+                BottomNavigationBarItem(
+                  icon: const Icon(Icons.person_rounded),
+                  label: appProvider.tr('nav_profile'),
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
+

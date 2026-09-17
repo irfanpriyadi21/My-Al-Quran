@@ -19,6 +19,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:my_quran/Provider/Shalat/adzan_notification_service.dart';
 import 'Componen/colors.dart';
 import 'Componen/navigatorKey.dart';
@@ -87,6 +88,17 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'My Alquran Mobile App',
             navigatorKey: NavigationService.navigatorKey,
+            locale: appProvider.locale,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('id'),
+              Locale('en'),
+              Locale('ar'),
+            ],
             themeMode: appProvider.isDarkMode
                 ? ThemeMode.dark
                 : ThemeMode.light,
@@ -122,6 +134,12 @@ class MyApp extends StatelessWidget {
               ),
               useMaterial3: true,
             ),
+            builder: (context, child) {
+              return Directionality(
+                textDirection: TextDirection.ltr,
+                child: child ?? const SizedBox(),
+              );
+            },
             home: isLogin ? const IndexPage() : const LoginPage(),
           );
         },

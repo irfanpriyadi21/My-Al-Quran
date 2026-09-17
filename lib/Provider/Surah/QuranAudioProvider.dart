@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import '../../Model/ModelListAyat.dart';
 
 class QuranAudioProvider with ChangeNotifier {
@@ -42,23 +41,27 @@ class QuranAudioProvider with ChangeNotifier {
 
   void _initAudioPlayer() {
     if (!kIsWeb) {
-      _audioPlayer.setAudioContext(
-        const AudioContext(
-          android: AudioContextAndroid(
-            isSpeakerphoneOn: false,
-            stayAwake: false,
-            contentType: AndroidContentType.music,
-            usageType: AndroidUsageType.media,
-            audioFocus: AndroidAudioFocus.none,
+      try {
+        _audioPlayer.setAudioContext(
+          const AudioContext(
+            android: AudioContextAndroid(
+              isSpeakerphoneOn: false,
+              stayAwake: false,
+              contentType: AndroidContentType.music,
+              usageType: AndroidUsageType.media,
+              audioFocus: AndroidAudioFocus.none,
+            ),
+            iOS: AudioContextIOS(
+              category: AVAudioSessionCategory.playback,
+              options: [
+                AVAudioSessionOptions.defaultToSpeaker,
+              ],
+            ),
           ),
-          iOS: AudioContextIOS(
-            category: AVAudioSessionCategory.playback,
-            options: [
-              AVAudioSessionOptions.defaultToSpeaker,
-            ],
-          ),
-        ),
-      );
+        );
+      } catch (e) {
+        debugPrint("Error setting QuranAudioProvider AudioContext: $e");
+      }
     }
 
     _playerStateSubscription = _audioPlayer.onPlayerStateChanged.listen((

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:my_quran/Componen/navigatorKey.dart';
@@ -26,13 +25,13 @@ class AdzanAudioOption {
 }
 
 class AdzanAlarmService extends ChangeNotifier {
-  static AdzanAlarmService _instance = AdzanAlarmService._internal();
+  static AdzanAlarmService? _instance;
 
   factory AdzanAlarmService() {
-    if (_instance._disposed) {
+    if (_instance == null || _instance!._disposed) {
       _instance = AdzanAlarmService._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
   AdzanAlarmService._internal() {
@@ -126,24 +125,28 @@ class AdzanAlarmService extends ChangeNotifier {
 
     // Set Audio context for proper speaker playback on Android/iOS
     if (!kIsWeb) {
-      _audioPlayer.setAudioContext(
-        const AudioContext(
-          android: AudioContextAndroid(
-            isSpeakerphoneOn: true,
-            stayAwake: true,
-            contentType: AndroidContentType.music,
-            usageType: AndroidUsageType.media,
-            audioFocus: AndroidAudioFocus.gainTransientMayDuck,
+      try {
+        _audioPlayer.setAudioContext(
+          const AudioContext(
+            android: AudioContextAndroid(
+              isSpeakerphoneOn: true,
+              stayAwake: true,
+              contentType: AndroidContentType.music,
+              usageType: AndroidUsageType.media,
+              audioFocus: AndroidAudioFocus.gainTransientMayDuck,
+            ),
+            iOS: AudioContextIOS(
+              category: AVAudioSessionCategory.playback,
+              options: [
+                AVAudioSessionOptions.duckOthers,
+                AVAudioSessionOptions.defaultToSpeaker,
+              ],
+            ),
           ),
-          iOS: AudioContextIOS(
-            category: AVAudioSessionCategory.playback,
-            options: [
-              AVAudioSessionOptions.duckOthers,
-              AVAudioSessionOptions.defaultToSpeaker,
-            ],
-          ),
-        ),
-      );
+        );
+      } catch (e) {
+        debugPrint("Error setting AudioContext: $e");
+      }
     }
 
     _playerSubscription = _audioPlayer.onPlayerStateChanged.listen((state) {

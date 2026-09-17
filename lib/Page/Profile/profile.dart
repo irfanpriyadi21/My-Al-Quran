@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_quran/Page/Profile/app_info_page.dart';
+import 'package:my_quran/Page/Profile/language_settings_modal.dart';
 import 'package:my_quran/Page/Profile/privacy_policy_page.dart';
 import 'package:my_quran/Page/login_page.dart';
 import 'package:my_quran/Provider/app_provider.dart';
@@ -24,7 +25,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-  void _modalBottomSheetMenu() {
+  void _modalBottomSheetMenu(AppProvider appProvider) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet(
@@ -51,7 +52,8 @@ class _ProfileState extends State<Profile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Apakah Anda Yakin Ingin Logout ?",
+                      appProvider.tr('logout_confirm'),
+                      textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -96,9 +98,9 @@ class _ProfileState extends State<Profile> {
                               );
                             }
                           },
-                          child: const Text(
-                            "Oke!",
-                            style: TextStyle(
+                          child: Text(
+                            appProvider.tr('yes'),
+                            style: const TextStyle(
                               fontSize: 14.0,
                               color: Colors.white,
                               fontFamily: 'PoppinsSemibold',
@@ -126,7 +128,7 @@ class _ProfileState extends State<Profile> {
                             Navigator.pop(context);
                           },
                           child: Text(
-                            "Cancel",
+                            appProvider.tr('cancel'),
                             style: TextStyle(
                               fontSize: 14.0,
                               color: isDark ? Colors.white70 : mainColor,
@@ -158,11 +160,15 @@ class _ProfileState extends State<Profile> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: TextData(
-          text: "Profile",
-          size: 20,
-          color: mainColor,
-          fontWeight: FontWeight.bold,
+        title: Consumer<AppProvider>(
+          builder: (context, appProvider, _) {
+            return TextData(
+              text: appProvider.tr('profile'),
+              size: 20,
+              color: mainColor,
+              fontWeight: FontWeight.bold,
+            );
+          },
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -190,13 +196,13 @@ class _ProfileState extends State<Profile> {
                           ? const Color(0xFF2C2C2C)
                           : Colors.grey[300],
                       child: user?.photoURL == null
-                          ? Icon(Icons.person, size: 40, color: mainColor)
+                          ? const Icon(Icons.person, size: 40, color: mainColor)
                           : null,
                     ),
                   ),
                   const SizedBox(height: 10),
                   TextData(
-                    text: user?.displayName ?? 'Pengguna',
+                    text: user?.displayName ?? appProvider.tr('user_default'),
                     size: 17,
                     color: isDark ? Colors.white : Colors.grey[800]!,
                     fontWeight: FontWeight.bold,
@@ -209,9 +215,40 @@ class _ProfileState extends State<Profile> {
                   ),
                   const SizedBox(height: 40),
 
+                  // PENGATURAN BAHASA / LANGUAGE SETTINGS
+                  SettingItemWidget(
+                    title: appProvider.tr('language_settings'),
+                    subTitle: '${appProvider.languageName} (${appProvider.languageNativeName})',
+                    subTitleTextStyle: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        color: mainColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                      ),
+                    ),
+                    titleTextStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.grey[800],
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    decoration: boxDecorationRoundedWithShadow(
+                      12,
+                      backgroundColor: cardColor,
+                    ),
+                    trailing: const Icon(
+                      Icons.translate_rounded,
+                      color: mainColor,
+                    ),
+                    onTap: () {
+                      LanguageSettingsModal.show(context);
+                    },
+                  ).paddingOnly(bottom: 10),
+
                   // TENTANG APLIKASI / APP INFO
                   SettingItemWidget(
-                    title: 'Tentang Aplikasi',
+                    title: appProvider.tr('app_info'),
                     titleTextStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         color: isDark ? Colors.white70 : Colors.grey[800],
@@ -239,7 +276,7 @@ class _ProfileState extends State<Profile> {
 
                   // PRIVACY POLICY
                   SettingItemWidget(
-                    title: 'Privacy Policy',
+                    title: appProvider.tr('privacy_policy'),
                     titleTextStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         color: isDark ? Colors.white70 : Colors.grey[800],
@@ -267,7 +304,7 @@ class _ProfileState extends State<Profile> {
 
                   // DARK MODE TOGGLE
                   SettingItemWidget(
-                    title: 'Dark Mode',
+                    title: appProvider.tr('dark_mode'),
                     titleTextStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         color: isDark ? Colors.white70 : Colors.grey[800],
@@ -293,7 +330,7 @@ class _ProfileState extends State<Profile> {
 
                   // LOGOUT
                   SettingItemWidget(
-                    title: 'Logout',
+                    title: appProvider.tr('logout'),
                     titleTextStyle: GoogleFonts.poppins(
                       textStyle: const TextStyle(
                         color: Colors.redAccent,
@@ -310,7 +347,7 @@ class _ProfileState extends State<Profile> {
                       color: Colors.redAccent,
                     ),
                     onTap: () {
-                      _modalBottomSheetMenu();
+                      _modalBottomSheetMenu(appProvider);
                     },
                   ),
                 ],
@@ -322,3 +359,4 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
