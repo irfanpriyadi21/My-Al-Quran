@@ -1,4 +1,4 @@
-package com.irfdev.myquran.app
+package com.muslimapp.myquran.id
 
 import io.flutter.embedding.android.FlutterActivity
 

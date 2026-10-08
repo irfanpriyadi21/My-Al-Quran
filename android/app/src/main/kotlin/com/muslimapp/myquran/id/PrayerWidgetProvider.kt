@@ -1,4 +1,4 @@
-package com.irfdev.myquran.app
+package com.muslimapp.myquran.id
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

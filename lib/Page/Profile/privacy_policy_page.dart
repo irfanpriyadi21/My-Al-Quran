@@ -7,7 +7,7 @@ class PrivacyPolicyPage extends StatefulWidget {
   final String url;
   const PrivacyPolicyPage({
     super.key,
-    this.url = 'https://www.termsfeed.com/live/10e637a3-4ee7-4adb-afbf-6bc52ff9179c',
+    this.url = 'https://www.termsfeed.com/live/bc24074f-c6ab-48e2-93f3-53e91aa21741',
   });
 
   @override

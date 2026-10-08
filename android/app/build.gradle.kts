@@ -21,7 +21,7 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "com.irfdev.myquran.app"
+    namespace = "com.muslimapp.myquran.id"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -36,7 +36,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.irfdev.myquran.app"
+        applicationId = "com.muslimapp.myquran.id"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

@@ -7,20 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:953324306666:android:4b47516776a52ecf5b9793",
+        "mobilesdk_app_id": "1:953324306666:android:5518da6fab774bca5b9793",
         "android_client_info": {
-          "package_name": "com.irfdev.myquran.app"
+          "package_name": "com.muslimapp.myquran.id"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "953324306666-gsa79tglt1ufctr5o76vd4q3v90uusp8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.irfdev.myquran.app",
-            "certificate_hash": "ee7196f7ce0ca5015411013ebb2edf7f285daf02"
-          }
-        },
         {
           "client_id": "953324306666-bgl2q3f9nprthu1chk5h4fuqcuci201h.apps.googleusercontent.com",
           "client_type": 3
